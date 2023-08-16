@@ -5,7 +5,7 @@
 
 
 A Snakemake workflow for `preparation of a curated catalogue of sequences of possible new tobamoviruses by scanning a large accumulated set of data from different metagenomics data repositories.`
-
+More info: http://projects.nib.si/tobamo/
 
 ## Usage
 
