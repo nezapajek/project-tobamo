@@ -4,6 +4,7 @@
 # in particular regarding the standardized folder structure mentioned there.
 
 # conda activate tobamo-snakemake
+# snakemake --use-conda
 
 
 configfile: "config/config.yaml"
@@ -11,18 +12,203 @@ configfile: "config/config.yaml"
 
 rule all:
     input:
-        expand("resources/SRA/{accession}", accession=config["SRRs"]),
+        expand(
+            "results/{accession}/{accession}_spades_isolate_contigs.fasta",
+            accession=config["SRRs"],
+        ),
 
 
-rule download_SRA:
+# rule download_SRA:
+#     output:
+#         fastq="resources/SRA/{accession}",
+#     log:
+#         "logs/resources/SRA/{accession}.download.log",
+#     conda:
+#         "envs/fasterq-dump.yaml"
+#     threads: workflow.cores
+#     shell:
+#         """
+#         ./workflow/scripts/download_sra.sh {output.fastq}
+#         """
+
+
+rule trim_pe:
+    input:
+        r1="resources/SRA/{accession}_1.fastq.gz",
+        r2="resources/SRA/{accession}_2.fastq.gz",
+        iclip="resources/TruSeq3-PE.fa",
     output:
-        fastq="resources/SRA/{accession}",
+        tp1="results/{accession}/{accession}_trim_1_paired.fq.gz",
+        tp2="results/{accession}/{accession}_trim_2_paired.fq.gz",
+        tup1="results/{accession}/{accession}_trim_1_unpaired.fq.gz",
+        tup2="results/{accession}/{accession}_trim_2_unpaired.fq.gz",
+        check="results/{accession}/{accession}_trim.done",
     log:
-        "logs/resources/SRA/{accession}.download.log",
+        logO="results/{accession}/{accession}_trim_pe.log",
+        logE="results/{accession}/{accession}_trim_pe_err.log",
     conda:
-        "envs/fasterq-dump.yaml"
-    threads: workflow.cores
+        "envs/trimmomatic.yaml"
+    threads: 4
     shell:
         """
-        ./workflow/scripts/download_sra.sh {output.fastq}
+        trimmomatic PE -threads {threads} -phred33 {input.r1} {input.r2} {output.tp1} {output.tup1} {output.tp2} {output.tup2} ILLUMINACLIP:{input.iclip}:2:30:10:2:True LEADING:3 TRAILING:3 MINLEN:36 > {log.logO} 2> {log.logE}
+        touch {output.check}
+        """
+
+
+rule trim_se:
+    input:
+        r="resources/SRA/{accession}.fastq.gz",
+        iclip="resources/TruSeq3-SE.fa",
+    output:
+        tp="results/{accession}/{accession}_trim_single.fq.gz",
+        check="results/{accession}/{accession}_trim.done",
+    log:
+        logO="results/{accession}/{accession}_trim_se.log",
+        logE="results/{accession}/{accession}_trim_se_err.log",
+    conda:
+        "envs/trimmomatic.yaml"
+    threads: 4
+    shell:
+        """
+        trimmomatic SE -threads {threads} -phred33 {input.r} {output.tp} ILLUMINACLIP:{input.iclip}:2:30:10:2:True LEADING:3 TRAILING:3 MINLEN:36 > {log.logO} 2> {log.logE}
+        touch {output.check}
+        """
+
+
+rule spades_isolate_pe:
+    input:
+        tp1="results/{accession}/{accession}_trim_1_paired.fq.gz",
+        tp2="results/{accession}/{accession}_trim_2_paired.fq.gz",
+    output:
+        d=temp(directory("results/{accession}/{accession}_spades_isolate")),
+        f="results/{accession}/{accession}_spades_isolate_contigs.fasta",
+    log:
+        logO="results/{accession}/{accession}_spades_isolate.log",
+        logE="results/{accession}/{accession}_spades_isolate_err.log",
+    benchmark:
+        "results/{accession}/{accession}_benchmark_spades_isolate.txt"
+    conda:
+        "envs/spades.yaml"
+    threads: 2
+    shell:
+        """
+        rm -Rf {output.d}
+        if [ -e "results/{wildcards.accession}/{wildcards.accession}_spades_isolate_contigs.fasta.no_isolate" ]; then
+            mkdir -p results/{wildcards.accession}/{wildcards.accession}_spades_isolate
+            cp -f resources/empty.fasta results/{wildcards.accession}/{wildcards.accession}_spades_isolate/contigs.fasta
+        else
+            set +e
+            spades.py --isolate --threads 12 -1 {input.tp1} -2 {input.tp2} -o {output.d} > {log.logO} 2> {log.logE}
+            exitcode=$?
+            set -e
+            if [ $exitcode -ne 0 ]; then
+                mkdir -p results/{wildcards.accession}/{wildcards.accession}_spades_isolate
+                touch "results/{wildcards.accession}/{wildcards.accession}_spades_isolate_contigs.fasta.no_isolate"
+                cp -f resources/empty.fasta results/{wildcards.accession}/{wildcards.accession}_spades_isolate/contigs.fasta
+            fi
+        fi
+        cp -f results/{wildcards.accession}/{wildcards.accession}_spades_isolate/contigs.fasta {output.f}
+        """
+
+
+rule spades_isolate_se:
+    input:
+        tp="results/{accession}/{accession}_trim_single.fq.gz",
+    output:
+        d=temp(directory("results/{accession}/{accession}_spades_isolate")),
+        f="results/{accession}/{accession}_spades_isolate_contigs.fasta",
+    log:
+        logO="results/{accession}/{accession}_spades_isolate.log",
+        logE="results/{accession}/{accession}_spades_isolate_err.log",
+    benchmark:
+        "results/{accession}/{accession}_benchmark_spades_isolate"
+    conda:
+        "envs/spades.yaml"
+    threads: 2
+    shell:
+        """
+        rm -Rf {output.d}
+        if [ -e "results/{wildcards.accession}/{wildcards.accession}_spades_isolate_contigs.fasta.no_isolate" ]; then
+            mkdir -p results/{wildcards.accession}/{wildcards.accession}_spades_isolate
+            cp -f resources/empty.fasta results/{wildcards.accession}/{wildcards.accession}_spades_isolate/contigs.fasta
+        else
+            set +e
+            spades.py --isolate --threads 12 -s {input.tp} -o {output.d} > {log.logO} 2> {log.logE}
+            exitcode=$?
+            set -e
+            if [ $exitcode -ne 0 ]; then
+                mkdir -p results/{wildcards.accession}/{wildcards.accession}_spades_isolate
+                touch "results/{wildcards.accession}/{wildcards.accession}_spades_isolate_contigs.fasta.no_isolate"
+                cp -f resources/empty.fasta results/{wildcards.accession}/{wildcards.accession}_spades_isolate/contigs.fasta
+            fi
+        fi
+        cp -f results/{wildcards.accession}/{wildcards.accession}_spades_isolate/contigs.fasta {output.f}
+        """
+
+
+rule megahit:
+    input:
+        r1="results/{accession}/{accession}_trim_1_paired.fq.gz",
+        r2="results/{accession}/{accession}_trim_2_paired.fq.gz",
+    output:
+        d=temp(directory("results/{accession}/{accession}_megahit")),
+        f="results/{accession}/{accession}_megahit_contigs.fasta",
+    log:
+        logO="results/{accession}/{accession}_megahit.log",
+        logE="results/{accession}/{accession}_megahit_err.log",
+    conda:
+        "envs/megahit.yaml"
+    threads: 2
+    shell:
+        """
+        rm -Rf {output.d}
+        if [ -e "results/{wildcards.accession}/{wildcards.accession}_megahit_contigs.fasta.no_megahit" ]; then
+            mkdir -p results/{wildcards.accession}/{wildcards.accession}_megahit
+            cp -f resources/empty.fasta results/{wildcards.accession}/{wildcards.accession}_megahit/final.contigs.fa
+        else
+            set +e
+            megahit -1 {input.r1} -2 {input.r2} -o {output.d} > {log.logO} 2> {log.logE}
+            exitcode=$?
+            set -e
+            if [ $exitcode -ne 0 ]; then
+                mkdir -p results/{wildcards.accession}/{wildcards.accession}_megahit
+                touch "results/{wildcards.accession}/{wildcards.accession}_megahit_contigs.fasta.no_megahit"
+                cp -f resources/empty.fasta results/{wildcards.accession}/{wildcards.accession}_megahit/final.contigs.fa
+            fi
+        fi
+        cp results/{wildcards.accession}/{wildcards.accession}_megahit/final.contigs.fa {output.f}
+        """
+
+
+rule megahit_single:
+    input:
+        r="results/{accession}/{accession}_trim_single.fq.gz",
+    output:
+        d=temp(directory("results/{accession}/{accession}_megahit")),
+        f="results/{accession}/{accession}_megahit_contigs.fasta",
+    log:
+        logO="results/{accession}/{accession}_megahit.log",
+        logE="results/{accession}/{accession}_megahit_err.log",
+    conda:
+        "envs/megahit.yaml"
+    threads: 2
+    shell:
+        """
+        rm -Rf {output.d}
+        if [ -e "results/{wildcards.accession}/{wildcards.accession}_megahit_contigs.fasta.no_megahit" ]; then
+            mkdir -p results/{wildcards.accession}/{wildcards.accession}_megahit
+            cp -f resources/empty.fasta results/{wildcards.accession}/{wildcards.accession}_megahit/final.contigs.fa
+        else
+            set +e
+            megahit -r {input.r} -o {output} > {log.logO} 2> {log.logE}
+            exitcode=$?
+            set -e
+            if [ $exitcode -ne 0 ]; then
+                mkdir -p results/{wildcards.accession}/{wildcards.accession}_megahit
+                touch "results/{wildcards.accession}/{wildcards.accession}_megahit_contigs.fasta.no_megahit"
+                cp -f resources/empty.fasta results/{wildcards.accession}/{wildcards.accession}_megahit/final.contigs.fa
+            fi
+        fi
+        cp results/{wildcards.accession}/{wildcards.accession}_megahit/final.contigs.fa {output.f}
         """
