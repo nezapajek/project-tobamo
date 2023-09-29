@@ -13,7 +13,7 @@ configfile: "config/config.yaml"
 rule all:
     input:
         expand(
-            "results/{accession}/{accession}_spades_isolate_contigs.fasta",
+            "results/{accession}/{accession}_contigs_filtered.fasta",
             accession=config["SRRs"],
         ),
 
@@ -211,4 +211,40 @@ rule megahit_single:
             fi
         fi
         cp results/{wildcards.accession}/{wildcards.accession}_megahit/final.contigs.fa {output.f}
+        """
+
+
+rule unique_contigs:
+    input:
+        iso="results/{accession}/{accession}_spades_isolate_contigs.fasta",
+        mega="results/{accession}/{accession}_megahit_contigs.fasta",
+    output:
+        comb="results/{accession}/{accession}_contigs_combined.fasta",
+        out="results/{accession}/{accession}_contigs_unique.fasta",
+    conda:
+        "envs/biopython.yaml"
+    threads: 1
+    shell:
+        """
+        cat {input.iso} {input.mega} > {output.comb}
+        python workflow/scripts/unique_contigs.py {output.comb} {output.out}
+        """
+
+
+rule filter_contigs:
+    input:
+        "results/{accession}/{accession}_contigs_unique.fasta",
+    output:
+        add_accession="results/{accession}/{accession}_contigs_add_accession.fasta",
+        filtered="results/{accession}/{accession}_contigs_filtered.fasta",
+    log:
+        logO="results/{accession}/{accession}_contigs_filter.log",
+        logE="results/{accession}/{accession}_contigs_filter_err.log",
+    conda:
+        "envs/biopython.yaml"
+    threads: 1
+    shell:
+        """
+        python workflow/scripts/add_accession_to_fasta.py {input} {output.add_accession} {wildcards.accession} > {log.logO} 2> {log.logE}
+        python workflow/scripts/filter_fasta_by_len.py {output.add_accession} {output.filtered} 600 8000 >> {log.logO} 2>> {log.logE}
         """
