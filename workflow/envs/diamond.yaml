@@ -1,0 +1,7 @@
+channels:
+  - bioconda
+dependencies:
+  - diamond=0.9.14
+  - python=3.9.0
+  - biopython=1.81
+  - pandas=2.1.1
