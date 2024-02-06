@@ -5,9 +5,18 @@
 
 # conda activate tobamo-snakemake
 # snakemake --use-conda
+# snakemake --use-conda -c40 -k -p
 
 
 configfile: "config/config.yaml"
+
+
+wildcard_constraints:
+    accession="ERR\d+|SRR\d+|DRR\d+",
+
+
+ruleorder: spades_isolate_se > megahit_se
+ruleorder: spades_isolate_pe > megahit_pe
 
 
 rule all:
@@ -18,18 +27,18 @@ rule all:
         ),
 
 
-# rule download_SRA:
-#     output:
-#         fastq="resources/SRA/{accession}",
-#     log:
-#         "logs/resources/SRA/{accession}.download.log",
-#     conda:
-#         "envs/fasterq-dump.yaml"
-#     threads: workflow.cores
-#     shell:
-#         """
-#         ./workflow/scripts/download_sra.sh {output.fastq}
-#         """
+rule download_SRA:
+    output:
+        fastq="resources/SRA/{accession}",
+    log:
+        "logs/resources/SRA/{accession}.download.log",
+    conda:
+        "envs/fasterq-dump.yaml"
+    threads: workflow.cores
+    shell:
+        """
+        ./workflow/scripts/download_sra.sh {output.fastq}
+        """
 
 
 rule trim_pe:
@@ -147,7 +156,7 @@ rule spades_isolate_se:
         """
 
 
-rule megahit:
+rule megahit_pe:
     input:
         r1="results/{accession}/{accession}_trim_1_paired.fq.gz",
         r2="results/{accession}/{accession}_trim_2_paired.fq.gz",
@@ -181,7 +190,7 @@ rule megahit:
         """
 
 
-rule megahit_single:
+rule megahit_se:
     input:
         r="results/{accession}/{accession}_trim_single.fq.gz",
     output:
@@ -250,55 +259,55 @@ rule filter_contigs:
         """
 
 
-# rule diamond_tpdb2:
-#     input:
-#         "results/{accession}/{accession}_contigs_filtered.fasta",
-#     output:
-#         "results/{accession}/{accession}_diamond_tpdb2.daa",
-#     log:
-#         logO="results/{accession}/{accession}_diamond_tpdb2.log",
-#         logE="results/{accession}/{accession}_diamond_tpdb2_err.log",
-#     benchmark:
-#         "results/{accession}/{accession}_benchmark_diamond_tpdb2.txt"
-#     conda:
-#         "envs/diamond-megan.yaml"
-#     threads: 2
-#     shell:
-#         """
-#         if [ -s {input} ]; then
-#             diamond blastx --threads 10 -d resources/tpdb2.dmnd -k 20 -q {input} --daa {output} > {log.logO} 2> {log.logE}
-#         else
-#             cp -f resources/empty.daa {output}
-#         fi
-#         """
+rule diamond_tpdb2:
+    input:
+        "results/{accession}/{accession}_contigs_filtered.fasta",
+    output:
+        "results/{accession}/{accession}_diamond_tpdb2.daa",
+    log:
+        logO="results/{accession}/{accession}_diamond_tpdb2.log",
+        logE="results/{accession}/{accession}_diamond_tpdb2_err.log",
+    benchmark:
+        "results/{accession}/{accession}_benchmark_diamond_tpdb2.txt"
+    conda:
+        "envs/diamond-megan.yaml"
+    threads: 2
+    shell:
+        """
+        if [ -s {input} ]; then
+            diamond blastx --threads 10 -d resources/tpdb2.dmnd -k 20 -q {input} --daa {output} > {log.logO} 2> {log.logE}
+        else
+            cp -f resources/empty.daa {output}
+        fi
+        """
 
 
-# rule diamond_nr:
-#     input:
-#         d="results/{accession}/{accession}_diamond_tpdb2.daa",
-#         f="results/{accession}/{accession}_contigs_filtered.fasta",
-#     output:
-#         info="results/{accession}/{accession}_diamond_info.tsv",
-#         selected="results/{accession}/{accession}_diamond_tpdb2_selected.fasta",
-#         out="results/{accession}/{accession}_diamond_nr.daa",
-#     log:
-#         logO="results/{accession}/{accession}_diamond_nr.log",
-#         logE="results/{accession}/{accession}_diamond_nr_err.log",
-#     benchmark:
-#         "results/{accession}/{accession}_benchmark_diamond_nr.txt"
-#     conda:
-#         "envs/diamond-megan.yaml"
-#     threads: 3
-#     shell:
-#         """
-#         diamond view --daa {input.d} --outfmt 6 > {output.info}
-#         python workflow/scripts/select_contigs.py {input.f} {output.info} {output.selected} > {log.logO} 2> {log.logE}
-#         if [ -s {output.info} ]; then
-#             diamond blastx -d resources/nr.dmnd -q {output.selected} --threads 10 -k 20 --unal 1 --daa {output.out} >> {log.logO} 2>> {log.logE}
-#         else
-#             cp -f {input.d} {output.out}
-#         fi
-#         """
+rule diamond_nr:
+    input:
+        d="results/{accession}/{accession}_diamond_tpdb2.daa",
+        f="results/{accession}/{accession}_contigs_filtered.fasta",
+    output:
+        info="results/{accession}/{accession}_diamond_info.tsv",
+        selected="results/{accession}/{accession}_diamond_tpdb2_selected.fasta",
+        out="results/{accession}/{accession}_diamond_nr.daa",
+    log:
+        logO="results/{accession}/{accession}_diamond_nr.log",
+        logE="results/{accession}/{accession}_diamond_nr_err.log",
+    benchmark:
+        "results/{accession}/{accession}_benchmark_diamond_nr.txt"
+    conda:
+        "envs/diamond-megan.yaml"
+    threads: 3
+    shell:
+        """
+        diamond view --daa {input.d} --outfmt 6 > {output.info}
+        python workflow/scripts/select_contigs.py {input.f} {output.info} {output.selected} > {log.logO} 2> {log.logE}
+        if [ -s {output.info} ]; then
+            diamond blastx -d resources/nr.dmnd -q {output.selected} --threads 10 -k 20 --unal 1 --daa {output.out} >> {log.logO} 2>> {log.logE}
+        else
+            cp -f {input.d} {output.out}
+        fi
+        """
 
 
 rule meganizer:
