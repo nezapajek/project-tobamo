@@ -1,3 +1,4 @@
+name: fasterq-dump
 channels:
   - bioconda
 dependencies:

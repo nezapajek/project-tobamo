@@ -1,3 +1,4 @@
+name: spades
 channels:
   - bioconda
 dependencies:
