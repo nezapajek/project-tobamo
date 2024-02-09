@@ -4,8 +4,13 @@
 # in particular regarding the standardized folder structure mentioned there.
 
 # conda activate tobamo-snakemake
-# snakemake --use-conda
+# snakemake -n already starts the download
 # snakemake --use-conda -c40 -k -p
+
+
+import os
+
+os.system("workflow/scripts/download_sra.sh")
 
 
 configfile: "config/config.yaml"
@@ -19,70 +24,141 @@ ruleorder: spades_isolate_se > megahit_se
 ruleorder: spades_isolate_pe > megahit_pe
 
 
+DEBUG = True
+
+
 rule all:
     input:
         expand(
             "results/{accession}/09_{accession}_megan6_results.csv",
             accession=config["SRRs"],
         ),
-
-
-rule download_SRA:
     output:
-        fastq="resources/SRA/{accession}",
-    log:
-        "logs/resources/SRA/{accession}.download.log",
-    conda:
-        "envs/fasterq-dump.yaml"
-    threads: workflow.cores
+        "results/megan6_results_combined.csv",
     shell:
         """
-        ./workflow/scripts/download_sra.sh {output.fastq}
+        python workflow/scripts/combine_results.py {input} {output}
         """
 
 
-rule trim_pe:
-    input:
-        r1="resources/SRA/{accession}_1.fastq.gz",
-        r2="resources/SRA/{accession}_2.fastq.gz",
-        iclip="resources/TruSeq3-PE.fa",
-    output:
-        tp1="results/{accession}/01_{accession}_trim_1_paired.fq.gz",
-        tp2="results/{accession}/01_{accession}_trim_2_paired.fq.gz",
-        tup1="results/{accession}/01_{accession}_trim_1_unpaired.fq.gz",
-        tup2="results/{accession}/01_{accession}_trim_2_unpaired.fq.gz",
-        check="results/{accession}/01_{accession}_trim_pe.done",
-    log:
-        logO="results/{accession}/01_{accession}_trim_pe.log",
-        logE="results/{accession}/01_{accession}_trim_pe_err.log",
-    conda:
-        "envs/trimmomatic.yaml"
-    threads: 4
-    shell:
-        """
-        trimmomatic PE -threads {threads} -phred33 {input.r1} {input.r2} {output.tp1} {output.tup1} {output.tp2} {output.tup2} ILLUMINACLIP:{input.iclip}:2:30:10:2:True LEADING:3 TRAILING:3 MINLEN:36 > {log.logO} 2> {log.logE}
-        touch {output.check}
-        """
+if not DEBUG:
 
+    rule trim_pe:
+        input:
+            r1="resources/SRA/{accession}_1.fastq.gz",
+            r2="resources/SRA/{accession}_2.fastq.gz",
+            iclip="resources/TruSeq3-PE.fa",
+        output:
+            tp1="results/{accession}/01_{accession}_trim_1_paired.fq.gz",
+            tp2="results/{accession}/01_{accession}_trim_2_paired.fq.gz",
+            tup1="results/{accession}/01_{accession}_trim_1_unpaired.fq.gz",
+            tup2="results/{accession}/01_{accession}_trim_2_unpaired.fq.gz",
+            check="results/{accession}/01_{accession}_trim_pe.done",
+        log:
+            logO="logs/trim_pe/{accession}.log",
+            logE="logs/trim_pe/{accession}.err.log",
+        conda:
+            "envs/trimmomatic.yaml"
+        threads: 4
+        shell:
+            """
+            trimmomatic PE -threads {threads} -phred33 {input.r1} {input.r2} {output.tp1} {output.tup1} {output.tp2} {output.tup2} ILLUMINACLIP:{input.iclip}:2:30:10:2:True LEADING:3 TRAILING:3 MINLEN:36 > {log.logO} 2> {log.logE}
+            touch {output.check}
+            """
 
-rule trim_se:
-    input:
-        r="resources/SRA/{accession}.fastq.gz",
-        iclip="resources/TruSeq3-SE.fa",
-    output:
-        tp="results/{accession}/01_{accession}_trim_single.fq.gz",
-        check="results/{accession}/01_{accession}_trim_se.done",
-    log:
-        logO="results/{accession}/01_{accession}_trim_se.log",
-        logE="results/{accession}/01_{accession}_trim_se_err.log",
-    conda:
-        "envs/trimmomatic.yaml"
-    threads: 4
-    shell:
-        """
-        trimmomatic SE -threads {threads} -phred33 {input.r} {output.tp} ILLUMINACLIP:{input.iclip}:2:30:10:2:True LEADING:3 TRAILING:3 MINLEN:36 > {log.logO} 2> {log.logE}
-        touch {output.check}
-        """
+    rule trim_se:
+        input:
+            r="resources/SRA/{accession}.fastq.gz",
+            iclip="resources/TruSeq3-SE.fa",
+        output:
+            tp="results/{accession}/01_{accession}_trim_single.fq.gz",
+            check="results/{accession}/01_{accession}_trim_se.done",
+        log:
+            logO="logs/trim_se/{accession}.log",
+            logE="logs/trim_se/{accession}.err.log",
+        conda:
+            "envs/trimmomatic.yaml"
+        threads: 4
+        shell:
+            """
+            trimmomatic SE -threads {threads} -phred33 {input.r} {output.tp} ILLUMINACLIP:{input.iclip}:2:30:10:2:True LEADING:3 TRAILING:3 MINLEN:36 > {log.logO} 2> {log.logE}
+            touch {output.check}
+            """
+
+else:
+
+    rule keep_pe:
+        input:
+            r1="resources/SRA/{accession}_1.fastq.gz",
+            r2="resources/SRA/{accession}_2.fastq.gz",
+        output:
+            r1="results/DEBUG/{accession}/{accession}_1.fastq.gz",
+            r2="results/DEBUG/{accession}/{accession}_2.fastq.gz",
+        threads: 1
+        shell:
+            """
+            set +o pipefail
+            mkdir -p results/{wildcards.accession}
+
+            zless {input.r1} | head -n 100000 | gzip - > {output.r1}
+            zless {input.r2} | head -n 100000 | gzip - > {output.r2}
+            """
+
+    rule keep_se:
+        input:
+            r="resources/SRA/{accession}.fastq.gz",
+        output:
+            r="results/DEBUG/{accession}/{accession}.fastq.gz",
+        threads: 1
+        shell:
+            """
+            set +o pipefail
+            mkdir -p results/{wildcards.accession}
+
+            zless {input} | head -n 100000 | gzip - > {output}
+            """
+
+    rule trim_keep_pe:
+        input:
+            r1="results/DEBUG/{accession}/{accession}_1.fastq.gz",
+            r2="results/DEBUG/{accession}/{accession}_2.fastq.gz",
+            iclip="resources/TruSeq3-PE.fa",
+        output:
+            tp1="results/{accession}/01_{accession}_trim_1_paired.fq.gz",
+            tp2="results/{accession}/01_{accession}_trim_2_paired.fq.gz",
+            tup1="results/{accession}/01_{accession}_trim_1_unpaired.fq.gz",
+            tup2="results/{accession}/01_{accession}_trim_2_unpaired.fq.gz",
+            check="results/{accession}/01_{accession}_trim_pe.done",
+        log:
+            logO="logs/trim_pe/{accession}.log",
+            logE="logs/trim_pe/{accession}.err.log",
+        conda:
+            "envs/trimmomatic.yaml"
+        threads: 4
+        shell:
+            """
+            trimmomatic PE -threads {threads} -phred33 {input.r1} {input.r2} {output.tp1} {output.tup1} {output.tp2} {output.tup2} ILLUMINACLIP:{input.iclip}:2:30:10:2:True LEADING:3 TRAILING:3 MINLEN:36 > {log.logO} 2> {log.logE}
+            touch {output.check}
+            """
+
+    rule trim_keep_se:
+        input:
+            r="results/DEBUG/{accession}/{accession}.fastq.gz",
+            iclip="resources/TruSeq3-SE.fa",
+        output:
+            tp="results/{accession}/01_{accession}_trim_single.fq.gz",
+            check="results/{accession}/01_{accession}_trim_se.done",
+        log:
+            logO="logs/trim_se/{accession}.log",
+            logE="logs/trim_se/{accession}.err.log",
+        conda:
+            "envs/trimmomatic.yaml"
+        threads: 4
+        shell:
+            """
+            trimmomatic SE -threads {threads} -phred33 {input.r} {output.tp} ILLUMINACLIP:{input.iclip}:2:30:10:2:True LEADING:3 TRAILING:3 MINLEN:36 > {log.logO} 2> {log.logE}
+            touch {output.check}
+            """
 
 
 rule spades_isolate_pe:
@@ -93,8 +169,8 @@ rule spades_isolate_pe:
         d=temp(directory("results/{accession}/{accession}_spades_isolate")),
         f="results/{accession}/02_{accession}_spades_isolate_contigs.fasta",
     log:
-        logO="results/{accession}/02_{accession}_spades_isolate_pe.log",
-        logE="results/{accession}/02_{accession}_spades_isolate_pe_err.log",
+        logO="logs/spades_isolate_pe/{accession}.log",
+        logE="logs/spades_isolate_pe/{accession}.err.log",
     benchmark:
         "results/{accession}/02_{accession}_benchmark_spades_isolate_pe.txt"
     conda:
@@ -128,8 +204,8 @@ rule spades_isolate_se:
         d=temp(directory("results/{accession}/{accession}_spades_isolate")),
         f="results/{accession}/02_{accession}_spades_isolate_contigs.fasta",
     log:
-        logO="results/{accession}/02_{accession}_spades_isolate_se.log",
-        logE="results/{accession}/02_{accession}_spades_isolate_se_err.log",
+        logO="logs/spades_isolate_se/{accession}.log",
+        logE="logs/spades_isolate_se/{accession}.err.log",
     benchmark:
         "results/{accession}/02_{accession}_benchmark_spades_isolate_se"
     conda:
@@ -164,8 +240,8 @@ rule megahit_pe:
         d=temp(directory("results/{accession}/{accession}_megahit")),
         f="results/{accession}/02_{accession}_megahit_contigs.fasta",
     log:
-        logO="results/{accession}/02_{accession}_megahit_pe.log",
-        logE="results/{accession}/02_{accession}_megahit_pe_err.log",
+        logO="logs/megahit_pe/{accession}.log",
+        logE="logs/megahit_pe/{accession}.err.log",
     conda:
         "envs/megahit.yaml"
     threads: 2
@@ -188,7 +264,8 @@ rule megahit_pe:
                 fi
             fi
         else
-            cp -f resources/empty.fasta "results/{wildcards.accession}/{wildcards.accession}_megahit/final.contigs.fa"
+            mkdir -p results/{wildcards.accession}/{wildcards.accession}_megahit
+            cp -f resources/empty.fasta results/{wildcards.accession}/{wildcards.accession}_megahit/final.contigs.fa
         fi
         cp results/{wildcards.accession}/{wildcards.accession}_megahit/final.contigs.fa {output.f}
         """
@@ -201,8 +278,8 @@ rule megahit_se:
         d=temp(directory("results/{accession}/{accession}_megahit")),
         f="results/{accession}/02_{accession}_megahit_contigs.fasta",
     log:
-        logO="results/{accession}/02_{accession}_megahit_se.log",
-        logE="results/{accession}/02_{accession}_megahit_se_err.log",
+        logO="logs/megahit_se/{accession}.log",
+        logE="logs/megahit_se/{accession}.err.log",
     conda:
         "envs/megahit.yaml"
     threads: 2
@@ -224,7 +301,9 @@ rule megahit_se:
                     cp -f resources/empty.fasta results/{wildcards.accession}/{wildcards.accession}_megahit/final.contigs.fa
                 fi
             fi
-        cp -f resources/empty.fasta "results/{wildcards.accession}/{wildcards.accession}_megahit/final.contigs.fa"
+        else
+            mkdir -p results/{wildcards.accession}/{wildcards.accession}_megahit
+            cp -f resources/empty.fasta "results/{wildcards.accession}/{wildcards.accession}_megahit/final.contigs.fa"
         fi
         cp results/{wildcards.accession}/{wildcards.accession}_megahit/final.contigs.fa {output.f}
         """
@@ -238,8 +317,8 @@ rule unique_contigs:
         comb="results/{accession}/03_{accession}_contigs_combined.fasta",
         out="results/{accession}/03_{accession}_contigs_unique.fasta",
     log:
-        logO="results/{accession}/03_{accession}_contigs_unique.log",
-        logE="results/{accession}/03_{accession}_contigs_unique_err.log",
+        logO="logs/unique_contigs/{accession}.log",
+        logE="logs/unique_contigs/{accession}.err.log",
     conda:
         "envs/biopython.yaml"
     threads: 1
@@ -257,8 +336,8 @@ rule filter_contigs:
         add_accession="results/{accession}/04_{accession}_contigs_add_accession.fasta",
         filtered="results/{accession}/04_{accession}_contigs_filtered.fasta",
     log:
-        logO="results/{accession}/04_{accession}_contigs_filter.log",
-        logE="results/{accession}/04_{accession}_contigs_filter_err.log",
+        logO="logs/filter_contigs/{accession}.log",
+        logE="logs/filter_contigs/{accession}.err.log",
     conda:
         "envs/biopython.yaml"
     threads: 1
@@ -275,8 +354,8 @@ rule diamond_tpdb2:
     output:
         "results/{accession}/05_{accession}_diamond_tpdb2.daa",
     log:
-        logO="results/{accession}/05_{accession}_diamond_tpdb2.log",
-        logE="results/{accession}/05_{accession}_diamond_tpdb2_err.log",
+        logO="logs/diamond_tpdb2/{accession}.log",
+        logE="logs/diamond_tpdb2/{accession}.err.log",
     benchmark:
         "results/{accession}/05_{accession}_benchmark_diamond_tpdb2.txt"
     conda:
@@ -301,8 +380,8 @@ rule diamond_nr:
         selected="results/{accession}/06_{accession}_diamond_tpdb2_selected.fasta",
         out="results/{accession}/06_{accession}_diamond_nr.daa",
     log:
-        logO="results/{accession}/06_{accession}_diamond_nr.log",
-        logE="results/{accession}/06_{accession}_diamond_nr_err.log",
+        logO="logs/diamond_nr/{accession}.log",
+        logE="logs/diamond_nr/{accession}.err.log",
     benchmark:
         "results/{accession}/06_{accession}_benchmark_diamond_nr.txt"
     conda:
@@ -326,8 +405,8 @@ rule meganizer:
     output:
         "results/{accession}/07_{accession}_meganizer_tpdb2.daa",
     log:
-        logO="results/{accession}/07_{accession}_meganizer_tpdb2.log",
-        logE="results/{accession}/07_{accession}_meganizer_tpdb2_err.log",
+        logO="logs/meganizer/{accession}.log",
+        logE="logs/meganizer/{accession}.err.log",
     benchmark:
         "results/{accession}/07_{accession}_benchmark_meganizer_tpdb2.txt"
     conda:
@@ -349,8 +428,8 @@ rule megan_cli_export:
         taxon="results/{accession}/08_{accession}_meganizer_tpdb2_read_classification.tsv",
         class_count="results/{accession}/08_{accession}_meganizer_tpdb2_class_count.tsv",
     log:
-        logO="results/{accession}/08_{accession}_megan_export.log",
-        logE="results/{accession}/08_{accession}_megan_export_err.log",
+        logO="logs/megan_cli_export/{accession}.log",
+        logE="logs/megan_cli_export/{accession}.err.log",
     conda:
         "envs/diamond-megan.yaml"
     shell:
@@ -368,8 +447,8 @@ rule megan6_concat:
     output:
         "results/{accession}/09_{accession}_megan6_results.csv",
     log:
-        logO="results/{accession}/09_{accession}_megan6_concat.log",
-        logE="results/{accession}/09_{accession}_megan6_concat_err.log",
+        logO="logs/megan6_concat/{accession}.log",
+        logE="logs/megan6_concat/{accession}.err.log",
     conda:
         "envs/biopython.yaml"
     shell:
@@ -380,6 +459,3 @@ rule megan6_concat:
             cp {input.tsv} {output}
         fi
         """
-
-
-# python combine_results.py `ls results/*/*_megan6_results.csv` results/megan6_results_combined.csv
