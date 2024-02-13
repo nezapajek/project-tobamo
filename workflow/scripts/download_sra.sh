@@ -1,6 +1,8 @@
 #!/bin/bash
 source /etc/profile.d/sra-tools.sh
 
+file="../../config/samples.tsv"
+
 if [ ! -d "resources/SRA" ]; then
     mkdir -p "resources/SRA"
 else
@@ -58,7 +60,7 @@ while read -r s; do
         fi
         touch ${s}.downloaded
     fi
-done < ../SRA.txt
+done < <(tail -n +2 "$file") 
 
 echo "done"
 cd ../..
