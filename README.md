@@ -20,3 +20,5 @@ If you use this workflow in a paper, don't forget to give credits to the authors
 3. Search for similarity against all tobamoviral protein sequences with [Diamond](https://bio.tools/diamond) blastx
 4. Search for similarity against non-redundant (NR) protein database with [Diamond](https://bio.tools/diamond) blastx
 5. Assigning taxonomy with [Megan6](https://www.computomics.com/services/megan6.html)
+
+[![Code style: snakefmt](https://img.shields.io/badge/code%20style-snakefmt-000000.svg)](https://github.com/snakemake/snakefmt)
