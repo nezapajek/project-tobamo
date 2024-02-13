@@ -1,3 +1,1 @@
-SRRs: 
-  - "ERR3687348"
-  - "SRR4830146"
+samples: config/samples.tsv
