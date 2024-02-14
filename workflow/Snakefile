@@ -10,7 +10,6 @@
 
 import os
 import pandas as pd
-from snakemake.utils import validate
 
 os.system("workflow/scripts/download_sra.sh")
 
