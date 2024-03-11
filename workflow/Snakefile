@@ -46,7 +46,7 @@ rule all:
 
 
 ##### Modules #####
-DEBUG = True
+DEBUG = False
 
 if DEBUG:
 
