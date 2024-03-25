@@ -5,4 +5,4 @@ logs/**
 .snakemake/**
 fasterq.tmp.tobamo.3188488
 Snakefile_Old
-err_logs_2024_03_11.txt
+temp_dev/**
