@@ -7,11 +7,7 @@
 # snakemake -n already starts the download
 # snakemake --use-conda -c40 -k -p
 
-
-import os
 import pandas as pd
-
-os.system("workflow/scripts/download_sra.sh")
 
 
 configfile: "config/config.yaml"
