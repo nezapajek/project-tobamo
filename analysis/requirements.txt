@@ -1,0 +1,5 @@
+# getorf (EMBOSS:6.5.7.0)
+# palmscan 
+    # see Dockerfile
+    # build docker (gcc:7.2)
+    docker build -t palmscan .
