@@ -73,6 +73,7 @@ rule megahit_pe:
     input:
         r1="results/{accession}/01_{accession}_trim_1_paired.fq.gz",
         r2="results/{accession}/01_{accession}_trim_2_paired.fq.gz",
+        f="results/{accession}/02_{accession}_spades_isolate_contigs.fasta",
     output:
         d=temp(directory("results/{accession}/{accession}_megahit")),
         f="results/{accession}/02_{accession}_megahit_contigs.fasta",
@@ -81,7 +82,7 @@ rule megahit_pe:
         logE="logs/megahit_pe/{accession}.err.log",
     conda:
         "../envs/megahit.yaml"
-    threads: 2
+    threads: 6
     shell:
         """
         rm -Rf {output.d}
@@ -111,6 +112,7 @@ rule megahit_pe:
 rule megahit_se:
     input:
         r="results/{accession}/01_{accession}_trim_single.fq.gz",
+        f="results/{accession}/02_{accession}_spades_isolate_contigs.fasta",
     output:
         d=temp(directory("results/{accession}/{accession}_megahit")),
         f="results/{accession}/02_{accession}_megahit_contigs.fasta",
@@ -119,7 +121,7 @@ rule megahit_se:
         logE="logs/megahit_se/{accession}.err.log",
     conda:
         "../envs/megahit.yaml"
-    threads: 2
+    threads: 6
     shell:
         """
         rm -Rf {output.d}
