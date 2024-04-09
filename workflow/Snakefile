@@ -6,6 +6,7 @@
 # conda activate tobamo-snakemake
 # snakemake -n already starts the download
 # snakemake --use-conda -c40 -k -p
+# time snakemake --use-conda -c 32 -p -k > output_29-3-2024.txt 2>&1
 
 import pandas as pd
 
@@ -18,10 +19,6 @@ samples = pd.read_table(config["samples"])
 
 wildcard_constraints:
     accession="ERR\d+|SRR\d+|DRR\d+",
-
-
-ruleorder: spades_isolate_se > megahit_se
-ruleorder: spades_isolate_pe > megahit_pe
 
 
 ##### Target rules #####
