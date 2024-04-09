@@ -6,3 +6,4 @@ logs/**
 fasterq.tmp.tobamo.3188488
 Snakefile_Old
 temp_dev/**
+output*.txt
