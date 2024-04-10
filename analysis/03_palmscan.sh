@@ -1,2 +1,0 @@
-#!/bin/bash
-docker run -it --rm -v "$PWD":/usr/src/palmscan/data -w /usr/src/palmscan/data palmscan -search_pssms analysis_results/getorf_output.fasta -tsv analysis_results/palmscan_hits.tsv -report_pssms analysis_results/palmscan_report -fasta analysis_results/palmscan_pp.fa
