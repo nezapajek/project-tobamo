@@ -1,60 +1,56 @@
 import sys
 import pandas as pd
 import re
-from Bio.SeqIO.FastaIO import SimpleFastaParser
+from Bio import SeqIO
 
 # python megan6_concat.py {input.csv} {input.fasta} {input.info_out} {output}
 
-csv = sys.argv[1]
+megan = sys.argv[1]
 fasta_file = sys.argv[2]
-diamond_info = sys.argv[3]
-results = sys.argv[4]
+diamond_info_tpdb2 = sys.argv[3]
+diamond_info_nr = sys.argv[4]
+results = sys.argv[5]
 
 
-# define function read_fasta
-def read_fasta(file_path, columns):
-    with open(file_path) as fasta_file:
-        records = []
-        for title, sequence in SimpleFastaParser(fasta_file):
-            record = []
-            record.append(title)
-            record.append(sequence)
-            records.append(record)
-    return pd.DataFrame(records, columns=columns)
+def fasta_to_dataframe(fasta_file):
+    records = SeqIO.parse(fasta_file, "fasta")
+    data = [(record.id, str(record.seq)) for record in records]
+    return pd.DataFrame(data, columns=["qseqid", "sequence"])
 
 
-# read csvs
-raw = pd.read_csv(csv, sep="\t", names=["qseqid", "taxonomy"])
-raw_fasta = read_fasta(fasta_file, ["qseqid", "seq"])
-df_info = pd.read_csv(
-    diamond_info,
-    sep="\t",
-    names=[
-        "qseqid",
-        "sseqid",
-        "pident",
-        "length",
-        "mismatch",
-        "gapopen",
-        "qstart",
-        "qend",
-        "sstart",
-        "send",
-        "evalue",
-        "bitscore",
-    ],
-)
+megan_df = pd.read_csv(megan, sep="\t", names=["qseqid", "megan_tax"])
+fasta_df = fasta_to_dataframe(fasta_file)
 
-# extract SRR
-cols = ["SRR"]
-contig_split = pd.DataFrame([re.findall("_([A-Za-z0-9]+)$", s) for s in raw.qseqid], columns=cols)
+# Define column names
+columns = [
+    "qseqid",
+    "sseqid",
+    "pident",
+    "length",
+    "mismatch",
+    "gapopen",
+    "qstart",
+    "qend",
+    "sstart",
+    "send",
+    "evalue",
+    "bitscore",
+]
 
-# mega merge
-df = pd.merge(pd.merge(pd.concat([raw, contig_split], axis=1), df_info, on="qseqid"), raw_fasta, on="qseqid")
+tpdb2_df = pd.read_csv(diamond_info_tpdb2, sep="\t", header=None, names=columns)
+nr_df = pd.read_csv(diamond_info_nr, sep="\t", header=None, names=columns)
+
+tpdb2_df.columns = ["tpdb2_" + col if col != "qseqid" else col for col in tpdb2_df.columns]
+nr_df.columns = ["nr_" + col if col != "qseqid" else col for col in nr_df.columns]
+diamond = pd.concat([nr_df, tpdb2_df])
+
+merged_df = pd.merge(megan_df, diamond, on="qseqid", how="inner").merge(fasta_df, on="qseqid", how="inner")
+
+merged_df["SRR"] = merged_df["qseqid"].str.extract(r"_([A-Za-z0-9]+)$")
 
 # save csv
-if not df.empty:
-    df.to_csv(results, index=False)
+if not merged_df.empty:
+    merged_df.to_csv(results)
 else:
     with open(results, "wt") as fout:
         pass

@@ -47,3 +47,20 @@ rule diamond_nr:
             cp -f {input.d} {output.out}
         fi
         """
+
+
+rule diamond_nr_get_info:
+    input:
+        "results/{accession}/06_{accession}_diamond_nr.daa",
+    output:
+        "results/{accession}/06_{accession}_diamond_nr_info.tsv",
+    log:
+        logO="logs/diamond_nr/{accession}_info.log",
+        logE="logs/diamond_nr/{accession}_info.err.log",
+    conda:
+        "../envs/diamond-megan.yaml"
+    threads: 2
+    shell:
+        """
+        diamond view --daa {input} --outfmt 6 > {output}
+        """

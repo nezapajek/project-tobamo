@@ -40,9 +40,10 @@ rule megan_cli_export:
 
 rule megan6_concat:
     input:
-        tsv="results/{accession}/08_{accession}_meganizer_tpdb2_read_classification.tsv",
+        megan="results/{accession}/08_{accession}_meganizer_tpdb2_read_classification.tsv",
         fasta="results/{accession}/06_{accession}_diamond_tpdb2_selected.fasta",
-        info="results/{accession}/06_{accession}_diamond_info.tsv",
+        info_tpdb2="results/{accession}/06_{accession}_diamond_info.tsv",
+        info_nr="results/{accession}/06_{accession}_diamond_nr_info.tsv",
     output:
         "results/{accession}/09_{accession}_megan6_results.csv",
     log:
@@ -52,9 +53,5 @@ rule megan6_concat:
         "../envs/biopython.yaml"
     shell:
         """
-        if [ -s {input.tsv} ] && [ -s {input.fasta} ] && [ -s {input.info} ]; then
-            python workflow/scripts/megan6_concat.py {input.tsv} {input.fasta} {input.info} {output} > {log.logO} 2> {log.logE}
-        else
-            cp {input.tsv} {output}
-        fi
+        python workflow/scripts/megan6_concat.py {input.megan} {input.fasta} {input.info_tpdb2} {input.info_nr} {output} > {log.logO} 2> {log.logE}
         """

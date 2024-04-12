@@ -4,5 +4,5 @@ channels:
   - bioconda
 dependencies:
   - python=3.9.0
-  - biopython=1.81
+  - biopython=1.83
   - pandas=2.1.1

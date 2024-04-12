@@ -7,6 +7,7 @@
 # snakemake -n already starts the download
 # snakemake --use-conda -c40 -k -p
 # time snakemake --use-conda -c 32 -p -k > output_29-3-2024.txt 2>&1
+# time snakemake --use-conda --rerun-trigger mtime -c40
 
 import pandas as pd
 
