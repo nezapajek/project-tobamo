@@ -1,0 +1,2 @@
+#!/bin/bash
+getorf /home/tobamo/analize/project-tobamo/analysis/palmscan/analysis_data/test_contigs_2024-04-09.fasta results/getorf_output_find1_min_360_max_3510.fasta -table 0 -find 1 -minsize 360 -maxsize 3510

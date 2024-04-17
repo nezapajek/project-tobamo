@@ -1,0 +1,2 @@
+#!/bin/bash
+getorf /home/tobamo/analize/project-tobamo/analysis/whole_orf/data/refs_tobamo_nt/tobamo_sequences.fasta results/getorf_output_find1_min_360_max_3510_reference_tobamo.fasta -table 0 -find 1 -minsize 360 -maxsize 3510
