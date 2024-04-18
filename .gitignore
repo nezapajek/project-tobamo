@@ -10,4 +10,6 @@ output*.txt
 analysis/whole_orf/data/**
 analysis/whole_orf/results/**
 *.svg
-*fasta
+*.fasta
+*.json
+*.xlsx
