@@ -7,3 +7,7 @@ fasterq.tmp.tobamo.3188488
 Snakefile_Old
 temp_dev/**
 output*.txt
+analysis/whole_orf/data/**
+analysis/whole_orf/results/**
+*.svg
+*fasta
