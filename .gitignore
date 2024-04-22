@@ -13,3 +13,4 @@ analysis/whole_orf/results/**
 *.fasta
 *.json
 *.xlsx
+*.pyc
