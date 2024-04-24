@@ -9,6 +9,25 @@ from Bio.SeqRecord import SeqRecord
 from Bio.Seq import Seq
 
 
+def parse_getorf_fasta_to_df(fasta_file):
+    sequences = []
+    for record in SeqIO.parse(fasta_file, "fasta"):
+        sequences.append((record.id, str(record.seq)))
+
+    df = pd.DataFrame(sequences, columns=["orf_name", "seq"])
+
+    def remove_last_number(s):
+        return re.sub(r"_(\d+)$", "", s)
+
+    df["contig"] = df["orf_name"].apply(lambda x: remove_last_number(x))
+    df["SRR"] = df["contig"].str.extract(r"_([A-Za-z0-9]+)$")
+    df["seq_len"] = df["seq"].apply(len)
+
+    columns = ["SRR", "contig", "orf_name", "seq", "seq_len"]
+    df = df[columns]
+    return df
+
+
 def parse_fasta(file_path):
     return SeqIO.to_dict(SeqIO.parse(file_path, "fasta"))
 

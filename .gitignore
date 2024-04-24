@@ -9,6 +9,8 @@ temp_dev/**
 output*.txt
 analysis/whole_orf/data/**
 analysis/whole_orf/results/**
+analysis/whole_orf/*.csv
+analysis/results_add_nr_taxa/*.csv
 *.svg
 *.fasta
 *.json
