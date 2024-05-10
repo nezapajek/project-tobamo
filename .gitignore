@@ -16,3 +16,7 @@ analysis/results_add_nr_taxa/*.csv
 *.json
 *.xlsx
 *.pyc
+analysis/palmscan/analysis_data
+analysis/palmscan/analysis_results
+*.bed
+*.log
