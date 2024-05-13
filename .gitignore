@@ -20,3 +20,4 @@ analysis/palmscan/analysis_data
 analysis/palmscan/analysis_results
 *.bed
 *.log
+analysis/fragmented_orf/results/**
