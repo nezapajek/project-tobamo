@@ -21,3 +21,5 @@ analysis/palmscan/analysis_results
 *.bed
 *.log
 analysis/fragmented_orf/results/**
+*.png
+*.gif
