@@ -23,3 +23,4 @@ analysis/palmscan/analysis_results
 analysis/fragmented_orf/results/**
 *.png
 *.gif
+analysis/fragmented_orf/orf1_fragmented_predict_df.csv
