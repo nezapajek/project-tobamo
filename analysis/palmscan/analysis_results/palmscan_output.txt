@@ -1,7 +1,0 @@
-
-palmscan2 v2.0.i86linux64
-(C) Copyright 2022 Robert C. Edgar
-
-[search_pssms analysis_results/getorf_output.fasta]
-00:00 5.1Mb CPU has 40 cores, defaulting to 10 threads
-00:00  39Mb    0.1% Searching00:01 718Mb  100.0% Searching 221/5401 hits (4.1%)
