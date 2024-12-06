@@ -1,4 +1,4 @@
-from utils_v10 import *
+from utils import *
 
 outdir = sys.argv[1]
 subsampling_n = int(sys.argv[2])

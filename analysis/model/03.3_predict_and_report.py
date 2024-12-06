@@ -1,4 +1,4 @@
-from utils_v10 import *
+from utils import *
 
 input = sys.argv[1]
 outdir = sys.argv[2]
