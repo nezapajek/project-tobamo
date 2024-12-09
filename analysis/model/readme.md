@@ -48,9 +48,10 @@ The workflow is divided into two main parts:
 
 This process involves several steps. Each step corresponds to a specific script that performs part of the pipeline.
 
-#### **Step 1: Simulating Sequencing and Assembly for Training Data****
+#### **Step 1: Simulating Sequencing and Assembly for Training Data**
 
 This step fragments reference genomes to generate contigs with realistic lengths, ensuring that the training data resembles actual sequencing data.
+
 **Command**
 ```bash
 python 00_sample_refs.py <path/to/reference.fasta> <out_dir_name> <sampling_num> <subsampling_num> 
@@ -63,3 +64,17 @@ python 00_sample_refs.py <path/to/reference.fasta> <out_dir_name> <sampling_num>
 | `<sampling_num>`        | Total number of samples to generate.                      |
 | `<subsampling_num>`     | Number of subsamples per reference sequence.              |
 
+#### **Step 2:  Finding ORFs and Pairwise Alignment**
+
+This step identifies **Open Reading Frames (ORFs)** in contigs and performs **pairwise alignment** with reference proteins. It uses **Orfipy**  and **biopython Bio.Seq.Seq.translate** method to detect ORFs and **MAFFT** to perform pairwise alignments against known reference sequences, such as RdRp ORF1, RdRp ORF2, and Coat Protein from species within the family *Virgaviridae*.
+
+**Command**
+```bash
+python 01_getorfs_pairwise_aln.py <path/to/contig.fasta> <out_dir_name> <contig_orientation>
+```
+**Arguments**
+| Argument                  | Description                                                     |
+|---------------------------|-----------------------------------------------------------------|
+| `<path/to/contig.fasta>`   | Path to the contig FASTA file to be processed.                  |
+| `<out_dir_name>`           | Directory where the output files will be saved.                 |
+| `<contig_orientation>`     | Orientation of the contigs (e.g., forward, reverse, or unknown).|
