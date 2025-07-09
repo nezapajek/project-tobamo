@@ -19,3 +19,7 @@ output*.txt
 *.csv
 archive/**
 training/**
+analysis/model/archive/**
+analysis/data/**
+analysis_conda-requirements.txt
+analysis_requirements.txt
