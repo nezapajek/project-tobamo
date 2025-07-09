@@ -22,17 +22,10 @@ Run the following commands to set up the environment:
 
 ```bash
 # Create and activate the environment
-conda create --name <env_name> python=3.10
-conda activate <env_name>
-
-# Install Python dependencies
-pip install -r requirements.txt
-
-# Install bioinformatics tools
-conda install bioconda::orfipy 
-conda install -c bioconda mafft=7.520
+conda env create -f analysis_environment.yml
+conda activate tobamo-model
 ```
-Note: Replace <env_name> with the name of your Conda environment.
+Note: You can rename environment in analysis_environment.yml file.
 
 ---
 
@@ -48,7 +41,13 @@ The workflow is divided into two main parts:
 
 This process involves several steps. Each step corresponds to a specific script that performs part of the pipeline.
 
-#### **Step 1: Simulating Sequencing and Assembly for Training Data**
+#### **Step 1: Fitting the curve on Snakemake output data for weighted random sampling**
+
+First we take a look inside the Snakemake pipeline output. This part demands some manual checkup and needs to be tailored for each study. In our case, we removed contigs that had hits on *cellular organisms* and contigs from *SRR6846476*, after consulting domain scientists. We then fitted a curve on contig length distribution of the selected contigs, which we'll later use for random weighted sampling of reference genomes, to generate training data.
+
+Example implementation is available in [`00_fit_distribution_curve.ipynb`](./00_fit_distribution_curve.ipynb).
+
+#### **Step 2: Simulating Sequencing and Assembly for Training Data**
 
 This step fragments reference genomes to generate contigs with realistic lengths, ensuring that the training data resembles actual sequencing data.
 
@@ -64,7 +63,7 @@ python 00_sample_refs.py <path/to/reference.fasta> <out_dir_name> <sampling_num>
 | `<sampling_num>`        | Total number of samples to generate.                      |
 | `<subsampling_num>`     | Number of subsamples per reference sequence.              |
 
-#### **Step 2:  Finding ORFs and Pairwise Alignment**
+#### **Step 3:  Finding ORFs and Pairwise Alignment**
 
 This step identifies **Open Reading Frames (ORFs)** in contigs and performs **pairwise alignment** with reference proteins. It uses **Orfipy**  and **biopython Bio.Seq.Seq.translate** method to detect ORFs and **MAFFT** to perform pairwise alignments against known reference sequences, such as RdRp ORF1, RdRp ORF2, and Coat Protein from species within the family *Virgaviridae*.
 
