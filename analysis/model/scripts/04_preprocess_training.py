@@ -41,4 +41,3 @@ input_df = add_info_to_training_input_df(basic, orf_fasta_path, inv_nt_virusname
 # save
 print("Saving")
 input_df.to_csv(f"results/{output_dir}/training_input.csv", index=False)
-removed_refs.to_csv(f"results/{output_dir}/removed_refs.csv", index=False)

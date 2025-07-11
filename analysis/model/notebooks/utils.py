@@ -4,9 +4,9 @@ import sys
 import tempfile
 from collections import defaultdict
 from concurrent.futures import ProcessPoolExecutor
+from datetime import datetime
 from glob import glob
 from itertools import product
-from datetime import datetime
 
 import matplotlib.pyplot as plt
 import mpu
@@ -18,36 +18,22 @@ from Bio.Align import AlignInfo, MultipleSeqAlignment
 from Bio.Seq import Seq
 from Bio.SeqRecord import SeqRecord
 from joblib import dump, load
+from scipy.optimize import curve_fit
 from sklearn.calibration import calibration_curve
 from sklearn.cluster import KMeans
 from sklearn.discriminant_analysis import StandardScaler
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.linear_model import LinearRegression, LogisticRegression
-from sklearn.metrics import (
-    ConfusionMatrixDisplay,
-    accuracy_score,
-    adjusted_rand_score,
-    auc,
-    classification_report,
-    confusion_matrix,
-    f1_score,
-    make_scorer,
-    mean_squared_error,
-    precision_recall_curve,
-    precision_score,
-    recall_score,
-    roc_auc_score,
-    roc_curve,
-)
-from sklearn.model_selection import (
-    GridSearchCV,
-    LeaveOneOut,
-    ParameterGrid,
-    StratifiedKFold,
-    TunedThresholdClassifierCV,
-    cross_val_predict,
-    train_test_split,
-)
+from sklearn.metrics import (ConfusionMatrixDisplay, accuracy_score,
+                             adjusted_rand_score, auc, classification_report,
+                             confusion_matrix, f1_score, make_scorer,
+                             mean_squared_error, precision_recall_curve,
+                             precision_score, recall_score, roc_auc_score,
+                             roc_curve)
+from sklearn.model_selection import (GridSearchCV, LeaveOneOut, ParameterGrid,
+                                     StratifiedKFold,
+                                     TunedThresholdClassifierCV,
+                                     cross_val_predict, train_test_split)
 from sklearn.naive_bayes import GaussianNB
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.preprocessing import LabelEncoder, StandardScaler
