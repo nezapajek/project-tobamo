@@ -114,25 +114,74 @@ python 04_preprocess_training.py <path/to/reference_database.xlsx> <path/to/samp
 - `results/<output_dir>/training_input.csv` - Final training dataset
 
 
-#### **Step 5A :  Model selection and hyperparameter tuning
+#### **Step 5: Model Training and Evaluation**
 
-This step evaluates multiple classification models to identify the best-performing one for distinguishing "tobamo" ORFs based on genomic features. It uses stratified k-fold cross-validation, subsampled contigs, and standard classification metrics.
+This step performs model selection, cross-validation evaluation, and final model training. It uses the processed training data to create a Random Forest model for ORF classification and a Logistic Regression model for contig-level prediction.
 
 **Command**
 ```bash
-python scripts/04A_model_selection.py <path/to/input_data.csv> <path/to/references.xlsx> <path/to/contigs.fasta>
+python scripts/train_model_pipeline.py <path/to/training_input.csv> <path/to/references.xlsx> <path/to/contigs.fasta> --stage <stage> [options]
 ```
 
 **Arguments**
-| Argument                  | Description                                                     |
-|---------------------------|-----------------------------------------------------------------|
-| `<path/to/input_data.csv>`   | Path to Step 3. output (training_input.csv)               |
-| `<path/to/references.xlsx>`           | Path to reference excel file                |
-| `<path/to/contigs.fasta>`     | Orientation of the contigs (e.g., forward, reverse, or unknown).|
+| Argument                           | Description                                                     |
+|------------------------------------|-----------------------------------------------------------------|
+| `<path/to/training_input.csv>`     | Path to the training input CSV from Step 4.                     |
+| `<path/to/references.xlsx>`        | Path to the Excel file containing reference protein data.       |
+| `<path/to/contigs.fasta>`          | Path to the contigs FASTA file.                                |
+| `--stage`                          | Pipeline stage to run (`select`, `evaluate`, or `final`).       |
+| `--outdir`                         | Output directory name (default: "default").                     |
+| `--iterations`                     | Number of iterations for cross-validation (default: 30).        |
+| `--sample_depth`                   | Number of contigs to sample per species (default: 30).          |
+| `--seed`                           | Random seed for reproducibility (default: 42).                  |
 
-note: if you're using custom reference file, format in the same manner or change scripts accordingly.
-note2: best performing model for our data: RandomForestClassifier
+**Pipeline Stages**
 
-#### **Step 5B : Model  
+1. **Model Selection** (`--stage select`)
+   - Performs grid search to find the best-performing model type
+   - Tests multiple models (RandomForest, LogisticRegression, SVM, etc.)
+   - Evaluates models using 5-fold cross-validation
+   - Saves performance metrics for each model
+   
+   ```bash
+   python scripts/train_model_pipeline.py training_input.csv references.xlsx contigs.fasta --stage select --outdir model_selection
+   ```
 
+2. **Cross-Validation Evaluation** (`--stage evaluate`)
+   - Performs extensive evaluation using multiple iterations of 5-fold cross-validation
+   - Compares two prediction methods:
+     - Most extreme probability approach
+     - Histogram-based approach (using logistic regression with bins=10)
+   - Generates comprehensive performance metrics
+   
+   ```bash
+   python scripts/train_model_pipeline.py training_input.csv references.xlsx contigs.fasta --stage evaluate --iterations 30 --sample_depth 30 --outdir evaluation_results
+    ```
 
+3. **Final Model Training** (`--stage final`)
+   - Trains the final production model on all training data
+   - Uses the best-performing approach (Random Forest + Logistic Regression histogram)
+   - Saves all necessary model files for deployment
+   
+   ```bash
+   python scripts/train_model_pipeline.py training_input.csv references.xlsx contigs.fasta --stage final --outdir final_model
+   ```
+
+**Output Files**
+- **Model Selection**:
+  - `results/<outdir>/performance_metrics.csv` - Performance metrics for all tested models
+  - `results/<outdir>/best_model.txt` - Information about the best-performing model
+
+- **Cross-Validation Evaluation**:
+  - `results/<outdir>/extreme_predictions_results.csv` - Results using most extreme probability method
+  - `results/<outdir>/histogram_predictions_results.csv` - Results using histogram-based approach
+  - `results/<outdir>/method_comparison.csv` - Performance comparison between methods
+  - `results/<outdir>/best_method.txt` - Information about the best-performing method
+
+- **Final Model**:
+  - `results/<outdir>/rf_model.joblib` - Trained Random Forest model
+  - `results/<outdir>/rf_scaler.joblib` - StandardScaler for feature normalization
+  - `results/<outdir>/rf_feature_names.csv` - Feature names used by the model
+  - `results/<outdir>/lr_histogram_10_model.joblib` - Trained Logistic Regression histogram model
+  - `results/<outdir>/feature_importances.csv` - All feature importances ranked
+  - `results/<outdir>/top_20_features.csv` - Top 20

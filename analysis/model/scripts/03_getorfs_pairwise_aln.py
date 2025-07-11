@@ -4,7 +4,7 @@ contigs = sys.argv[1]
 outdir = sys.argv[2]
 orientation = sys.argv[3]
 
-aa_refs = "data/all_proteins.fasta"
+aa_refs = "../data/tobamo/all_proteins.fasta"
 
 # Check if the contigs file is a FASTA file
 if not contigs.endswith((".fasta", ".fa", ".fna")):
