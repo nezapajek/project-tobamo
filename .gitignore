@@ -24,3 +24,4 @@ analysis/data/**
 analysis_conda-requirements.txt
 analysis_requirements.txt
 analysis/model/results/**
+analysis/model/scripts/archive/**
