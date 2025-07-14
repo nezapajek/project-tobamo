@@ -1,4 +1,4 @@
-# **Tobamovirus Contig Classification with Random Forest**
+# *Tobamovirus Contig Classification with Random Forest and Logistic Regression*
 
 This repository provides Python scripts for training and using a **Random Forest Classifier** and **Logistic Regression** to predict **Tobamoviral sequences**. The workflow includes simulating training data, training the model, and using it to classify query contigs. The process ensures a realistic approach to handling sequencing data and contig assembly.
 
@@ -15,7 +15,7 @@ This repository provides Python scripts for training and using a **Random Forest
 
 ---
 
-## **1. Installation**
+# **1. Installation**
 Before running the scripts, you need to set up the environment and install the required tools. We recommend using **Conda** to manage dependencies.  
 
 Run the following commands to set up the environment:  
@@ -29,7 +29,7 @@ Note: You can rename environment in analysis_environment.yml file.
 
 ---
 
-## **2. Workflow Steps**
+# **2. Workflow Steps**
 
 The workflow is divided into two main parts:
   - **A. Training the Model**
@@ -37,17 +37,17 @@ The workflow is divided into two main parts:
 
 ---
 
-### **A. Training the Model**
+## **A. Training the Model**
 
 This process involves several steps. Each step corresponds to a specific script that performs part of the pipeline.
 
-#### **Step 1: Fitting the curve on Snakemake output data for weighted random sampling**
+### **Step 1: Fitting the curve on Snakemake output data for weighted random sampling**
 
 First we take a look inside the Snakemake pipeline output. This part demands some manual checkup and needs to be tailored for each study. In our case, we removed contigs that had hits on *cellular organisms* and contigs from *SRR6846476*, after consulting domain scientists. We then fitted a curve on contig length distribution of the selected contigs, which we'll later use for random weighted sampling of reference genomes, to generate training data.
 
 Example implementation is available in [`notebooks/01_fit_distribution_curve.ipynb`](notebooks/00_fit_distribution_curve.ipynb).
 
-#### **Step 2: Simulating Sequencing and Assembly for Training Data**
+### **Step 2: Simulating Sequencing and Assembly for Training Data**
 
 This step fragments reference genomes to generate contigs with realistic lengths, ensuring that the training data resembles actual sequencing data.
 
@@ -64,7 +64,7 @@ python scripts/02_sample_refs.py <path/to/reference.fasta> <out_dir_name> <sampl
 | `<subsampling_num>`     | Number of subsamples per reference sequence.              |
 | `<path/to/lens_freq.json>`| Path to the lens_freq.json (Step 1 output)              |
 
-#### **Step 3:  Finding ORFs and Pairwise Alignment**
+### **Step 3:  Finding ORFs and Pairwise Alignment**
 
 This step identifies **Open Reading Frames (ORFs)** in contigs and performs **pairwise alignment** with reference proteins. It uses **Orfipy**  and **biopython Bio.Seq.Seq.translate** method to detect ORFs and **MAFFT** to perform pairwise alignments against known reference sequences, such as RdRp ORF1, RdRp ORF2, and Coat Protein from species within the family *Virgaviridae*. 
 
@@ -82,7 +82,7 @@ python 03_getorfs_pairwise_aln.py <path/to/contig.fasta> <out_dir_name> <contig_
 note: if you want to use different reference proteins, change "data/all_proteins.fasta" or change path aa_refs in script.
 
 
-#### **Step 4: Data Processing and Training Input Generation**
+### **Step 4: Data Processing and Training Input Generation**
 
 This step processes reference data and pairwise alignment results to create a training input dataset. It performs data filtering, aggregation, and enrichment with additional sequence information to prepare the final training dataset.
 
@@ -114,7 +114,7 @@ python 04_preprocess_training.py <path/to/reference_database.xlsx> <path/to/samp
 - `results/<output_dir>/training_input.csv` - Final training dataset
 
 
-#### **Step 5: Model Training and Evaluation**
+### **Step 5: Model Training and Evaluation**
 
 This step performs model selection, cross-validation evaluation, and final model training. It uses the processed training data to create a Random Forest model for ORF classification and a Logistic Regression model for contig-level prediction.
 
@@ -185,3 +185,51 @@ python scripts/train_model_pipeline.py <path/to/training_input.csv> <path/to/ref
   - `results/<outdir>/lr_histogram_10_model.joblib` - Trained Logistic Regression histogram model
   - `results/<outdir>/feature_importances.csv` - All feature importances ranked
   - `results/<outdir>/top_20_features.csv` - Top 20
+
+  ## **B. Using the Model for Classification**
+
+Once the model has been trained and finalized, you can use it to classify new query contigs.
+
+Step 1: Preprocessing Query Contigs
+
+You must process query contigs through ORF detection, pairwise alignment, and training input preparation. These steps replicate parts of the training pipeline.
+
+1.1: ORF Detection and Pairwise Alignment
+
+```bash
+# 1. ORF detection and alignment
+python scripts/03_getorfs_pairwise_aln.py ../data/contigs/contigs_all_deduplicated.fasta <out_dir_name> <contig_orientation>
+
+# 2. Generate processed input for prediction
+python scripts/04_preprocess_training.py <path/to/reference_database.xlsx> ../data/contigs/contigs_all_deduplicated.fasta <path/to/orf.fasta> <path/to/pairwise_aln.csv> <output_dir>
+```
+
+Step 2: Predicting Tobamovirus Contigs
+
+Once you have the processed input features and the trained models, run the prediction script:
+
+```bash
+python scripts/07_predict_query_contigs.py results/query_processed/training_input.csv results/final_model/ --outdir predictions
+```
+
+**Arguments**
+| Argument                     | Description                                                                 |
+|------------------------------|-----------------------------------------------------------------------------|
+| `<model_input_df.csv>`       | Processed input CSV (same format as training input).                        |
+| `<rf_model.joblib>`          | Path to the trained Random Forest model.                                   |
+| `<rf_scaler.joblib>`         | Path to the scaler used during training (for feature normalization).       |
+| `<lr_hist_model.joblib>`     | Path to the trained Logistic Regression histogram model.                   |
+| `<feature_names.csv>`        | CSV containing the ordered list of feature names used by the model.        |
+| `<outdir>`                   | Name of the output directory for prediction results (inside `results/`).   |
+
+---
+
+### **Output Files**
+After running the script, the following files will be saved in `results/<outdir>/`:
+
+| Filename                                 | Description                                                  |
+|------------------------------------------|--------------------------------------------------------------|
+| `contig_predictions_all.csv`            | ORF-level predictions with probability scores.               |
+| `contig_predictions.csv`                | Final contig-level predictions with class and probability.   |
+
+---
