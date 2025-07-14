@@ -50,8 +50,13 @@ def model_selection(input_df, refs, contigs, outdir="model_selection", random_se
     # Define the models and their parameter grids
     models = {
         "LogisticRegression": {
-            "model": LogisticRegression(max_iter=1000),
-            "params": {"C": [0.1, 1, 10], "solver": ["liblinear", "lbfgs", "saga"]},
+            "model": LogisticRegression(max_iter=10000),
+            "params": {
+                "C": [0.01, 0.1, 1, 10],
+                "solver": ["liblinear", "saga"],
+                "penalty": ["l1", "l2"],
+                "class_weight": ["balanced", None],
+            },
         },
         "RandomForest": {
             "model": RandomForestClassifier(),
@@ -240,11 +245,11 @@ def train_and_evaluate(input_df, refs, contigs, outdir="cv_evaluation", iteratio
         # Calculate metrics
         metrics = {
             "method": method_name,
-            "accuracy": accuracy_score(results_df["true_class"], results_df["predicted_class"]),
-            "f1": f1_score(results_df["true_class"], results_df["predicted_class"]),
-            "precision": precision_score(results_df["true_class"], results_df["predicted_class"]),
-            "recall": recall_score(results_df["true_class"], results_df["predicted_class"]),
-            "auc": roc_auc_score(results_df["true_class"], results_df["prob_1"]),
+            "accuracy": accuracy_score(results_df["ground_truth"], results_df["predicted_class"]),
+            "f1": f1_score(results_df["ground_truth"], results_df["predicted_class"]),
+            "precision": precision_score(results_df["ground_truth"], results_df["predicted_class"]),
+            "recall": recall_score(results_df["ground_truth"], results_df["predicted_class"]),
+            "auc": roc_auc_score(results_df["ground_truth"], results_df["prob_1"]),
         }
         summary_metrics.append(metrics)
 
