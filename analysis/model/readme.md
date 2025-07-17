@@ -88,30 +88,31 @@ This step processes reference data and pairwise alignment results to create a tr
 
 **Command**
 ```bash
-python preprocess.py <path/to/reference_database.xlsx> <path/to/sampled_contigs.fasta> <path/to/orf.fasta> <path/to/pairwise_aln.csv> <output_dir> --train --contigs
+python scripts/preprocess.py <path/to/reference_database.xlsx> <path/to/orf.fasta> <path/to/pairwise_aln.csv> <output_dir> --train --contigs <path/to/sampled_contigs.fasta>
 ```
 
 **Arguments**
 | Argument                           | Description                                                     |
 |------------------------------------|-----------------------------------------------------------------|
 | `<path/to/reference_database.xlsx>`| Path to the Excel file containing reference protein data.       |
-| `<path/to/sampled_contigs.fasta>`  | Path to the sampled contigs FASTA file.                        |
 | `<path/to/orf.fasta>`              | Path to the ORF FASTA file from previous step.                 |
 | `<path/to/pairwise_aln.csv>`       | Path to the CSV file containing pairwise alignment results.     |
 | `<output_dir>`                     | Directory name where output files will be saved in results/.    |
+| `--train`                          | Flag to specify processing for training data.                  |
+| `--contigs`                        | Path to the contigs FASTA file (required for training).        |
 
 **Processing Steps**
 1. **File Validation**: Checks that all input files exist and are in correct formats (Excel, CSV, FASTA)
 2. **Data Loading**: Loads reference data from Excel and pairwise alignment results from CSV
-3. **Filtering**: Removes parent amino acid references from pairwise data
+3. **Filtering**: Removes parent amino acid references from pairwise data (training mode only)
 4. **Mapper Creation**: Creates mappings between amino acid IDs, protein types, and virus names
 5. **Data Aggregation**: Aggregates pairwise alignment data by protein type and ID
-6. **Data Pivoting**: Restructures data for training format
-7. **Information Enrichment**: Adds basic sequence information and training-specific metadata
-8. **Output Generation**: Saves processed training input and removed references
+6. **Data Pivoting**: Restructures data for model input format
+7. **Information Enrichment**: Adds basic sequence information and metadata
+8. **Output Generation**: Saves processed input data
 
 **Output Files**
-- `results/<output_dir>/training_input.csv` - Final training dataset
+- `results/<output_dir>/training_input.csv` - Final training dataset (when using --train)
 
 
 ### **Step 5: Model Training and Evaluation**
@@ -120,7 +121,7 @@ This step performs model selection, cross-validation evaluation, and final model
 
 **Command**
 ```bash
-python scripts/05_train_model_pipeline.py <path/to/training_input.csv> <path/to/references.xlsx> <path/to/contigs.fasta> --stage <stage> [options]
+python scripts/train_model_pipeline.py <path/to/training_input.csv> <path/to/references.xlsx> <path/to/contigs.fasta> --stage <stage> [options]
 ```
 
 **Arguments**
@@ -144,7 +145,7 @@ python scripts/05_train_model_pipeline.py <path/to/training_input.csv> <path/to/
    - Saves performance metrics for each model
    
    ```bash
-   python scripts/05_train_model_pipeline.py training_input.csv references.xlsx contigs.fasta --stage select --outdir model_selection
+   python scripts/train_model_pipeline.py training_input.csv references.xlsx contigs.fasta --stage select --outdir model_selection
    ```
 
 2. **Cross-Validation Evaluation** (`--stage evaluate`)
@@ -155,7 +156,7 @@ python scripts/05_train_model_pipeline.py <path/to/training_input.csv> <path/to/
    - Generates comprehensive performance metrics
    
    ```bash
-   python scripts/05_train_model_pipeline.py training_input.csv references.xlsx contigs.fasta --stage evaluate --iterations 30 --sample_depth 30 --outdir evaluation_results
+   python scripts/train_model_pipeline.py training_input.csv references.xlsx contigs.fasta --stage evaluate --iterations 30 --sample_depth 30 --outdir evaluation_results
     ```
 
 3. **Final Model Training** (`--stage final`)
@@ -164,7 +165,7 @@ python scripts/05_train_model_pipeline.py <path/to/training_input.csv> <path/to/
    - Saves all necessary model files for deployment
    
    ```bash
-   python scripts/05_train_model_pipeline.py training_input.csv references.xlsx contigs.fasta --stage final --outdir final_model
+   python scripts/train_model_pipeline.py training_input.csv references.xlsx contigs.fasta --stage final --outdir final_model
    ```
 
 **Output Files**
@@ -199,17 +200,35 @@ You must process query contigs through ORF detection, pairwise alignment, and tr
 ```bash
 # 1. ORF detection and alignment
 python scripts/getorfs_pairwise_aln.py ../data/contigs/contigs_all_deduplicated.fasta <out_dir_name> <contig_orientation>
-
-# 2. Generate processed input for prediction
-python scripts/preprocess.py <path/to/reference_database.xlsx> ../data/contigs/contigs_all_deduplicated.fasta <path/to/orf.fasta> <path/to/pairwise_aln.csv> <output_dir> --test
 ```
+**Output File**
+- `results/<output_dir>/pairwise_aln.csv` - pairwise alignment metrics table of test data
+
+1.2. Preprocessing of test data (same as training, but with different name parsing and without ground truth)
+
+```bash
+# 2. Generate processed input for prediction
+python scripts/preprocess.py <path/to/reference_database.xlsx> <path/to/orf.fasta> <path/to/pairwise_aln.csv> <output_dir> --test
+```
+
+**Arguments for Test Processing**
+| Argument                           | Description                                                     |
+|------------------------------------|-----------------------------------------------------------------|
+| `<path/to/reference_database.xlsx>`| Path to the Excel file containing reference protein data.       |
+| `<path/to/orf.fasta>`              | Path to the ORF FASTA file from previous step.                 |
+| `<path/to/pairwise_aln.csv>`       | Path to the CSV file containing pairwise alignment results.     |
+| `<output_dir>`                     | Directory name where output files will be saved in results/.    |
+| `--test`                           | Flag to specify processing for test/query data.                |
+
+**Output File**
+- `results/<output_dir>/testing_input.csv` - Processed data for prediction
 
 Step 2: Predicting Tobamovirus Contigs
 
 Once you have the processed input features and the trained models, run the prediction script:
 
 ```bash
-python scripts/07_predict_query_contigs.py results/query_processed/training_input.csv results/final_model/ --outdir predictions
+python scripts/07_predict_query_contigs.py results/<output_dir>/testing_input.csv results/<output_dir>/ --outdir <output_dir>
 ```
 
 **Arguments**
