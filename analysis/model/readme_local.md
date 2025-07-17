@@ -21,10 +21,19 @@ python scripts/04_preprocess_training.py ../data/tobamo/reference_database.xlsx 
 5. training 
 
 # 1. Model selection - to find the best base model via grid search:
-python scripts/05_train_model_pipeline.py results/training/training_input.csv ../data/tobamo/reference_database.xlsx results/training/sampling/2025-07-11_sampled_contigs_30.fasta --stage select --outdir model_selection
+python scripts/train_model_pipeline.py results/training/training_input.csv ../data/tobamo/reference_database.xlsx results/training/sampling/2025-07-11_sampled_contigs_30.fasta --stage select --outdir model_selection
 
 # 2. Cross-validation evaluation - 30 iterations of 5-fold CV with both methods:
-python scripts/05_train_model_pipeline.py results/training/training_input.csv ../data/tobamo/reference_database.xlsx results/training/sampling/2025-07-11_sampled_contigs_30.fasta --stage evaluate --iterations 2 --sample_depth 30 --outdir evaluation_results
+python scripts/train_model_pipeline.py results/training/training_input.csv ../data/tobamo/reference_database.xlsx results/training/sampling/2025-07-11_sampled_contigs_30.fasta --stage evaluate --iterations 30 --sample_depth 30 --outdir evaluation_results
 
 # 3. Train final model - using RF + LR histogram with bins=10:
-python scripts/05_train_model_pipeline.py results/training/training_input.csv ../data/tobamo/reference_database.xlsx results/training/sampling/2025-07-11_sampled_contigs_30.fasta --stage final --outdir final_model
+python scripts/train_model_pipeline.py results/training/training_input.csv ../data/tobamo/reference_database.xlsx results/training/sampling/2025-07-11_sampled_contigs_30.fasta --stage final --outdir final_model
+
+
+---------------------
+
+# preprocess TRAINING
+python scripts/preprocess.py ../data/tobamo/reference_database.xlsx results/training/orfs/combined_orfs.fasta results/training/pairwise_aln.csv training --train --contigs results/training/sampling/2025-07-11_sampled_contigs_30.fasta
+
+# preproces TEST - todo: update path/to/pairwise.csv
+python scripts/preprocess.py ./data/tobamo/reference_database.xlsx results/snakemake/orfs/combined_orfs.fasta path/to/pairwise.csv snakemake --test
