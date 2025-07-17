@@ -77,7 +77,7 @@ python getorfs_pairwise_aln.py <path/to/contig.fasta> <out_dir_name> <contig_ori
 |---------------------------|-----------------------------------------------------------------|
 | `<path/to/contig.fasta>`   | Path to the contig FASTA file to be processed.                  |
 | `<out_dir_name>`           | Directory where the output files will be saved.                 |
-| `<contig_orientation>`     | Orientation of the contigs (e.g., forward, reverse, or unknown).|
+| `<contig_orientation>`     | Orientation of the contigs (e.g., forward or unknown).|
 
 note: if you want to use different reference proteins, change "data/all_proteins.fasta" or change path aa_refs in script.
 
