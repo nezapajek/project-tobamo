@@ -53,7 +53,7 @@ This step fragments reference genomes to generate contigs with realistic lengths
 
 **Command**
 ```bash
-python scripts/02_sample_refs.py <path/to/reference.fasta> <out_dir_name> <sampling_num> <subsampling_num> <path/to/lens_freq.json>
+python scripts/sample_refs.py <path/to/reference.fasta> <out_dir_name> <sampling_num> <subsampling_num> <path/to/lens_freq.json>
 ```
 **Arguments**
 | Argument                | Description                                              |
@@ -70,7 +70,7 @@ This step identifies **Open Reading Frames (ORFs)** in contigs and performs **pa
 
 **Command**
 ```bash
-python 03_getorfs_pairwise_aln.py <path/to/contig.fasta> <out_dir_name> <contig_orientation>
+python getorfs_pairwise_aln.py <path/to/contig.fasta> <out_dir_name> <contig_orientation>
 ```
 **Arguments**
 | Argument                  | Description                                                     |
@@ -88,7 +88,7 @@ This step processes reference data and pairwise alignment results to create a tr
 
 **Command**
 ```bash
-python 04_preprocess_training.py <path/to/reference_database.xlsx> <path/to/sampled_contigs.fasta> <path/to/orf.fasta> <path/to/pairwise_aln.csv> <output_dir>
+python preprocess.py <path/to/reference_database.xlsx> <path/to/sampled_contigs.fasta> <path/to/orf.fasta> <path/to/pairwise_aln.csv> <output_dir> --train --contigs
 ```
 
 **Arguments**
@@ -120,7 +120,7 @@ This step performs model selection, cross-validation evaluation, and final model
 
 **Command**
 ```bash
-python scripts/train_model_pipeline.py <path/to/training_input.csv> <path/to/references.xlsx> <path/to/contigs.fasta> --stage <stage> [options]
+python scripts/05_train_model_pipeline.py <path/to/training_input.csv> <path/to/references.xlsx> <path/to/contigs.fasta> --stage <stage> [options]
 ```
 
 **Arguments**
@@ -144,7 +144,7 @@ python scripts/train_model_pipeline.py <path/to/training_input.csv> <path/to/ref
    - Saves performance metrics for each model
    
    ```bash
-   python scripts/train_model_pipeline.py training_input.csv references.xlsx contigs.fasta --stage select --outdir model_selection
+   python scripts/05_train_model_pipeline.py training_input.csv references.xlsx contigs.fasta --stage select --outdir model_selection
    ```
 
 2. **Cross-Validation Evaluation** (`--stage evaluate`)
@@ -155,7 +155,7 @@ python scripts/train_model_pipeline.py <path/to/training_input.csv> <path/to/ref
    - Generates comprehensive performance metrics
    
    ```bash
-   python scripts/train_model_pipeline.py training_input.csv references.xlsx contigs.fasta --stage evaluate --iterations 30 --sample_depth 30 --outdir evaluation_results
+   python scripts/05_train_model_pipeline.py training_input.csv references.xlsx contigs.fasta --stage evaluate --iterations 30 --sample_depth 30 --outdir evaluation_results
     ```
 
 3. **Final Model Training** (`--stage final`)
@@ -164,7 +164,7 @@ python scripts/train_model_pipeline.py <path/to/training_input.csv> <path/to/ref
    - Saves all necessary model files for deployment
    
    ```bash
-   python scripts/train_model_pipeline.py training_input.csv references.xlsx contigs.fasta --stage final --outdir final_model
+   python scripts/05_train_model_pipeline.py training_input.csv references.xlsx contigs.fasta --stage final --outdir final_model
    ```
 
 **Output Files**
@@ -198,10 +198,10 @@ You must process query contigs through ORF detection, pairwise alignment, and tr
 
 ```bash
 # 1. ORF detection and alignment
-python scripts/03_getorfs_pairwise_aln.py ../data/contigs/contigs_all_deduplicated.fasta <out_dir_name> <contig_orientation>
+python scripts/getorfs_pairwise_aln.py ../data/contigs/contigs_all_deduplicated.fasta <out_dir_name> <contig_orientation>
 
 # 2. Generate processed input for prediction
-python scripts/04_preprocess_training.py <path/to/reference_database.xlsx> ../data/contigs/contigs_all_deduplicated.fasta <path/to/orf.fasta> <path/to/pairwise_aln.csv> <output_dir>
+python scripts/preprocess.py <path/to/reference_database.xlsx> ../data/contigs/contigs_all_deduplicated.fasta <path/to/orf.fasta> <path/to/pairwise_aln.csv> <output_dir> --test
 ```
 
 Step 2: Predicting Tobamovirus Contigs

@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# filepath: /home/tobamo/analize/project-tobamo/analysis/model/scripts/train_model_pipeline.py
 
 from utils import *
 import argparse
@@ -27,6 +26,7 @@ def parse_args():
     parser.add_argument("--iterations", type=int, default=30, help="Number of iterations for cross-validation")
     parser.add_argument("--sample_depth", type=int, default=30, help="Number of contigs to sample per species")
     parser.add_argument("--seed", type=int, default=42, help="Random seed")
+    parser.add_argument("--bin-num", type=int, default=10, help="Number of bins for histogram model (default: 10)")
     return parser.parse_args()
 
 
@@ -68,7 +68,7 @@ def model_selection(input_df, refs, contigs, outdir="model_selection", random_se
         "KNN": {"model": KNeighborsClassifier(), "params": {"n_neighbors": [3, 5, 7, 15]}},
     }
 
-    os.makedirs(f"results/{outdir}", exist_ok=True)
+    os.makedirs(f"results/{outdir}/report", exist_ok=True)
 
     # Create 5-fold CV split
     folds = stratified_kfold_split(refs, n_splits=5, random_state=random_seed)
@@ -83,10 +83,14 @@ def model_selection(input_df, refs, contigs, outdir="model_selection", random_se
 
         # Subsample contigs
         selected_training_contigs = subsample_contigs(
-            train_refs, contigs, num=30, output_dir=f"results/{outdir}/{idx}_train_report", random_seed=random_seed
+            train_refs,
+            contigs,
+            num=30,
+            output_dir=f"results/{outdir}/report/{idx}_train_report",
+            random_seed=random_seed,
         )
         selected_test_contigs = subsample_contigs(
-            test_refs, contigs, num=30, output_dir=f"results/{outdir}/{idx}_test_report", random_seed=random_seed
+            test_refs, contigs, num=30, output_dir=f"results/{outdir}/report/{idx}_test_report", random_seed=random_seed
         )
 
         # Filter datasets to selected contigs
@@ -182,7 +186,7 @@ def train_and_evaluate(input_df, refs, contigs, outdir="cv_evaluation", iteratio
         folds = stratified_kfold_split(refs, n_splits=5, random_state=iter_seed)
 
         for idx, (train_refs, test_refs) in enumerate(folds):
-            fold_dir = f"results/{outdir}/iter{iteration}_fold{idx}"
+            fold_dir = f"results/{outdir}/report/iter{iteration}_fold{idx}"
             os.makedirs(fold_dir, exist_ok=True)
 
             # Prepare TRAIN and TEST data
@@ -203,28 +207,38 @@ def train_and_evaluate(input_df, refs, contigs, outdir="cv_evaluation", iteratio
             # Use only forward ORFs for training
             train = train[train["strand"] == "FORWARD"]
 
-            # Method 1: Direct Random Forest approach
-            morf, sorf, _ = train_rf_on_all_data(train)
-            test_orf_predictions = predict_orfs(test, morf, sorf, refs=True)
+            ################################################ TRAIN PHASE
 
-            # Most extreme prediction approach
-            extreme_predictions = filter_extreme_probability(test_orf_predictions, idx, refs_=True)
-            extreme_predictions["iteration"] = iteration
-            extreme_predictions["method"] = "extreme"
-            all_extreme_predictions.append(extreme_predictions)
+            # Make ORF predictions: Direct Random Forest
+            morf_predictions = train_rf_and_predict(train)  # make predictions using LOOCV
 
-            # Method 2: Histogram-based approach
-            morf_predictions = train_rf_and_predict(train)
-            bins = [10]  # Using 10 bins as specified
+            # Train Logistic Regression model on LOOCV prediction
+            bins = [10]  # or test a list of bins e.g. [5, 10, 20]
             mc_dict = train_lr_and_predict_hist_test(morf_predictions, bins)
 
-            # Apply histogram-based model
-            hist_predictions = predict_contigs_hist_test(
-                test_orf_predictions, mc_dict[f"histogram_{bins[0]}"], idx, "histogram", bins[0], refs_=True
-            )
-            hist_predictions["iteration"] = iteration
-            hist_predictions["method"] = "histogram"
-            all_hist_predictions.append(hist_predictions)
+            # Train RandomForest model on all training data
+            morf, sorf, _ = train_rf_on_all_data(train)
+
+            ################################################ TEST phase
+
+            # Predict test ORFs using the trained RandomForest model
+            test_orf_predictions = predict_orfs(test, morf, sorf, refs=True)
+
+            # Method 1: Select contig class based on most extreme ORF probability
+            extreme_predictions = filter_extreme_probability(test_orf_predictions, idx, refs_=True)
+            extreme_predictions["iteration"] = iteration
+            all_extreme_predictions.append(extreme_predictions)
+
+            # Method 2: Predict contigs using logistic regression (based on binned ORF predictions)
+            for mc_name_n, mc in mc_dict.items():
+                mc_name = mc_name_n.split("_")[0]
+                num = int(mc_name_n.split("_")[1])
+                final_predictions = predict_contigs_hist_test(test_orf_predictions, mc, idx, mc_name, num, refs_=True)
+                final_predictions["n"] = num
+                final_predictions["treshold"] = 0.5
+                final_predictions["random_seed"] = random_seed
+                final_predictions["iteration"] = iteration
+                all_hist_predictions.append(final_predictions)
 
     # Combine and save all results
     extreme_results = pd.concat(all_extreme_predictions)
@@ -242,39 +256,121 @@ def train_and_evaluate(input_df, refs, contigs, outdir="cv_evaluation", iteratio
         # Add predicted class based on probability threshold
         results_df["predicted_class"] = np.where(results_df["prob_1"] >= 0.5, 1, 0)
 
-        # Calculate metrics
-        metrics = {
+        # Group by iteration to calculate per-iteration metrics
+        iteration_metrics = []
+
+        for iteration, group in results_df.groupby("iteration"):
+            iter_metrics = {
+                "iteration": iteration,
+                "method": method_name,
+                "accuracy": accuracy_score(group["ground_truth"], group["predicted_class"]),
+                "f1": f1_score(group["ground_truth"], group["predicted_class"]),
+                "precision": precision_score(group["ground_truth"], group["predicted_class"]),
+                "recall": recall_score(group["ground_truth"], group["predicted_class"]),
+                "auc": roc_auc_score(group["ground_truth"], group["prob_1"]),
+            }
+            iteration_metrics.append(iter_metrics)
+
+        # Create DataFrame of per-iteration metrics
+        iter_metrics_df = pd.DataFrame(iteration_metrics)
+
+        # Calculate statistics across iterations
+        metrics_stats = {
             "method": method_name,
-            "accuracy": accuracy_score(results_df["ground_truth"], results_df["predicted_class"]),
-            "f1": f1_score(results_df["ground_truth"], results_df["predicted_class"]),
-            "precision": precision_score(results_df["ground_truth"], results_df["predicted_class"]),
-            "recall": recall_score(results_df["ground_truth"], results_df["predicted_class"]),
-            "auc": roc_auc_score(results_df["ground_truth"], results_df["prob_1"]),
+            "accuracy_mean": iter_metrics_df["accuracy"].mean(),
+            "accuracy_std": iter_metrics_df["accuracy"].std(),
+            "accuracy_ci95_low": iter_metrics_df["accuracy"].mean()
+            - 1.96 * iter_metrics_df["accuracy"].std() / np.sqrt(len(iter_metrics_df)),
+            "accuracy_ci95_high": iter_metrics_df["accuracy"].mean()
+            + 1.96 * iter_metrics_df["accuracy"].std() / np.sqrt(len(iter_metrics_df)),
+            "f1_mean": iter_metrics_df["f1"].mean(),
+            "f1_std": iter_metrics_df["f1"].std(),
+            "f1_ci95_low": iter_metrics_df["f1"].mean()
+            - 1.96 * iter_metrics_df["f1"].std() / np.sqrt(len(iter_metrics_df)),
+            "f1_ci95_high": iter_metrics_df["f1"].mean()
+            + 1.96 * iter_metrics_df["f1"].std() / np.sqrt(len(iter_metrics_df)),
+            "precision_mean": iter_metrics_df["precision"].mean(),
+            "precision_std": iter_metrics_df["precision"].std(),
+            "precision_ci95_low": iter_metrics_df["precision"].mean()
+            - 1.96 * iter_metrics_df["precision"].std() / np.sqrt(len(iter_metrics_df)),
+            "precision_ci95_high": iter_metrics_df["precision"].mean()
+            + 1.96 * iter_metrics_df["precision"].std() / np.sqrt(len(iter_metrics_df)),
+            "recall_mean": iter_metrics_df["recall"].mean(),
+            "recall_std": iter_metrics_df["recall"].std(),
+            "recall_ci95_low": iter_metrics_df["recall"].mean()
+            - 1.96 * iter_metrics_df["recall"].std() / np.sqrt(len(iter_metrics_df)),
+            "recall_ci95_high": iter_metrics_df["recall"].mean()
+            + 1.96 * iter_metrics_df["recall"].std() / np.sqrt(len(iter_metrics_df)),
+            "auc_mean": iter_metrics_df["auc"].mean(),
+            "auc_std": iter_metrics_df["auc"].std(),
+            "auc_ci95_low": iter_metrics_df["auc"].mean()
+            - 1.96 * iter_metrics_df["auc"].std() / np.sqrt(len(iter_metrics_df)),
+            "auc_ci95_high": iter_metrics_df["auc"].mean()
+            + 1.96 * iter_metrics_df["auc"].std() / np.sqrt(len(iter_metrics_df)),
         }
-        summary_metrics.append(metrics)
+
+        # Save the per-iteration metrics
+        iter_metrics_df.to_csv(f"results/{outdir}/{method_name}_iteration_metrics.csv", index=False)
+
+        # Add summary metrics
+        summary_metrics.append(metrics_stats)
 
     # Save summary metrics
     summary_df = pd.DataFrame(summary_metrics)
-    summary_df.to_csv(f"results/{outdir}/method_comparison.csv", index=False)
+    summary_df.to_csv(f"results/{outdir}/method_comparison_stats.csv", index=False)
 
-    # Determine best method
-    best_method = summary_df.loc[summary_df["accuracy"].idxmax()]["method"]
+    # Create a simplified summary with mean ± std
+    simplified_summary = []
+    for _, row in summary_df.iterrows():
+        method = row["method"]
+        simplified = {
+            "method": method,
+            "accuracy": f"{row['accuracy_mean']:.3f} ± {row['accuracy_std']:.3f}",
+            "f1": f"{row['f1_mean']:.3f} ± {row['f1_std']:.3f}",
+            "precision": f"{row['precision_mean']:.3f} ± {row['precision_std']:.3f}",
+            "recall": f"{row['recall_mean']:.3f} ± {row['recall_std']:.3f}",
+            "auc": f"{row['auc_mean']:.3f} ± {row['auc_std']:.3f}",
+        }
+        simplified_summary.append(simplified)
+
+    # Save simplified summary
+    pd.DataFrame(simplified_summary).to_csv(f"results/{outdir}/method_comparison_simplified.csv", index=False)
+
+    # Determine best method based on mean accuracy
+    best_method = summary_df.loc[summary_df["accuracy_mean"].idxmax()]["method"]
 
     # Save best method information
     with open(f"results/{outdir}/best_method.txt", "w") as f:
         f.write(f"Best method: {best_method}\n")
-        best_metrics = summary_df[summary_df["method"] == best_method].iloc[0].to_dict()
-        for metric, value in best_metrics.items():
-            if metric != "method":
-                f.write(f"{metric}: {value:.4f}\n")
+        best_metrics = summary_df[summary_df["method"] == best_method].iloc[0]
+        for metric in ["accuracy", "f1", "precision", "recall", "auc"]:
+            mean = best_metrics[f"{metric}_mean"]
+            std = best_metrics[f"{metric}_std"]
+            ci_low = best_metrics[f"{metric}_ci95_low"]
+            ci_high = best_metrics[f"{metric}_ci95_high"]
+            f.write(f"{metric}: {mean:.4f} ± {std:.4f} (95% CI: {ci_low:.4f}-{ci_high:.4f})\n")
 
-    print(f"Evaluation completed! Best method: {best_method}")
-    return summary_df
 
+def train_final_model(input_df, refs, contigs, outdir="final_model", bin_num=10, random_seed=42):
+    """Train the final RF+LR histogram model on all training data
 
-def train_final_model(input_df, refs, contigs, outdir="final_model", random_seed=42):
-    """Train the final RF+LR histogram model on all training data"""
-    print("Training final model using RF + LR histogram approach...")
+    Parameters:
+    -----------
+    input_df : pandas.DataFrame
+        Input DataFrame with features
+    refs : pandas.DataFrame
+        References dataframe
+    contigs : dict
+        Dictionary of contigs from FASTA
+    outdir : str, default="final_model"
+        Output directory name
+    bin_num : int, default=10
+        Number of bins to use for the histogram model (determined in evaluation)
+    random_seed : int, default=42
+        Random seed for reproducibility
+    """
+
+    print(f"Training final model using RF + LR histogram approach with {bin_num} bins...")
 
     os.makedirs(f"results/{outdir}", exist_ok=True)
 
@@ -306,12 +402,13 @@ def train_final_model(input_df, refs, contigs, outdir="final_model", random_seed
     # Train RF on subset and get predictions with LOOCV for LR model training
     morf_predictions = train_rf_and_predict(train_fwd)
 
-    # Train Logistic Regression histogram model with bins=10
-    mc_dict = train_lr_and_predict_hist_test(morf_predictions, bins=[10])
-    hist_model = mc_dict["histogram_10"]
+    # Train Logistic Regression histogram model with selected bins num
+    mc_dict = train_lr_and_predict_hist_test(morf_predictions, [bin_num])
+    hist_model = mc_dict[f"histogram_{bin_num}"]
 
     # Save LR histogram model
-    dump(hist_model, f"results/{outdir}/lr_histogram_10_model.joblib")
+    dump(hist_model, f"results/{outdir}/lr_histogram_{bin_num}_model.joblib")
+    print(f"Saved histogram model with {bin_num} bins")
 
     # Save feature importances
     feature_importances = morf.feature_importances_
@@ -324,7 +421,7 @@ def train_final_model(input_df, refs, contigs, outdir="final_model", random_seed
     top_features = feature_importances_df.head(20)
     top_features.to_csv(f"results/{outdir}/top_20_features.csv", index=False)
 
-    print("Final models (RF + LR histogram) trained and saved!")
+    print(f"Final models (RF + LR histogram with {bin_num} bins) trained and saved!")
 
 
 def main():
@@ -351,7 +448,7 @@ def main():
         )
 
     elif args.stage == "final":
-        train_final_model(input_df, refs, contigs, outdir=args.outdir, random_seed=args.seed)
+        train_final_model(input_df, refs, contigs, outdir=args.outdir, bin_num=args.bin_num, random_seed=args.seed)
 
     print("Pipeline completed successfully!")
 
