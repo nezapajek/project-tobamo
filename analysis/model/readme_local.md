@@ -33,7 +33,24 @@ python scripts/train_model_pipeline.py results/training/training_input.csv ../da
 ---------------------
 
 # preprocess TRAINING
+
+time python scripts/getorfs_pairwise_aln.py results/training/sampling/2025-07-11_sampled_contigs_30.fasta training unknown
+
 python scripts/preprocess.py ../data/tobamo/reference_database.xlsx results/training/orfs/combined_orfs.fasta results/training/pairwise_aln.csv training --train --contigs results/training/sampling/2025-07-11_sampled_contigs_30.fasta
 
 # preproces TEST - todo: update path/to/pairwise.csv
-python scripts/preprocess.py ./data/tobamo/reference_database.xlsx results/snakemake/orfs/combined_orfs.fasta path/to/pairwise.csv snakemake --test
+
+time python scripts/getorfs_pairwise_aln.py ../data/contigs/contigs_all_deduplicated.fasta snakemake unknown 
+
+python scripts/preprocess.py ../data/tobamo/reference_database.xlsx results/snakemake/orfs/combined_orfs.fasta results/snakemake/pairwise_aln.csv snakemake --test
+
+# ALL DEDUPLICATED (filter out non-target - keep 510 contigs non_cellular_filtered only) 
+notebooks/filter_snakemake_pairwise_results.ipynb
+
+
+----------------------
+
+# Predict test contigs
+
+python scripts/predict_query_contigs.py results/snakemake/pairwise_aln_all_deduplicated_non_cellular_filtered.csv results/final_model --outdir predictions
+

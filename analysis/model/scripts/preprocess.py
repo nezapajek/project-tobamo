@@ -108,7 +108,7 @@ def preprocess_testing(refs_path, orf_fasta_path, pairwise_path, output_dir):
 
     # Add basic info
     print("Adding basic sequence information")
-    input_df = add_info_basic(pvtd, orf_fasta_path, snakemake=False)
+    input_df = add_info_basic(pvtd, orf_fasta_path, snakemake=True)
 
     # Save results
     print("Saving processed test data")
