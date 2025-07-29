@@ -228,27 +228,29 @@ Step 2: Predicting Tobamovirus Contigs
 Once you have the processed input features and the trained models, run the prediction script:
 
 ```bash
-python scripts/07_predict_query_contigs.py results/<output_dir>/testing_input.csv results/<output_dir>/ --outdir <output_dir>
+python scripts/predict_contigs.py results/<output_dir>/testing_input.csv results/final_model --outdir predictions --bin-num 10
 ```
 
 **Arguments**
 | Argument                     | Description                                                                 |
 |------------------------------|-----------------------------------------------------------------------------|
-| `<model_input_df.csv>`       | Processed input CSV (same format as training input).                        |
-| `<rf_model.joblib>`          | Path to the trained Random Forest model.                                   |
-| `<rf_scaler.joblib>`         | Path to the scaler used during training (for feature normalization).       |
-| `<lr_hist_model.joblib>`     | Path to the trained Logistic Regression histogram model.                   |
-| `<feature_names.csv>`        | CSV containing the ordered list of feature names used by the model.        |
-| `<outdir>`                   | Name of the output directory for prediction results (inside `results/`).   |
+| `<testing_input_df.csv>`     | Path to the processed input CSV file from preprocessing step.              |
+| `<model_dir>`                | Directory containing all model files (RF model, scaler, LR model, etc.).    |
+| `--outdir`                   | Name of output directory for prediction results (default: "predictions").   |
+| `--bin-num`                  | Number of bins for histogram approach (default: 10).                        |
 
----
+The script expects these files in the model directory with standard names:
+- `rf_model.joblib` - Trained Random Forest model
+- `rf_scaler.joblib` - StandardScaler for feature normalization
+- `rf_feature_names.csv` - Feature names used by the model
+- `lr_histogram_<bin-num>_model.joblib` - Trained Logistic Regression histogram model
 
-### **Output Files**
+**Output Files**
 After running the script, the following files will be saved in `results/<outdir>/`:
 
-| Filename                                 | Description                                                  |
-|------------------------------------------|--------------------------------------------------------------|
-| `contig_predictions_all.csv`            | ORF-level predictions with probability scores.               |
-| `contig_predictions.csv`                | Final contig-level predictions with class and probability.   |
+| Filename                   | Description                                                  |
+|----------------------------|--------------------------------------------------------------|
+| `orf_predictions.csv`      | ORF-level predictions with probability scores.               |
+| `contig_predictions.csv`   | Final contig-level predictions with class and probability.   |
 
 ---
