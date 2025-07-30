@@ -60,7 +60,7 @@ def model_selection(input_df, refs, contigs, outdir="model_selection", random_se
         },
         "RandomForest": {
             "model": RandomForestClassifier(),
-            "params": {"n_estimators": [10, 50, 100, 150, 200], "max_depth": [5, 10, 20, 40, None]},
+            "params": {"n_estimators": [10, 50, 75, 100, 125, 150, 175, 200], "max_depth": [5, 10, 20, 40, None]},
         },
         "SVM": {"model": SVC(), "params": {"C": [10, 50, 100], "kernel": ["linear", "rbf", "poly"]}},
         "DecisionTree": {"model": DecisionTreeClassifier(), "params": {"max_depth": [None, 5, 10]}},
