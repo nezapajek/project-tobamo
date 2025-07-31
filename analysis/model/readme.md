@@ -117,7 +117,39 @@ python scripts/preprocess.py <path/to/reference_database.xlsx> <path/to/orf.fast
 
 ### **Step 5: Model Training and Evaluation**
 
-This step performs model selection, cross-validation evaluation, and final model training. It uses the processed training data to create a Random Forest model for ORF classification and a Logistic Regression model for contig-level prediction.
+Our machine learning pipeline employs a three-stage approach to ensure optimal classification performance.
+
+#### Model Selection
+
+First, we conduct comprehensive algorithm selection through systematic evaluation of multiple classification models:
+
+- **Algorithms Tested**: Logistic Regression, Random Forest, SVM, Decision Tree, Naive Bayes, and KNN
+- **Hyperparameter Optimization**: Grid search across all relevant parameters for each algorithm
+- **Evaluation Method**: 5-fold cross-validation with stratified sampling
+- **Results**: Random Forest demonstrated superior performance across evaluation metrics
+
+#### Cross-Validation Evaluation
+
+We then compare two different strategies for contig-level prediction:
+
+- **ORF Prediction**: All models use Random Forest for Open Reading Frame (ORF) classification (best performing model from previous step)
+- **Contig Prediction Methods**:
+  - **Extreme Method**: Uses the most confident ORF prediction score
+  - **Histogram Method**: Bins ORF predictions and uses Logistic Regression
+- **Validation Process**: Leave-One-Out Cross-Validation (LOOCV) repeated 30 times
+- **Performance Assessment**: Comprehensive metrics including accuracy, F1 score, precision, and recall
+- **Winner**: Histogram-based approach (bins=10) achieved superior performance
+
+#### Final Model Training
+
+The production model combines the best components from our evaluation:
+
+- **ORF Classifier (Morf)**: Random Forest trained on all available training data
+- **Contig Classifier (Mc)**: Logistic Regression using binned ORF prediction probabilities
+- **Feature Importance**: Analysis reveals most informative sequence characteristics
+- **Serialization**: Models saved as joblib files for deployment in production pipeline
+
+This multi-stage approach ensures robust performance across diverse viral sequence data while maintaining interpretability
 
 **Command**
 ```bash
