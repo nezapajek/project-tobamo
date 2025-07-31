@@ -136,7 +136,7 @@ We then compare two different strategies for contig-level prediction:
 - **Contig Prediction Methods**:
   - **Extreme Method**: Uses the most confident ORF prediction score
   - **Histogram Method**: Bins ORF predictions and uses Logistic Regression
-- **Validation Process**: Leave-One-Out Cross-Validation (LOOCV) repeated 30 times
+- **Validation Process**: 5 fold Cross-Validation repeated 30 times
 - **Performance Assessment**: Comprehensive metrics including accuracy, F1 score, precision, and recall
 - **Winner**: Histogram-based approach (bins=10) achieved superior performance
 
