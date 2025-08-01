@@ -43,7 +43,7 @@ def check_inputs(input_df_path, refs_path, contig_fasta_path):
     )
 
 
-def model_selection(input_df, refs, contigs, outdir="model_selection", random_seed=42):
+def model_selection_old(input_df, refs, contigs, outdir="model_selection", random_seed=42):
     """Perform model selection and hyperparameter tuning"""
     print("Starting model selection and hyperparameter tuning...")
 
@@ -166,6 +166,184 @@ def model_selection(input_df, refs, contigs, outdir="model_selection", random_se
         f.write(f"Average accuracy: {avg_performances[best_model]:.4f}\n")
 
     print(f"Model selection completed! Best model: {best_model}")
+
+
+def model_selection(input_df, refs, contigs, outdir="model_selection", random_seed=42, iterations=10):
+    """Perform model selection and hyperparameter tuning with multiple iterations"""
+    print(f"Starting model selection and hyperparameter tuning with {iterations} iterations...")
+
+    # Define the models and their parameter grids
+    models = {
+        "LogisticRegression": {
+            "model": LogisticRegression(max_iter=10000),
+            "params": {
+                "C": [0.01, 0.1, 1, 10],
+                "solver": ["liblinear", "saga"],
+                "penalty": ["l1", "l2"],
+                "class_weight": ["balanced", None],
+            },
+        },
+        "RandomForest": {
+            "model": RandomForestClassifier(),
+            "params": {"n_estimators": [50, 100, 150, 200, 300], "max_depth": [5, 10, 20, 40, 50, None]},
+        },
+        "SVM": {"model": SVC(), "params": {"C": [10, 50, 100], "kernel": ["linear", "rbf", "poly"]}},
+        "DecisionTree": {"model": DecisionTreeClassifier(), "params": {"max_depth": [None, 5, 10]}},
+        "NaiveBayes": {"model": GaussianNB(), "params": {}},
+        "KNN": {"model": KNeighborsClassifier(), "params": {"n_neighbors": [3, 5, 7, 15]}},
+    }
+
+    os.makedirs(f"results/{outdir}/report", exist_ok=True)
+    
+    # List to store results across all iterations
+    all_performance_metrics = []
+    
+    # Run multiple iterations
+    for iteration in range(iterations):
+        print(f"\nStarting iteration {iteration+1}/{iterations}")
+        iter_seed = random_seed + iteration
+        
+        # Create 5-fold CV split for this iteration
+        folds = stratified_kfold_split(refs, n_splits=5, random_state=iter_seed)
+
+        performance_metrics_list = []
+
+        for idx, (train_refs, test_refs) in enumerate(folds):
+            print(f"Processing fold {idx+1}/5")
+
+            # Prepare TRAIN and TEST data
+            train_all, test_all = prepare_train_test(input_df, train_refs, test_refs)
+
+            # Subsample contigs
+            selected_training_contigs = subsample_contigs(
+                train_refs,
+                contigs,
+                num=30,
+                output_dir=f"results/{outdir}/report/iter{iteration}_fold{idx}_train_report",
+                random_seed=iter_seed,
+            )
+            selected_test_contigs = subsample_contigs(
+                test_refs, 
+                contigs, 
+                num=30, 
+                output_dir=f"results/{outdir}/report/iter{iteration}_fold{idx}_test_report", 
+                random_seed=iter_seed
+            )
+
+            # Filter datasets to selected contigs
+            train = train_all[train_all["contig_name"].isin(selected_training_contigs)]
+            test = test_all[test_all["contig_name"].isin(selected_test_contigs)]
+
+            # Use only forward ORFs for training
+            train = train[train["strand"] == "FORWARD"]
+
+            # Prepare features and target
+            X_train = train.drop(columns=["orf_type", "strand", "virus_name", "accession", "contig_name"])
+            y_train = (train["orf_type"] == "tobamo").astype(int)
+            X_test = test.drop(columns=["orf_type", "strand", "virus_name", "accession", "contig_name"])
+            y_test = (test["orf_type"] == "tobamo").astype(int)
+
+            # Standardize data
+            scaler = StandardScaler()
+            X_train = scaler.fit_transform(X_train)
+            X_test = scaler.transform(X_test)
+
+            # Find best model
+            best_model, best_score, best_params, best_model_name = None, -float("inf"), None, None
+
+            for model_name, model_info in models.items():
+                print(f"  Testing {model_name}...")
+                model, params = model_info["model"], model_info["params"]
+
+                grid_search = GridSearchCV(model, param_grid=params, n_jobs=-1, cv=5, scoring="accuracy")
+                grid_search.fit(X_train, y_train)
+
+                if grid_search.best_score_ > best_score:
+                    best_model = grid_search.best_estimator_
+                    best_score = grid_search.best_score_
+                    best_params = grid_search.best_params_
+                    best_model_name = model_name
+
+            # Evaluate best model
+            y_pred = best_model.predict(X_test)
+
+            metrics = {
+                "iteration": iteration,
+                "fold": idx,
+                "model": best_model_name,
+                "accuracy": accuracy_score(y_test, y_pred),
+                "auc_roc": roc_auc_score(y_test, y_pred),
+                "f1_score": f1_score(y_test, y_pred),
+                "recall": recall_score(y_test, y_pred),
+                "specificity": recall_score(y_test, y_pred, pos_label=0),
+                "precision": precision_score(y_test, y_pred),
+                "negative_predictive_value": precision_score(y_test, y_pred, pos_label=0),
+                "best_params": best_params,
+            }
+
+            performance_metrics_list.append(metrics)
+        
+        # Save this iteration's results
+        iter_df = pd.DataFrame(performance_metrics_list)
+        iter_df.to_csv(f"results/{outdir}/iter_{iteration}_performance_metrics.csv")
+        
+        # Append to overall results
+        all_performance_metrics.extend(performance_metrics_list)
+
+    # Save combined results from all iterations
+    pd.DataFrame(all_performance_metrics).to_csv(f"results/{outdir}/all_performance_metrics.csv")
+
+    # Calculate overall model performance across all iterations
+    model_performances = {}
+    for metric in all_performance_metrics:
+        model_name = metric["model"]
+        if model_name not in model_performances:
+            model_performances[model_name] = []
+        model_performances[model_name].append(metric["accuracy"])
+
+    # Calculate average and std of accuracy for each model
+    avg_performances = {
+        model: {
+            "mean": np.mean(scores),
+            "std": np.std(scores),
+            "count": len(scores)
+        } 
+        for model, scores in model_performances.items()
+    }
+    
+    # Find best model based on average performance
+    best_model = max(avg_performances.keys(), key=lambda m: avg_performances[m]["mean"])
+    
+    # Count how many times each model was selected as best in individual folds
+    model_selection_counts = {}
+    for metric in all_performance_metrics:
+        model_name = metric["model"]
+        if model_name not in model_selection_counts:
+            model_selection_counts[model_name] = 0
+        model_selection_counts[model_name] += 1
+
+    # Save summary information
+    with open(f"results/{outdir}/model_selection_summary.txt", "w") as f:
+        f.write(f"Model Selection Summary (across {iterations} iterations)\n")
+        f.write("=" * 50 + "\n\n")
+        
+        f.write("Overall Best Model: {}\n".format(best_model))
+        f.write("Average accuracy: {:.4f} ± {:.4f}\n\n".format(
+            avg_performances[best_model]["mean"], 
+            avg_performances[best_model]["std"]
+        ))
+        
+        f.write("Performance by Model:\n")
+        f.write("-" * 40 + "\n")
+        for model, stats in avg_performances.items():
+            f.write("{}: {:.4f} ± {:.4f} (selected in {}/{} folds)\n".format(
+                model, stats["mean"], stats["std"],
+                model_selection_counts[model],
+                iterations * 5  # total number of folds across all iterations
+            ))
+
+    print(f"Model selection completed across {iterations} iterations! Best model: {best_model}")
+    return best_model, avg_performances
 
 
 def train_and_evaluate(input_df, refs, contigs, outdir="cv_evaluation", iterations=30, sample_depth=30, random_seed=42):

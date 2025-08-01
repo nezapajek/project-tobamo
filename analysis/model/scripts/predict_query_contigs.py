@@ -14,12 +14,12 @@ def parse_args():
     parser = argparse.ArgumentParser(description="Predict Tobamovirus contigs using trained models")
     parser.add_argument("input_path", help="Path to the processed test data CSV file")
     parser.add_argument("model_dir", help="Directory containing all model files")
-    parser.add_argument("--outdir", default="predictions", help="Output directory name (default: predictions)")
+    parser.add_argument("--outdir", help="Output directory name")
     parser.add_argument("--bin-num", type=int, default=10, help="Number of bins for histogram (default: 10)")
     return parser.parse_args()
 
 
-def predict_contigs(input_path, model_dir, outdir="predictions", bin_num=10):
+def predict_contigs(input_path, model_dir, outdir, bin_num=10):
     """
     Predict Tobamovirus contigs using trained models
 
@@ -40,6 +40,8 @@ def predict_contigs(input_path, model_dir, outdir="predictions", bin_num=10):
         DataFrame with contig predictions
     """
     print(f"Starting contig prediction using {bin_num} bins for histogram approach...")
+
+    predictions_dir = f"{outdir}/predictions"
 
     # Construct model file paths
     rf_model_path = os.path.join(model_dir, "rf_model.joblib")
@@ -70,7 +72,7 @@ def predict_contigs(input_path, model_dir, outdir="predictions", bin_num=10):
     input_df = pd.read_csv(input_path)
 
     # Create output directory
-    os.makedirs(f"results/{outdir}", exist_ok=True)
+    os.makedirs(f"results/{predictions_dir}", exist_ok=True)
 
     # Load feature names
     cols = pd.read_csv(feature_names_path, header=None)[0].tolist()
@@ -102,8 +104,8 @@ def predict_contigs(input_path, model_dir, outdir="predictions", bin_num=10):
     results_df["contig_name"] = results_df["orf_name"].str.extract(r"(.*)(?:_ORF\.\d+|_aa_frame\d+)", expand=False)
 
     # Save ORF predictions
-    results_df.to_csv(f"results/{outdir}/orf_predictions.csv", index=False)
-    print(f"ORF predictions saved to results/{outdir}/orf_predictions.csv")
+    results_df.to_csv(f"results/{predictions_dir}/orf_predictions.csv", index=False)
+    print(f"ORF predictions saved to results/{predictions_dir}/orf_predictions.csv")
 
     # Prepare predictions for contig prediction
     print(f"Preparing histogram with {bin_num} bins for contig-level prediction...")
@@ -119,8 +121,8 @@ def predict_contigs(input_path, model_dir, outdir="predictions", bin_num=10):
     )
 
     # Save contig predictions
-    final_predictions_df.to_csv(f"results/{outdir}/contig_predictions.csv", index=False)
-    print(f"Contig predictions saved to results/{outdir}/contig_predictions.csv")
+    final_predictions_df.to_csv(f"results/{predictions_dir}/contig_predictions.csv", index=False)
+    print(f"Contig predictions saved to results/{predictions_dir}/contig_predictions.csv")
 
     # Summary statistics
     tobamo_count = final_predictions_df["predicted_class"].sum()
