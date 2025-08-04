@@ -24,16 +24,31 @@ from sklearn.cluster import KMeans
 from sklearn.discriminant_analysis import StandardScaler
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.linear_model import LinearRegression, LogisticRegression
-from sklearn.metrics import (ConfusionMatrixDisplay, accuracy_score,
-                             adjusted_rand_score, auc, classification_report,
-                             confusion_matrix, f1_score, make_scorer,
-                             mean_squared_error, precision_recall_curve,
-                             precision_score, recall_score, roc_auc_score,
-                             roc_curve)
-from sklearn.model_selection import (GridSearchCV, LeaveOneOut, ParameterGrid,
-                                     StratifiedKFold,
-                                     TunedThresholdClassifierCV,
-                                     cross_val_predict, train_test_split)
+from sklearn.metrics import (
+    ConfusionMatrixDisplay,
+    accuracy_score,
+    adjusted_rand_score,
+    auc,
+    classification_report,
+    confusion_matrix,
+    f1_score,
+    make_scorer,
+    mean_squared_error,
+    precision_recall_curve,
+    precision_score,
+    recall_score,
+    roc_auc_score,
+    roc_curve,
+)
+from sklearn.model_selection import (
+    GridSearchCV,
+    LeaveOneOut,
+    ParameterGrid,
+    StratifiedKFold,
+    TunedThresholdClassifierCV,
+    cross_val_predict,
+    train_test_split,
+)
 from sklearn.naive_bayes import GaussianNB
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.preprocessing import LabelEncoder, StandardScaler
@@ -428,19 +443,22 @@ def predict_contigs_hist_test(predictions, mc, idx, mc_name, num: int, refs_: bo
     return final_predictions_df
 
 
-def train_rf_and_predict(train):
+def train_rf_and_predict(train, selected_model):
     """
     Train a Random Forest model and predict probabilities for each virus name.
 
     Parameters:
     train (pd.DataFrame): The training DataFrame.
+    selected_model (dict): The selected model configuration.
 
     Returns:
     pd.DataFrame: A DataFrame containing predictions and ground truth.
     """
+
     unique_virusnames = train["virus_name"].unique()
     all_predictions = pd.DataFrame()
 
+    # Perform LOOCV for each unique virus name to make ORF predictions
     for virusname in unique_virusnames:
         # Split data
         sub_train = train[train["virus_name"] != virusname]
@@ -460,7 +478,7 @@ def train_rf_and_predict(train):
         X_test = scaler.transform(X_test)
 
         # Initialize the model
-        model = RandomForestClassifier(n_estimators=125, max_depth=40, n_jobs=-1, random_state=42)
+        model = selected_model["model"]
 
         # Train the model
         model.fit(X_train, y_train)
@@ -478,7 +496,7 @@ def train_rf_and_predict(train):
     return all_predictions
 
 
-def train_rf_on_all_data(train):
+def train_rf_on_all_data(train, selected_model):
     """
     Train a Random Forest model on all data and save the model and scaler.
 
@@ -499,7 +517,7 @@ def train_rf_on_all_data(train):
     X_train = scaler.fit_transform(X_train)
 
     # Initialize and train the model
-    model = RandomForestClassifier(n_estimators=125, max_depth=40, n_jobs=-1, random_state=42)
+    model = selected_model["model"]
     model.fit(X_train, y_train)
 
     return model, scaler, feature_names

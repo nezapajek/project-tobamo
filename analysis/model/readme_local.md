@@ -54,18 +54,6 @@ notebooks/filter_snakemake_pairwise_results.ipynb
 
 python scripts/predict_query_contigs.py results/snakemake/pairwise_aln_all_deduplicated_non_cellular_filtered.csv results/final_model --outdir predictions
 
-
--------------------------------------------
-
-model_selection() TEST
-
-python scripts/train_model_pipeline.py results/training/training_input.csv ../data/tobamo/reference_database.xlsx results/training/sampling/2025-07-11_sampled_contigs_30.fasta --stage select --outdir model_selection_test_n2
-
-
-# running over weekend
-time python scripts/train_model_pipeline.py results/training/training_input.csv ../data/tobamo/reference_database.xlsx results/training/sampling/2025-07-11_sampled_contigs_30.fasta --stage select --outdir model_selection_test_n10
-
-
 -------------------------------------------
 
 RANDOM SEQ

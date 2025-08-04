@@ -168,7 +168,7 @@ def model_selection_old(input_df, refs, contigs, outdir="model_selection", rando
     print(f"Model selection completed! Best model: {best_model}")
 
 
-def model_selection(input_df, refs, contigs, outdir="model_selection", random_seed=42, iterations=10):
+def model_selection(input_df, refs, contigs, outdir="model_selection", random_seed=42, iterations=5):
     """Perform model selection and hyperparameter tuning with multiple iterations"""
     print(f"Starting model selection and hyperparameter tuning with {iterations} iterations...")
 
@@ -194,15 +194,15 @@ def model_selection(input_df, refs, contigs, outdir="model_selection", random_se
     }
 
     os.makedirs(f"results/{outdir}/report", exist_ok=True)
-    
+
     # List to store results across all iterations
     all_performance_metrics = []
-    
+
     # Run multiple iterations
     for iteration in range(iterations):
         print(f"\nStarting iteration {iteration+1}/{iterations}")
         iter_seed = random_seed + iteration
-        
+
         # Create 5-fold CV split for this iteration
         folds = stratified_kfold_split(refs, n_splits=5, random_state=iter_seed)
 
@@ -223,11 +223,11 @@ def model_selection(input_df, refs, contigs, outdir="model_selection", random_se
                 random_seed=iter_seed,
             )
             selected_test_contigs = subsample_contigs(
-                test_refs, 
-                contigs, 
-                num=30, 
-                output_dir=f"results/{outdir}/report/iter{iteration}_fold{idx}_test_report", 
-                random_seed=iter_seed
+                test_refs,
+                contigs,
+                num=30,
+                output_dir=f"results/{outdir}/report/iter{iteration}_fold{idx}_test_report",
+                random_seed=iter_seed,
             )
 
             # Filter datasets to selected contigs
@@ -282,11 +282,11 @@ def model_selection(input_df, refs, contigs, outdir="model_selection", random_se
             }
 
             performance_metrics_list.append(metrics)
-        
+
         # Save this iteration's results
         iter_df = pd.DataFrame(performance_metrics_list)
         iter_df.to_csv(f"results/{outdir}/iter_{iteration}_performance_metrics.csv")
-        
+
         # Append to overall results
         all_performance_metrics.extend(performance_metrics_list)
 
@@ -303,17 +303,13 @@ def model_selection(input_df, refs, contigs, outdir="model_selection", random_se
 
     # Calculate average and std of accuracy for each model
     avg_performances = {
-        model: {
-            "mean": np.mean(scores),
-            "std": np.std(scores),
-            "count": len(scores)
-        } 
+        model: {"mean": np.mean(scores), "std": np.std(scores), "count": len(scores)}
         for model, scores in model_performances.items()
     }
-    
+
     # Find best model based on average performance
     best_model = max(avg_performances.keys(), key=lambda m: avg_performances[m]["mean"])
-    
+
     # Count how many times each model was selected as best in individual folds
     model_selection_counts = {}
     for metric in all_performance_metrics:
@@ -326,27 +322,32 @@ def model_selection(input_df, refs, contigs, outdir="model_selection", random_se
     with open(f"results/{outdir}/model_selection_summary.txt", "w") as f:
         f.write(f"Model Selection Summary (across {iterations} iterations)\n")
         f.write("=" * 50 + "\n\n")
-        
+
         f.write("Overall Best Model: {}\n".format(best_model))
-        f.write("Average accuracy: {:.4f} ± {:.4f}\n\n".format(
-            avg_performances[best_model]["mean"], 
-            avg_performances[best_model]["std"]
-        ))
-        
+        f.write(
+            "Average accuracy: {:.4f} ± {:.4f}\n\n".format(
+                avg_performances[best_model]["mean"], avg_performances[best_model]["std"]
+            )
+        )
+
         f.write("Performance by Model:\n")
         f.write("-" * 40 + "\n")
         for model, stats in avg_performances.items():
-            f.write("{}: {:.4f} ± {:.4f} (selected in {}/{} folds)\n".format(
-                model, stats["mean"], stats["std"],
-                model_selection_counts[model],
-                iterations * 5  # total number of folds across all iterations
-            ))
+            f.write(
+                "{}: {:.4f} ± {:.4f} (selected in {}/{} folds)\n".format(
+                    model,
+                    stats["mean"],
+                    stats["std"],
+                    model_selection_counts[model],
+                    iterations * 5,  # total number of folds across all iterations
+                )
+            )
 
     print(f"Model selection completed across {iterations} iterations! Best model: {best_model}")
     return best_model, avg_performances
 
 
-def train_and_evaluate(input_df, refs, contigs, outdir="cv_evaluation", iterations=30, sample_depth=30, random_seed=42):
+def train_and_evaluate(input_df, refs, contigs, outdir="cv_evaluation", iterations=30, sample_depth=30, random_seed=42, selected_model=None):
     """Perform extensive cross-validation with both prediction methods"""
     print(f"Starting comprehensive evaluation with {iterations} iterations...")
 
@@ -388,14 +389,14 @@ def train_and_evaluate(input_df, refs, contigs, outdir="cv_evaluation", iteratio
             ################################################ TRAIN PHASE
 
             # Make ORF predictions: Direct Random Forest
-            morf_predictions = train_rf_and_predict(train)  # make predictions using LOOCV
+            morf_predictions = train_rf_and_predict(train, selected_model)  # make predictions using LOOCV
 
             # Train Logistic Regression model on LOOCV prediction
             bins = [10]  # or test a list of bins e.g. [5, 10, 20]
             mc_dict = train_lr_and_predict_hist_test(morf_predictions, bins)
 
             # Train RandomForest model on all training data
-            morf, sorf, _ = train_rf_on_all_data(train)
+            morf, sorf, _ = train_rf_on_all_data(train, selected_model)
 
             ################################################ TEST phase
 
@@ -529,7 +530,7 @@ def train_and_evaluate(input_df, refs, contigs, outdir="cv_evaluation", iteratio
             f.write(f"{metric}: {mean:.4f} ± {std:.4f} (95% CI: {ci_low:.4f}-{ci_high:.4f})\n")
 
 
-def train_final_model(input_df, refs, contigs, outdir="final_model", bin_num=10, random_seed=42):
+def train_final_model(input_df, refs, contigs, outdir="final_model", bin_num=10, random_seed=42, selected_model=None):
     """Train the final RF+LR histogram model on all training data
 
     Parameters:
@@ -570,7 +571,7 @@ def train_final_model(input_df, refs, contigs, outdir="final_model", bin_num=10,
     train_fwd = train[train["strand"] == "FORWARD"]
 
     # Train RandomForest model
-    morf, sorf, features = train_rf_on_all_data(train_fwd)
+    morf, sorf, features = train_rf_on_all_data(train_fwd, selected_model)
 
     # Save RF model and features
     dump(morf, f"results/{outdir}/rf_model.joblib")
@@ -578,7 +579,7 @@ def train_final_model(input_df, refs, contigs, outdir="final_model", bin_num=10,
     pd.Series(features).to_csv(f"results/{outdir}/rf_feature_names.csv", index=False, header=False)
 
     # Train RF on subset and get predictions with LOOCV for LR model training
-    morf_predictions = train_rf_and_predict(train_fwd)
+    morf_predictions = train_rf_and_predict(train_fwd, selected_model)
 
     # Train Logistic Regression histogram model with selected bins num
     mc_dict = train_lr_and_predict_hist_test(morf_predictions, [bin_num])
@@ -595,9 +596,10 @@ def train_final_model(input_df, refs, contigs, outdir="final_model", bin_num=10,
     feature_importances_df = feature_importances_df.sort_values("Importance", ascending=False)
     feature_importances_df.to_csv(f"results/{outdir}/feature_importances.csv", index=False)
 
-    # Save top 20 features for easy reference
-    top_features = feature_importances_df.head(20)
-    top_features.to_csv(f"results/{outdir}/top_20_features.csv", index=False)
+    # Save all and top 40 features for easy reference
+    feature_importances_df.to_csv(f"results/{outdir}/all_features.csv", index=False)
+    top_features = feature_importances_df.head(40)
+    top_features.to_csv(f"results/{outdir}/top_40_features.csv", index=False)
 
     print(f"Final models (RF + LR histogram with {bin_num} bins) trained and saved!")
 
@@ -609,6 +611,9 @@ def main():
     # Check inputs and load data
     input_df, refs, contigs = check_inputs(args.input_df, args.refs, args.contigs)
     print("Input data loaded successfully")
+
+    # Default selected model
+    default_selected_model = {"model": RandomForestClassifier(n_estimators=200, max_depth=50, n_jobs=-1, random_state=args.seed)}
 
     # Run the requested pipeline stage
     if args.stage == "select":
@@ -623,10 +628,19 @@ def main():
             iterations=args.iterations,
             sample_depth=args.sample_depth,
             random_seed=args.seed,
+            selected_model=default_selected_model,
         )
 
     elif args.stage == "final":
-        train_final_model(input_df, refs, contigs, outdir=args.outdir, bin_num=args.bin_num, random_seed=args.seed)
+        train_final_model(
+            input_df,
+            refs,
+            contigs,
+            outdir=args.outdir,
+            bin_num=args.bin_num,
+            random_seed=args.seed,
+            selected_model=default_selected_model,
+        )
 
     print("Pipeline completed successfully!")
 
