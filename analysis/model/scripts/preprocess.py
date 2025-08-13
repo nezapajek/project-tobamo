@@ -16,6 +16,9 @@ def parse_args():
     parser.add_argument("orf_fasta_path", help="Path to ORF FASTA file")
     parser.add_argument("pairwise_path", help="Path to pairwise alignment CSV")
     parser.add_argument("output_dir", help="Directory name where output files will be saved in results/")
+    parser.add_argument(
+        "--contig_fasta_path", help="Path to contig FASTA file (required for non-snakemake contigs)", default=None
+    )
 
     # Data type flags (mutually exclusive)
     group = parser.add_mutually_exclusive_group(required=True)
@@ -24,6 +27,13 @@ def parse_args():
 
     # Training-specific arguments
     parser.add_argument("--contigs", help="Path to contigs FASTA file (required for training)", default=None)
+
+    # Test-specific arguments
+    parser.add_argument(
+        "--snakemake",
+        action="store_true",
+        help="Use snakemake mode for contigs from snakemake, relevant for parsing names",
+    )
 
     return parser.parse_args()
 
@@ -78,7 +88,7 @@ def preprocess_training(refs_path, contig_fasta_path, orf_fasta_path, pairwise_p
     return input_df
 
 
-def preprocess_testing(refs_path, orf_fasta_path, pairwise_path, output_dir):
+def preprocess_testing(refs_path, orf_fasta_path, pairwise_path, output_dir, snakemake=True, contig_fasta_path=None):
     """
     Process test data
     """
@@ -108,7 +118,13 @@ def preprocess_testing(refs_path, orf_fasta_path, pairwise_path, output_dir):
 
     # Add basic info
     print("Adding basic sequence information")
-    input_df = add_info_basic(pvtd, orf_fasta_path, snakemake=True)
+
+    if snakemake:
+        input_df = add_info_basic(pvtd, orf_fasta_path, snakemake=True)
+    else:
+        if contig_fasta_path is None:
+            raise ValueError("Contig FASTA path must be provided for non-snakemake mode")
+        input_df = add_info_basic(pvtd, orf_fasta_path, snakemake=False, contig_fasta_path=contig_fasta_path)
 
     # Save results
     print("Saving processed test data")
@@ -131,7 +147,14 @@ def main():
     if args.train:
         preprocess_training(args.refs_path, args.contigs, args.orf_fasta_path, args.pairwise_path, args.output_dir)
     elif args.test:
-        preprocess_testing(args.refs_path, args.orf_fasta_path, args.pairwise_path, args.output_dir)
+        preprocess_testing(
+            args.refs_path,
+            args.orf_fasta_path,
+            args.pairwise_path,
+            args.output_dir,
+            args.snakemake,
+            args.contig_fasta_path,
+        )
 
     print("Preprocessing completed successfully!")
 

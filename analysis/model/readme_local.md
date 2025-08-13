@@ -42,7 +42,7 @@ python scripts/preprocess.py ../data/tobamo/reference_database.xlsx results/trai
 
 time python scripts/getorfs_pairwise_aln.py ../data/contigs/contigs_all_deduplicated.fasta snakemake unknown 
 
-python scripts/preprocess.py ../data/tobamo/reference_database.xlsx results/snakemake/orfs/combined_orfs.fasta results/snakemake/pairwise_aln.csv snakemake --test
+python scripts/preprocess.py ../data/tobamo/reference_database.xlsx results/snakemake/orfs/combined_orfs.fasta results/snakemake/pairwise_aln.csv snakemake --test --snakemake
 
 # ALL DEDUPLICATED (filter out non-target - keep 510 contigs non_cellular_filtered only) 
 notebooks/filter_snakemake_pairwise_results.ipynb
@@ -52,16 +52,16 @@ notebooks/filter_snakemake_pairwise_results.ipynb
 
 # Predict test contigs
 
-python scripts/predict_query_contigs.py results/snakemake/pairwise_aln_all_deduplicated_non_cellular_filtered.csv results/final_model --outdir predictions
+python scripts/predict_query_contigs.py results/snakemake/pairwise_aln_all_deduplicated_non_cellular_filtered.csv results/final_model --outdir snakemake
 
 -------------------------------------------
 
 RANDOM SEQ
 
 # preprocessing
-time python scripts/getorfs_pairwise_aln.py ../data/random/non-virga_tpdb2_diamond_selected.fasta random unknown 
+time python scripts/getorfs_pairwise_aln.py ../data/random_seq/non-virga_tpdb2_diamond_selected.fasta random_seq unknown 
 
-python scripts/preprocess.py ../data/tobamo/reference_database.xlsx results/random/orfs/combined_orfs.fasta results/random/pairwise_aln.csv random --test
+python scripts/preprocess.py ../data/tobamo/reference_database.xlsx results/random/orfs/combined_orfs.fasta results/random/pairwise_aln.csv random_seq --test --contig_fasta_path ../data/random_seq/non-virga_tpdb2_diamond_selected.fasta
 
 # model predictions
-python scripts/predict_query_contigs.py results/random/testing_input.csv results/final_model --outdir random
+python scripts/predict_query_contigs.py results/random_seq/testing_input.csv results/final_model --outdir random_seq 

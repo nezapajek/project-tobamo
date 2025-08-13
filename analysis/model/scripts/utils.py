@@ -556,7 +556,7 @@ def add_info_to_training_input_df(input_df, orf_fasta_path: str, inv_nt_virusnam
     return input_df
 
 
-def add_info_basic(input_df, orf_fasta_path: str, snakemake: bool):  # , contig_fasta_path: str):
+def add_info_basic(input_df, orf_fasta_path: str, snakemake: bool, contig_fasta_path=None):  # , contig_fasta_path: str):
     """
     Add additional information to the input DataFrame from ORF and contig FASTA files.
 
@@ -594,7 +594,8 @@ def add_info_basic(input_df, orf_fasta_path: str, snakemake: bool):  # , contig_
         orf_lens = {k: len(v.seq) for k, v in SeqIO.to_dict(SeqIO.parse(orf_fasta_path, "fasta")).items()}
         input_df["orf_len"] = input_df["orf_name"].map(orf_lens)
         # add contig_length
-        input_df["contig_length"] = input_df["contig_name"].str.extract(r"len-(\d+)").astype(int)
+        contig_lens = {rec.id: len(rec.seq) for rec in SeqIO.parse(contig_fasta_path, "fasta")}
+        input_df["contig_length"] = input_df["contig_name"].map(contig_lens)
         # add stop_codons
         all_orfs_stops = {
             k: int(v.seq.count("*")) for k, v in SeqIO.to_dict(SeqIO.parse(orf_fasta_path, "fasta")).items()
