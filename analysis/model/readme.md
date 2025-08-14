@@ -170,8 +170,8 @@ python scripts/train_model_pipeline.py <path/to/training_input.csv> <path/to/ref
 
 **Pipeline Stages**
 
-1. **Model Selection** (`--stage select`)
-   - Performs grid search to find the best-performing model type
+1. **ORF Model Selection** (`--stage select`)
+   - Performs grid search to find the best-performing model type for ORF classification
    - Tests multiple models (RandomForest, LogisticRegression, SVM, etc.)
    - Evaluates models using 5-fold cross-validation
    - Saves performance metrics for each model
@@ -182,7 +182,7 @@ python scripts/train_model_pipeline.py <path/to/training_input.csv> <path/to/ref
 
 2. **Cross-Validation Evaluation** (`--stage evaluate`)
    - Performs extensive evaluation using multiple iterations of 5-fold cross-validation
-   - Compares two prediction methods:
+   - Compares two prediction methods for contig classification:
      - Most extreme probability approach
      - Histogram-based approach (using logistic regression with bins=10)
    - Generates comprehensive performance metrics
@@ -193,7 +193,7 @@ python scripts/train_model_pipeline.py <path/to/training_input.csv> <path/to/ref
 
 3. **Final Model Training** (`--stage final`)
    - Trains the final production model on all training data
-   - Uses the best-performing approach (Random Forest + Logistic Regression histogram)
+   - Uses the best-performing approach (Random Forest for ORF classification + Logistic Regression histogram for contig level classification)
    - Saves all necessary model files for deployment
    
    ```bash
