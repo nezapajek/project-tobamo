@@ -347,7 +347,9 @@ def model_selection(input_df, refs, contigs, outdir="model_selection", random_se
     return best_model, avg_performances
 
 
-def train_and_evaluate(input_df, refs, contigs, outdir="cv_evaluation", iterations=30, sample_depth=30, random_seed=42, selected_model=None):
+def train_and_evaluate(
+    input_df, refs, contigs, outdir="cv_evaluation", iterations=30, sample_depth=30, random_seed=42, selected_model=None
+):
     """Perform extensive cross-validation with both prediction methods"""
     print(f"Starting comprehensive evaluation with {iterations} iterations...")
 
@@ -356,6 +358,7 @@ def train_and_evaluate(input_df, refs, contigs, outdir="cv_evaluation", iteratio
     # Lists to store all results
     all_extreme_predictions = []
     all_hist_predictions = []
+    all_orf_predictions = []
 
     for iteration in range(iterations):
         print(f"Starting iteration {iteration+1}/{iterations}")
@@ -403,6 +406,10 @@ def train_and_evaluate(input_df, refs, contigs, outdir="cv_evaluation", iteratio
             # Predict test ORFs using the trained RandomForest model
             test_orf_predictions = predict_orfs(test, morf, sorf, refs=True)
 
+            test_orf_predictions["iteration"] = iteration
+            test_orf_predictions["fold"] = idx
+            all_orf_predictions.append(test_orf_predictions)
+
             # Method 1: Select contig class based on most extreme ORF probability
             extreme_predictions = filter_extreme_probability(test_orf_predictions, idx, refs_=True)
             extreme_predictions["iteration"] = iteration
@@ -425,6 +432,9 @@ def train_and_evaluate(input_df, refs, contigs, outdir="cv_evaluation", iteratio
 
     hist_results = pd.concat(all_hist_predictions)
     hist_results.to_csv(f"results/{outdir}/histogram_predictions_results.csv", index=False)
+
+    orf_results = pd.concat(all_orf_predictions)
+    orf_results.to_csv(f"results/{outdir}/orf_predictions_results.csv", index=False)
 
     # Calculate summary performance metrics
     methods = {"extreme": extreme_results, "histogram": hist_results}
@@ -613,7 +623,9 @@ def main():
     print("Input data loaded successfully")
 
     # Default selected model
-    default_selected_model = {"model": RandomForestClassifier(n_estimators=200, max_depth=50, n_jobs=-1, random_state=args.seed)}
+    default_selected_model = {
+        "model": RandomForestClassifier(n_estimators=200, max_depth=50, n_jobs=-1, random_state=args.seed)
+    }
 
     # Run the requested pipeline stage
     if args.stage == "select":
