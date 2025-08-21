@@ -262,12 +262,35 @@ def train_lr_and_predict_hist_test(all_predictions, nums: list):
         bin_df = prepare_bin_df_refs_hist_test(all_predictions, "histogram", num_bins=num)
         X = bin_df.drop(columns=["ground_truth"])
         y = bin_df["ground_truth"]
-        model_lr = LogisticRegression(max_iter=1000)
+
+        scorer = make_scorer(accuracy_score)
+        base_model = LogisticRegression(max_iter=1000)
+        model_lr = TunedThresholdClassifierCV(base_model, scoring=scorer, cv=StratifiedKFold(n_splits=10))
+        
         model_lr.fit(X, y)
 
-        models[f"histogram_{num}"] = model_lr
+        # Store both the model and the best threshold
+        models[f"histogram_{num}"] = {
+            'model': model_lr,
+            'best_threshold':model_lr.best_threshold_
+        }
 
     return models
+
+def train_lr_final_model(all_predictions, num_bins, fixed_threshold=0.5):
+    """Train final logistic regression model with fixed threshold"""
+    bin_df = prepare_bin_df_refs_hist_test(all_predictions, "histogram", num_bins=num_bins)
+    X = bin_df.drop(columns=["ground_truth"])
+    y = bin_df["ground_truth"]
+    
+    # Use regular LogisticRegression for final model
+    model_lr = LogisticRegression(max_iter=1000)
+    model_lr.fit(X, y)
+    
+    return {
+        'model': model_lr,
+        'threshold': fixed_threshold
+    }
 
 
 def prepare_bin_df_refs_hist_test(all_predictions, method_name, num_bins):
@@ -382,6 +405,49 @@ def prepare_bin_df(all_predictions, method_name, num_bins=10):
 
     return bin_df
 
+
+def generate_threshold_summary(hist_results, outdir):
+    """Generate a concise threshold analysis summary"""
+    
+    # Calculate basic statistics
+    overall_mean = hist_results['threshold'].mean()
+    overall_std = hist_results['threshold'].std()
+    overall_min = hist_results['threshold'].min()
+    overall_max = hist_results['threshold'].max()
+    
+    # Per-iteration means
+    iter_means = hist_results.groupby('iteration')['threshold'].mean()
+    iter_mean_avg = iter_means.mean()
+    iter_mean_std = iter_means.std()
+    
+    # Simple recommendation
+    if abs(overall_mean - 0.5) < 0.05:
+        recommendation = "Use default threshold 0.5"
+    else:
+        recommendation = f"Consider CV threshold: {overall_mean:.3f}"
+    
+    # Create short report
+    report = f"""
+        THRESHOLD ANALYSIS SUMMARY
+        ==========================
+        Overall statistics:
+        Mean: {overall_mean:.4f} ± {overall_std:.4f}
+        Range: {overall_min:.4f} - {overall_max:.4f}
+
+        Per-iteration means:
+        Mean: {iter_mean_avg:.4f} ± {iter_mean_std:.4f}
+        
+        Recommendation: {recommendation}
+        """
+    
+    # Save to file
+    with open(f"results/{outdir}/threshold_summary.txt", "w") as f:
+        f.write(report)
+    
+    # Print to console
+    print(report)
+    
+    return overall_mean, overall_std
 
 def predict_contigs(predictions, mc, idx, mc_name, refs_: bool):
 

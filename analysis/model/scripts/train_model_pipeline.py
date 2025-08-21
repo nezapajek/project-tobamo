@@ -27,6 +27,7 @@ def parse_args():
     parser.add_argument("--sample_depth", type=int, default=30, help="Number of contigs to sample per species")
     parser.add_argument("--seed", type=int, default=42, help="Random seed")
     parser.add_argument("--bin-num", type=int, default=10, help="Number of bins for histogram model (default: 10)")
+    parser.add_argument("--threshold", type=float, default=None, help="Custom classification threshold (overrides CV results)")
     return parser.parse_args()
 
 
@@ -416,12 +417,15 @@ def train_and_evaluate(
             all_extreme_predictions.append(extreme_predictions)
 
             # Method 2: Predict contigs using logistic regression (based on binned ORF predictions)
-            for mc_name_n, mc in mc_dict.items():
+            for mc_name_n, mc_info in mc_dict.items():
                 mc_name = mc_name_n.split("_")[0]
                 num = int(mc_name_n.split("_")[1])
+                mc = mc_info['model']  # Extract the model
+                best_threshold = mc_info['best_threshold']  # Extract the threshold
+
                 final_predictions = predict_contigs_hist_test(test_orf_predictions, mc, idx, mc_name, num, refs_=True)
                 final_predictions["n"] = num
-                final_predictions["treshold"] = 0.5
+                final_predictions["threshold"] = best_threshold
                 final_predictions["random_seed"] = random_seed
                 final_predictions["iteration"] = iteration
                 all_hist_predictions.append(final_predictions)
@@ -539,8 +543,15 @@ def train_and_evaluate(
             ci_high = best_metrics[f"{metric}_ci95_high"]
             f.write(f"{metric}: {mean:.4f} ± {std:.4f} (95% CI: {ci_low:.4f}-{ci_high:.4f})\n")
 
+    # Add threshold analysis
+    print("\nAnalyzing threshold optimization results...")
+    generate_threshold_summary(hist_results, outdir)
+    
+    print(f"\nEvaluation completed! Best method: {best_method}")
+    print(f"Results saved to: results/{outdir}/")
 
-def train_final_model(input_df, refs, contigs, outdir="final_model", bin_num=10, random_seed=42, selected_model=None):
+
+def train_final_model(input_df, refs, contigs, outdir="final_model", bin_num=10, fixed_threshold=0.5, random_seed=42, selected_model=None):
     """Train the final RF+LR histogram model on all training data
 
     Parameters:
@@ -555,11 +566,16 @@ def train_final_model(input_df, refs, contigs, outdir="final_model", bin_num=10,
         Output directory name
     bin_num : int, default=10
         Number of bins to use for the histogram model (determined in evaluation)
+    fixed_threshold : float, default=0.5
+        Classification threshold. If 0.5, uses default. Otherwise uses value from CV.
     random_seed : int, default=42
         Random seed for reproducibility
+    selected_model : dict, optional
+        Selected model configuration
     """
 
     print(f"Training final model using RF + LR histogram approach with {bin_num} bins...")
+    print(f"Using classification threshold: {fixed_threshold}")
 
     os.makedirs(f"results/{outdir}", exist_ok=True)
 
@@ -592,12 +608,22 @@ def train_final_model(input_df, refs, contigs, outdir="final_model", bin_num=10,
     morf_predictions = train_rf_and_predict(train_fwd, selected_model)
 
     # Train Logistic Regression histogram model with selected bins num
-    mc_dict = train_lr_and_predict_hist_test(morf_predictions, [bin_num])
-    hist_model = mc_dict[f"histogram_{bin_num}"]
+    mc_dict = train_lr_final_model(morf_predictions, [bin_num], fixed_threshold)
+    hist_model_info = mc_dict[f"histogram_{bin_num}"]
+    hist_model = hist_model_info['model']  # Get the LR model
+    threshold = hist_model_info['threshold']
 
     # Save LR histogram model
     dump(hist_model, f"results/{outdir}/lr_histogram_{bin_num}_model.joblib")
     print(f"Saved histogram model with {bin_num} bins")
+
+    # Save threshold info
+    with open(f"results/{outdir}/threshold_info.txt", "w") as f:
+        f.write(f"Classification threshold: {threshold}\n")
+        f.write(f"Source: {'default' if threshold == 0.5 else 'cross_validation'}\n")
+    
+    print(f"Saved histogram model with {bin_num} bins and threshold {threshold}")
+   
 
     # Save feature importances
     feature_importances = morf.feature_importances_
@@ -650,6 +676,7 @@ def main():
             contigs,
             outdir=args.outdir,
             bin_num=args.bin_num,
+            fixed_threshold=args.threshold if args.threshold is not None else 0.5,
             random_seed=args.seed,
             selected_model=default_selected_model,
         )
