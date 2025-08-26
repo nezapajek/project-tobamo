@@ -26,7 +26,7 @@ def parse_args():
     parser.add_argument("--iterations", type=int, default=30, help="Number of iterations for cross-validation")
     parser.add_argument("--sample_depth", type=int, default=30, help="Number of contigs to sample per species")
     parser.add_argument("--seed", type=int, default=42, help="Random seed")
-    parser.add_argument("--bin-num", type=int, default=10, help="Number of bins for histogram model (default: 10)")
+    parser.add_argument("--bin-num", type=int, default=10, help="Number of bins for stacking model (default: 10)")
     parser.add_argument("--threshold", type=float, default=None, help="Custom classification threshold (overrides CV results)")
     return parser.parse_args()
 
@@ -435,13 +435,13 @@ def train_and_evaluate(
     extreme_results.to_csv(f"results/{outdir}/extreme_predictions_results.csv", index=False)
 
     hist_results = pd.concat(all_hist_predictions)
-    hist_results.to_csv(f"results/{outdir}/histogram_predictions_results.csv", index=False)
+    hist_results.to_csv(f"results/{outdir}/stacking_predictions_results.csv", index=False)
 
     orf_results = pd.concat(all_orf_predictions)
     orf_results.to_csv(f"results/{outdir}/orf_predictions_results.csv", index=False)
 
     # Calculate summary performance metrics
-    methods = {"extreme": extreme_results, "histogram": hist_results}
+    methods = {"extreme": extreme_results, "stacking": hist_results}
 
     summary_metrics = []
 
@@ -552,7 +552,7 @@ def train_and_evaluate(
 
 
 def train_final_model(input_df, refs, contigs, outdir="final_model", bin_num=10, fixed_threshold=0.5, random_seed=42, selected_model=None):
-    """Train the final RF+LR histogram model on all training data
+    """Train the final RF+LR stacking model on all training data
 
     Parameters:
     -----------
@@ -565,7 +565,7 @@ def train_final_model(input_df, refs, contigs, outdir="final_model", bin_num=10,
     outdir : str, default="final_model"
         Output directory name
     bin_num : int, default=10
-        Number of bins to use for the histogram model (determined in evaluation)
+        Number of bins to use for the stacking model (determined in evaluation)
     fixed_threshold : float, default=0.5
         Classification threshold. If 0.5, uses default. Otherwise uses value from CV.
     random_seed : int, default=42
@@ -574,7 +574,7 @@ def train_final_model(input_df, refs, contigs, outdir="final_model", bin_num=10,
         Selected model configuration
     """
 
-    print(f"Training final model using RF + LR histogram approach with {bin_num} bins...")
+    print(f"Training final model using RF + LR stacking approach with {bin_num} bins...")
     print(f"Using classification threshold: {fixed_threshold}")
 
     os.makedirs(f"results/{outdir}", exist_ok=True)
@@ -607,22 +607,22 @@ def train_final_model(input_df, refs, contigs, outdir="final_model", bin_num=10,
     # Train RF on subset and get predictions with LOOCV for LR model training
     morf_predictions = train_rf_and_predict(train_fwd, selected_model)
 
-    # Train Logistic Regression histogram model with selected bins num
+    # Train Logistic Regression stacking model with selected bins num
     mc_dict = train_lr_final_model(morf_predictions, [bin_num], fixed_threshold)
-    hist_model_info = mc_dict[f"histogram_{bin_num}"]
+    hist_model_info = mc_dict[f"stacking_{bin_num}"]
     hist_model = hist_model_info['model']  # Get the LR model
     threshold = hist_model_info['threshold']
 
-    # Save LR histogram model
-    dump(hist_model, f"results/{outdir}/lr_histogram_{bin_num}_model.joblib")
-    print(f"Saved histogram model with {bin_num} bins")
+    # Save LR stacking model
+    dump(hist_model, f"results/{outdir}/lr_stacking_{bin_num}_model.joblib")
+    print(f"Saved stacking model with {bin_num} bins")
 
     # Save threshold info
     with open(f"results/{outdir}/threshold_info.txt", "w") as f:
         f.write(f"Classification threshold: {threshold}\n")
         f.write(f"Source: {'default' if threshold == 0.5 else 'cross_validation'}\n")
     
-    print(f"Saved histogram model with {bin_num} bins and threshold {threshold}")
+    print(f"Saved stacking model with {bin_num} bins and threshold {threshold}")
    
 
     # Save feature importances
@@ -637,7 +637,7 @@ def train_final_model(input_df, refs, contigs, outdir="final_model", bin_num=10,
     top_features = feature_importances_df.head(40)
     top_features.to_csv(f"results/{outdir}/top_40_features.csv", index=False)
 
-    print(f"Final models (RF + LR histogram with {bin_num} bins) trained and saved!")
+    print(f"Final models (RF + LR stacking with {bin_num} bins) trained and saved!")
 
 
 def main():

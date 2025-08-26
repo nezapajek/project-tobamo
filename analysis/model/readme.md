@@ -135,10 +135,10 @@ We then compare two different strategies for contig-level prediction:
 - **ORF Prediction**: All models use Random Forest for Open Reading Frame (ORF) classification (best performing model from previous step)
 - **Contig Prediction Methods**:
   - **Extreme Method**: Uses the most confident ORF prediction score
-  - **Histogram Method**: Bins ORF predictions and uses Logistic Regression
+  - **Stacking Method**: Bins ORF predictions and uses Logistic Regression
 - **Validation Process**: 5 fold Cross-Validation repeated 30 times
 - **Performance Assessment**: Comprehensive metrics including accuracy, F1 score, precision, and recall
-- **Winner**: Histogram-based approach (bins=10) achieved superior performance
+- **Winner**: Stacking-based approach (bins=10) achieved superior performance
 
 #### Final Model Training
 
@@ -184,7 +184,7 @@ python scripts/train_model_pipeline.py <path/to/training_input.csv> <path/to/ref
    - Performs extensive evaluation using multiple iterations of 5-fold cross-validation
    - Compares two prediction methods for contig classification:
      - Most extreme probability approach
-     - Histogram-based approach (using logistic regression with bins=10)
+     - Stacking-based approach (using logistic regression with bins=10)
    - Generates comprehensive performance metrics
    
    ```bash
@@ -193,7 +193,7 @@ python scripts/train_model_pipeline.py <path/to/training_input.csv> <path/to/ref
 
 3. **Final Model Training** (`--stage final`)
    - Trains the final production model on all training data
-   - Uses the best-performing approach (Random Forest for ORF classification + Logistic Regression histogram for contig level classification)
+   - Uses the best-performing approach (Random Forest for ORF classification + Logistic Regression stacking for contig level classification)
    - Saves all necessary model files for deployment
    
    ```bash
@@ -207,7 +207,7 @@ python scripts/train_model_pipeline.py <path/to/training_input.csv> <path/to/ref
 
 - **Cross-Validation Evaluation**:
   - `results/<outdir>/extreme_predictions_results.csv` - Results using most extreme probability method
-  - `results/<outdir>/histogram_predictions_results.csv` - Results using histogram-based approach
+  - `results/<outdir>/stacking_predictions_results.csv` - Results using stacking-based approach
   - `results/<outdir>/method_comparison.csv` - Performance comparison between methods
   - `results/<outdir>/best_method.txt` - Information about the best-performing method
 
@@ -215,7 +215,7 @@ python scripts/train_model_pipeline.py <path/to/training_input.csv> <path/to/ref
   - `results/<outdir>/rf_model.joblib` - Trained Random Forest model
   - `results/<outdir>/rf_scaler.joblib` - StandardScaler for feature normalization
   - `results/<outdir>/rf_feature_names.csv` - Feature names used by the model
-  - `results/<outdir>/lr_histogram_10_model.joblib` - Trained Logistic Regression histogram model
+  - `results/<outdir>/lr_stacking_10_model.joblib` - Trained Logistic Regression stacking model
   - `results/<outdir>/feature_importances.csv` - All feature importances ranked
   - `results/<outdir>/top_20_features.csv` - Top 20
 
@@ -269,13 +269,13 @@ python scripts/predict_contigs.py results/<output_dir>/testing_input.csv results
 | `<testing_input_df.csv>`     | Path to the processed input CSV file from preprocessing step.              |
 | `<model_dir>`                | Directory containing all model files (RF model, scaler, LR model, etc.).    |
 | `--outdir`                   | Name of output directory for prediction results (default: "predictions").   |
-| `--bin-num`                  | Number of bins for histogram approach (default: 10).                        |
+| `--bin-num`                  | Number of bins for stacking approach (default: 10).                        |
 
 The script expects these files in the model directory with standard names:
 - `rf_model.joblib` - Trained Random Forest model
 - `rf_scaler.joblib` - StandardScaler for feature normalization
 - `rf_feature_names.csv` - Feature names used by the model
-- `lr_histogram_<bin-num>_model.joblib` - Trained Logistic Regression histogram model
+- `lr_stacking_<bin-num>_model.joblib` - Trained Logistic Regression stacking model
 
 **Output Files**
 After running the script, the following files will be saved in `results/<outdir>/`:

@@ -43,7 +43,7 @@ from tqdm import tqdm
 
 
 def train_lr_and_predict_tuned(morf_predictions):
-    bin_df = prepare_bin_df_refs(morf_predictions, "histogram", num_bins=10)
+    bin_df = prepare_bin_df_refs(morf_predictions, "stacking", num_bins=10)
     X = bin_df.drop(columns=["ground_truth"])
     y = bin_df["ground_truth"]
 
@@ -54,7 +54,7 @@ def train_lr_and_predict_tuned(morf_predictions):
     model.fit(X, y)
     best_score = model.best_threshold_
 
-    return "histogram", model, best_score
+    return "stacking", model, best_score
 
 
 def check_file_exists(filepath, filetype):
@@ -196,7 +196,7 @@ def predict_orfs(test, morf, sorf, refs: bool = True):
 
 # def train_lr_and_predict(all_predictions):
 #     models = {}
-#     methods = ["histogram", "cumsum", "cumsum_reverse"]
+#     methods = ["stacking", "cumsum", "cumsum_reverse"]
 
 #     for method_name in methods:
 #         bin_df = prepare_bin_df_refs(all_predictions, method_name, num_bins=10)
@@ -210,14 +210,14 @@ def predict_orfs(test, morf, sorf, refs: bool = True):
 #     return models
 
 
-def train_lr_and_predict(all_predictions, methods=["histogram", "cumsum", "cumsum_reverse"]):
+def train_lr_and_predict(all_predictions, methods=["stacking", "cumsum", "cumsum_reverse"]):
     """
     Train Logistic Regression models for the specified methods.
 
     Parameters:
     all_predictions (pd.DataFrame): DataFrame containing predictions and ground truth.
     methods (list or str): List of methods or a single method to use for training.
-                           Defaults to ["histogram", "cumsum", "cumsum_reverse"].
+                           Defaults to ["stacking", "cumsum", "cumsum_reverse"].
 
     Returns:
     dict: A dictionary of trained Logistic Regression models for each method.
@@ -244,13 +244,13 @@ def train_lr_and_predict_hist_test(all_predictions, nums: list):
     models = {}
 
     for num in nums:
-        bin_df = prepare_bin_df_refs_hist_test(all_predictions, "histogram", num_bins=num)
+        bin_df = prepare_bin_df_refs_hist_test(all_predictions, "stacking", num_bins=num)
         X = bin_df.drop(columns=["ground_truth"])
         y = bin_df["ground_truth"]
         model_lr = LogisticRegression(max_iter=1000)
         model_lr.fit(X, y)
 
-        models[f"histogram_{num}"] = model_lr
+        models[f"stacking_{num}"] = model_lr
 
     return models
 
@@ -261,20 +261,20 @@ def prepare_bin_df_refs_hist_test(all_predictions, method_name, num_bins):
 
     Parameters:
     all_predictions (pd.DataFrame): DataFrame containing predictions and ground truth.
-    num_bins (int): Number of bins for the histogram.
-    method (str): Method for histogram calculation ('histogram', 'cumsum', 'cumsum_reverse').
+    num_bins (int): Number of bins for the stacking.
+    method (str): Method for stacking calculation ('stacking', 'cumsum', 'cumsum_reverse').
 
     Returns:
     pd.DataFrame: The bin_df DataFrame with binned probabilities and ground truth.
     """
     # Raise error if method is not valid
-    if method_name not in ["histogram", "cumsum", "cumsum_reverse"]:
+    if method_name not in ["stacking", "cumsum", "cumsum_reverse"]:
         raise ValueError(
-            f"Unknown method: {method_name}. Please choose from 'histogram', 'cumsum', or 'cumsum_reverse'."
+            f"Unknown method: {method_name}. Please choose from 'stacking', 'cumsum', or 'cumsum_reverse'."
         )
 
-    # Select the appropriate histogram calculation function
-    if method_name == "histogram":
+    # Select the appropriate stacking calculation function
+    if method_name == "stacking":
         histogram_func = calculate_histogram
     elif method_name == "cumsum":
         histogram_func = calculate_histogram_cumsum
@@ -284,7 +284,7 @@ def prepare_bin_df_refs_hist_test(all_predictions, method_name, num_bins):
     # Create a ground truth mapper
     ground_truth_mapper = dict(all_predictions.groupby("contig_name")["ground_truth"].first())
 
-    # Calculate histogram for each contig_name
+    # Calculate stacking for each contig_name
     bin_df = all_predictions.groupby("contig_name").apply(histogram_func, num_bins=num_bins, include_groups=False)
 
     # # Reset index and map ground truth
@@ -301,20 +301,20 @@ def prepare_bin_df_refs(all_predictions, method_name, num_bins=10):
 
     Parameters:
     all_predictions (pd.DataFrame): DataFrame containing predictions and ground truth.
-    num_bins (int): Number of bins for the histogram.
-    method (str): Method for histogram calculation ('histogram', 'cumsum', 'cumsum_reverse').
+    num_bins (int): Number of bins for the stacking.
+    method (str): Method for stacking calculation ('stacking', 'cumsum', 'cumsum_reverse').
 
     Returns:
     pd.DataFrame: The bin_df DataFrame with binned probabilities and ground truth.
     """
     # Raise error if method is not valid
-    if method_name not in ["histogram", "cumsum", "cumsum_reverse"]:
+    if method_name not in ["stacking", "cumsum", "cumsum_reverse"]:
         raise ValueError(
-            f"Unknown method: {method_name}. Please choose from 'histogram', 'cumsum', or 'cumsum_reverse'."
+            f"Unknown method: {method_name}. Please choose from 'stacking', 'cumsum', or 'cumsum_reverse'."
         )
 
-    # Select the appropriate histogram calculation function
-    if method_name == "histogram":
+    # Select the appropriate stacking calculation function
+    if method_name == "stacking":
         histogram_func = calculate_histogram
     elif method_name == "cumsum":
         histogram_func = calculate_histogram_cumsum
@@ -324,7 +324,7 @@ def prepare_bin_df_refs(all_predictions, method_name, num_bins=10):
     # Create a ground truth mapper
     ground_truth_mapper = dict(all_predictions.groupby("contig_name")["ground_truth"].first())
 
-    # Calculate histogram for each contig_name
+    # Calculate stacking for each contig_name
     bin_df = all_predictions.groupby("contig_name").apply(histogram_func, num_bins=num_bins, include_groups=False)
 
     # # Reset index and map ground truth
@@ -342,27 +342,27 @@ def prepare_bin_df(all_predictions, method_name, num_bins=10):
 
     Parameters:
     all_predictions (pd.DataFrame): DataFrame containing predictions and ground truth.
-    num_bins (int): Number of bins for the histogram.
-    method (str): Method for histogram calculation ('histogram', 'cumsum', 'cumsum_reverse').
+    num_bins (int): Number of bins for the stacking.
+    method (str): Method for stacking calculation ('stacking', 'cumsum', 'cumsum_reverse').
 
     Returns:
     pd.DataFrame: The bin_df DataFrame with binned probabilities and ground truth.
     """
     # Raise error if method is not valid
-    if method_name not in ["histogram", "cumsum", "cumsum_reverse"]:
+    if method_name not in ["stacking", "cumsum", "cumsum_reverse"]:
         raise ValueError(
-            f"Unknown method: {method_name}. Please choose from 'histogram', 'cumsum', or 'cumsum_reverse'."
+            f"Unknown method: {method_name}. Please choose from 'stacking', 'cumsum', or 'cumsum_reverse'."
         )
 
-    # Select the appropriate histogram calculation function
-    if method_name == "histogram":
+    # Select the appropriate stacking calculation function
+    if method_name == "stacking":
         histogram_func = calculate_histogram
     elif method_name == "cumsum":
         histogram_func = calculate_histogram_cumsum
     elif method_name == "cumsum_reverse":
         histogram_func = calculate_histogram_cumsum_reverse
 
-    # Calculate histogram for each contig_name
+    # Calculate stacking for each contig_name
     bin_df = all_predictions.groupby("contig_name").apply(histogram_func, num_bins=num_bins, include_groups=False)
 
     return bin_df
