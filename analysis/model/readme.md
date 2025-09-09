@@ -5,13 +5,20 @@ This repository provides Python scripts for training and using a **Random Forest
 ---
 
 ## **Table of Contents**
-1. [**Installation**](#installation)
-2. [**Workflow Overview**](#workflow-overview)
-3. [**Training the Model**](#training-the-model)
-4. [**Using the Model for Classification**](#using-the-model-for-classification)
-5. [**Example Usage**](#example-usage)
-6. [**Notes**](#notes)
-7. [**Contact**](#contact)
+1. [**Installation**](#1-installation)
+2. [**Workflow Overview**](#2-workflow-overview)
+3. [**Training the Model**](#3-training-the-model)
+   - 3.1 [Fitting the curve on Snakemake output data](#31-fitting-the-curve-on-snakemake-output-data-for-weighted-random-sampling)
+   - 3.2 [Simulating Sequencing and Assembly for Training Data](#32-simulating-sequencing-and-assembly-for-training-data)
+   - 3.3 [Finding ORFs and Pairwise Alignment](#33-finding-orfs-and-pairwise-alignment)
+   - 3.4 [Data Processing and Training Input Generation](#34-data-processing-and-training-input-generation)
+   - 3.5 [Model Training and Evaluation](#35-model-training-and-evaluation)
+4. [**Using the Model for Classification**](#4-using-the-model-for-classification)
+   - 4.1 [Preprocessing Query Contigs](#41-preprocessing-query-contigs)
+   - 4.2 [Predicting Tobamovirus Contigs](#42-predicting-tobamovirus-contigs)
+5. [**Example Usage**](#5-example-usage)
+6. [**Notes**](#6-notes)
+7. [**Contact**](#7-contact)
 
 ---
 
@@ -29,25 +36,25 @@ Note: You can rename environment in analysis_environment.yml file.
 
 ---
 
-# **2. Workflow Steps**
+# **2. Workflow Overview**
 
 The workflow is divided into two main parts:
-  - **A. Training the Model**
-  - **B. Using the Model for Classification**
+  - **Training the Model** (Section 3)
+  - **Using the Model for Classification** (Section 4)
 
 ---
 
-## **A. Training the Model**
+# **3. Training the Model**
 
 This process involves several steps. Each step corresponds to a specific script that performs part of the pipeline.
 
-### **Step 1: Fitting the curve on Snakemake output data for weighted random sampling**
+## **3.1 Fitting the curve on Snakemake output data for weighted random sampling**
 
 First we take a look inside the Snakemake pipeline output. This part demands some manual checkup and needs to be tailored for each study. In our case, we removed contigs that had hits on *cellular organisms* and contigs from *SRR6846476*, after consulting domain scientists. We then fitted a curve on contig length distribution of the selected contigs, which we'll later use for random weighted sampling of reference genomes, to generate training data.
 
 Example implementation is available in [`notebooks/01_fit_distribution_curve.ipynb`](notebooks/00_fit_distribution_curve.ipynb).
 
-### **Step 2: Simulating Sequencing and Assembly for Training Data**
+## **3.2 Simulating Sequencing and Assembly for Training Data**
 
 This step fragments reference genomes to generate contigs with realistic lengths, ensuring that the training data resembles actual sequencing data.
 
@@ -64,7 +71,7 @@ python scripts/sample_refs.py <path/to/reference.fasta> <out_dir_name> <sampling
 | `<subsampling_num>`     | Number of subsamples per reference sequence.              |
 | `<path/to/lens_freq.json>`| Path to the lens_freq.json (Step 1 output)              |
 
-### **Step 3:  Finding ORFs and Pairwise Alignment**
+## **3.3 Finding ORFs and Pairwise Alignment**
 
 This step identifies **Open Reading Frames (ORFs)** in contigs and performs **pairwise alignment** with reference proteins. It uses **Orfipy**  and **biopython Bio.Seq.Seq.translate** method to detect ORFs and **MAFFT** to perform pairwise alignments against known reference sequences, such as RdRp ORF1, RdRp ORF2, and Coat Protein from species within the family *Virgaviridae*. 
 
@@ -82,7 +89,7 @@ python getorfs_pairwise_aln.py <path/to/contig.fasta> <out_dir_name> <contig_ori
 note: if you want to use different reference proteins, change "data/all_proteins.fasta" or change path aa_refs in script.
 
 
-### **Step 4: Data Processing and Training Input Generation**
+## **3.4 Data Processing and Training Input Generation**
 
 This step processes reference data and pairwise alignment results to create a training input dataset. It performs data filtering, aggregation, and enrichment with additional sequence information to prepare the final training dataset.
 
@@ -115,11 +122,11 @@ python scripts/preprocess.py <path/to/reference_database.xlsx> <path/to/orf.fast
 - `results/<output_dir>/training_input.csv` - Final training dataset (when using --train)
 
 
-### **Step 5: Model Training and Evaluation**
+## **3.5 Model Training and Evaluation**
 
 Our machine learning pipeline employs a three-stage approach to ensure optimal classification performance.
 
-#### Model Selection
+### **3.5.1 Model Selection**
 
 First, we conduct comprehensive algorithm selection through systematic evaluation of multiple classification models:
 
@@ -128,7 +135,7 @@ First, we conduct comprehensive algorithm selection through systematic evaluatio
 - **Evaluation Method**: 5-fold cross-validation with stratified sampling
 - **Results**: Random Forest demonstrated superior performance across evaluation metrics
 
-#### Cross-Validation Evaluation
+### **3.5.2 Cross-Validation Evaluation**
 
 We then compare two different strategies for contig-level prediction:
 
@@ -140,7 +147,7 @@ We then compare two different strategies for contig-level prediction:
 - **Performance Assessment**: Comprehensive metrics including accuracy, F1 score, precision, and recall
 - **Winner**: Stacking-based approach (bins=10) achieved superior performance
 
-#### Final Model Training
+### **3.5.3 Final Model Training**
 
 The production model combines the best components from our evaluation:
 
@@ -219,15 +226,17 @@ python scripts/train_model_pipeline.py <path/to/training_input.csv> <path/to/ref
   - `results/<outdir>/feature_importances.csv` - All feature importances ranked
   - `results/<outdir>/top_20_features.csv` - Top 20
 
-  ## **B. Using the Model for Classification**
+---
+
+# **4. Using the Model for Classification**
 
 Once the model has been trained and finalized, you can use it to classify new query contigs.
 
-Step 1: Preprocessing Query Contigs
+## **4.1 Preprocessing Query Contigs**
 
 You must process query contigs through ORF detection, pairwise alignment, and training input preparation. These steps replicate parts of the training pipeline.
 
-1.1: ORF Detection and Pairwise Alignment
+### **4.1.1 ORF Detection and Pairwise Alignment**
 
 ```bash
 # 1. ORF detection and alignment
@@ -236,7 +245,9 @@ python scripts/getorfs_pairwise_aln.py ../data/contigs/contigs_all_deduplicated.
 **Output File**
 - `results/<output_dir>/pairwise_aln.csv` - pairwise alignment metrics table of test data
 
-1.2. Preprocessing of test data (same as training, but with different name parsing and without ground truth)
+### **4.1.2 Preprocessing of test data**
+
+Preprocessing of test data (same as training, but with different name parsing and without ground truth)
 
 ```bash
 # 2. Generate processed input for prediction
@@ -255,7 +266,7 @@ python scripts/preprocess.py <path/to/reference_database.xlsx> <path/to/orf.fast
 **Output File**
 - `results/<output_dir>/testing_input.csv` - Processed data for prediction
 
-Step 2: Predicting Tobamovirus Contigs
+## **4.2 Predicting Tobamovirus Contigs**
 
 Once you have the processed input features and the trained models, run the prediction script:
 
@@ -286,3 +297,185 @@ After running the script, the following files will be saved in `results/<outdir>
 | `contig_predictions.csv`   | Final contig-level predictions with class and probability.   |
 
 ---
+
+# **5. Example Usage**
+
+This section provides complete examples showing how to run the entire workflow from start to finish.
+
+## **5.1 Complete Training Workflow Example**
+
+Here's a step-by-step example of training a model from scratch:
+
+### **Step 1: Fit Distribution Curve**
+```bash
+# Run the notebook to fit curve on Snakemake output data
+# Input: Snakemake pipeline output data
+# Output: results/training/sampling/fitted_curve_lens_freq.json
+jupyter notebook notebooks/01_fit_distribution_curve.ipynb
+```
+
+### **Step 2: Sample Reference Genomes**
+```bash
+# Generate training contigs from reference genomes
+python scripts/02_sample_refs.py \
+    ../data/tobamo/reference_nukleotidne.fasta \
+    training \
+    300 \
+    30 \
+    results/training/sampling/fitted_curve_lens_freq.json
+```
+
+### **Step 3: ORF Detection and Pairwise Alignment**
+```bash
+# Process sampled contigs to find ORFs and perform alignments
+time python scripts/03_getorfs_pairwise_aln.py \
+    results/training/sampling/2025-07-11_sampled_contigs_30.fasta \
+    training \
+    unknown
+```
+
+### **Step 4: Preprocess Training Data**
+```bash
+# Generate training input features
+python scripts/04_preprocess_training.py \
+    ../data/tobamo/reference_database.xlsx \
+    results/training/sampling/2025-07-11_sampled_contigs_30.fasta \
+    results/training/orfs/combined_orfs.fasta \
+    results/training/pairwise_aln.csv \
+    training
+```
+
+### **Step 5: Model Training (3-stage process)**
+```bash
+# Stage 1: Model selection via grid search
+python scripts/train_model_pipeline.py \
+    results/training/training_input.csv \
+    ../data/tobamo/reference_database.xlsx \
+    results/training/sampling/2025-07-11_sampled_contigs_30.fasta \
+    --stage select \
+    --outdir model_selection
+
+# Stage 2: Cross-validation evaluation (30 iterations of 5-fold CV)
+python scripts/train_model_pipeline.py \
+    results/training/training_input.csv \
+    ../data/tobamo/reference_database.xlsx \
+    results/training/sampling/2025-07-11_sampled_contigs_30.fasta \
+    --stage evaluate \
+    --iterations 30 \
+    --sample_depth 30 \
+    --outdir evaluation_results
+
+# Stage 3: Train final model using RF + LR stacking with bins=10
+python scripts/train_model_pipeline.py \
+    results/training/training_input.csv \
+    ../data/tobamo/reference_database.xlsx \
+    results/training/sampling/2025-07-11_sampled_contigs_30.fasta \
+    --stage final \
+    --outdir final_model
+```
+
+## **5.2 Complete Classification Workflow Example**
+
+Here's how to classify new query contigs using the trained model:
+
+### **Preprocessing Query Contigs**
+```bash
+# Step 1: ORF detection and pairwise alignment for test data
+time python scripts/getorfs_pairwise_aln.py \
+    ../data/contigs/contigs_all_deduplicated.fasta \
+    snakemake \
+    unknown
+
+# Step 2: Preprocess test data
+python scripts/preprocess.py \
+    ../data/tobamo/reference_database.xlsx \
+    results/snakemake/orfs/combined_orfs.fasta \
+    results/snakemake/pairwise_aln.csv \
+    snakemake \
+    --test \
+    --snakemake
+```
+
+### **Filter Data (Optional)**
+```bash
+# Optional: Filter out non-target contigs (keep only 510 non-cellular contigs)
+# Use notebook: notebooks/filter_snakemake_pairwise_results.ipynb
+```
+
+### **Make Predictions**
+```bash
+# Predict tobamovirus contigs using trained model
+python scripts/predict_query_contigs.py \
+    results/snakemake/pairwise_aln_all_deduplicated_non_cellular_filtered.csv \
+    results/final_model \
+    --outdir snakemake
+```
+
+## **5.3 Testing with Random Sequences Example**
+
+Example of testing the model with random sequences to validate specificity:
+
+```bash
+# Step 1: Preprocess random sequences
+time python scripts/getorfs_pairwise_aln.py \
+    ../data/random_seq/non-virga_tpdb2_diamond_selected.fasta \
+    random_seq \
+    unknown
+
+python scripts/preprocess.py \
+    ../data/tobamo/reference_database.xlsx \
+    results/random/orfs/combined_orfs.fasta \
+    results/random/pairwise_aln.csv \
+    random_seq \
+    --test \
+    --contig_fasta_path ../data/random_seq/non-virga_tpdb2_diamond_selected.fasta
+
+# Step 2: Make predictions on random sequences
+python scripts/predict_query_contigs.py \
+    results/random_seq/testing_input.csv \
+    results/final_model \
+    --outdir random_seq
+```
+
+## **5.4 Expected Directory Structure After Training**
+
+After completing the training workflow, your directory structure should look like:
+
+```
+results/
+├── training/
+│   ├── sampling/
+│   │   ├── fitted_curve_lens_freq.json
+│   │   └── 2025-07-11_sampled_contigs_30.fasta
+│   ├── orfs/
+│   │   └── combined_orfs.fasta
+│   ├── pairwise_aln.csv
+│   └── training_input.csv
+├── model_selection/
+│   ├── performance_metrics.csv
+│   └── best_model.txt
+├── evaluation_results/
+│   ├── extreme_predictions_results.csv
+│   ├── stacking_predictions_results.csv
+│   └── method_comparison.csv
+├── final_model/
+│   ├── rf_model.joblib
+│   ├── rf_scaler.joblib
+│   ├── rf_feature_names.csv
+│   ├── lr_stacking_10_model.joblib
+│   └── feature_importances.csv
+├── snakemake/
+│   ├── orfs/
+│   │   └── combined_orfs.fasta
+│   ├── pairwise_aln.csv
+│   ├── testing_input.csv
+│   ├── orf_predictions.csv
+│   └── contig_predictions.csv
+└── random_seq/
+    ├── orfs/
+    │   └── combined_orfs.fasta
+    ├── pairwise_aln.csv
+    ├── testing_input.csv
+    ├── orf_predictions.csv
+    └── contig_predictions.csv
+```
