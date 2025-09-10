@@ -21,10 +21,10 @@ Different sample files are provided for various use cases:
 
 | File | Description | Samples | Use Case |
 |------|-------------|---------|----------|
-| `samples_test.tsv` | Test dataset | ~10 | Quick testing and validation |
+| `samples_debug.tsv` | Debug dataset | 2 | Troubleshooting |
 | `samples_12.tsv` | Small dataset | 12 | Development and debugging |
-| `samples_debug.tsv` | Debug dataset | Few samples | Troubleshooting |
-| `samples_all.tsv` | Complete dataset | 279 | Full production analysis |
+| `samples_test.tsv` | Test dataset | 253 | Test samples |
+| `samples_all.tsv` | Complete dataset | 279 | Test and control samples |
 
 ### Sample File Format
 
