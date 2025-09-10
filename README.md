@@ -48,10 +48,13 @@ conda activate tobamo-snakemake
 # 3. Configure samples
 # Edit config/samples_test.tsv with your SRA accessions
 
-# 4. Test run
+# 4. Download SRA data (REQUIRED)
+workflow/scripts/download_sra.sh
+
+# 5. Test run
 snakemake -n --configfile config/config.yaml
 
-# 5. Full run
+# 6. Full run
 snakemake --use-conda -c32 -p -k
 ```
 
@@ -90,6 +93,38 @@ Edit `config/samples_*.tsv` files to specify your SRA accessions:
 #### Required Databases
 
 **Note:** Databases need to be downloaded manually
+
+### SRA Data Download
+
+**⚠️ IMPORTANT:** SRA data must be downloaded before running the workflow.
+
+```bash
+# Download SRA data for configured samples
+workflow/scripts/download_sra.sh
+```
+
+**What this does:**
+- Downloads FASTQ files for all samples listed in your configured samples file
+- Handles both paired-end and single-end sequencing data
+- Compresses files and creates download markers
+- Skips already downloaded samples (resumable)
+
+**Requirements:**
+- SRA Toolkit (`fasterq-dump`) - automatically installed via conda
+- ~10-100GB free space (depending on dataset size)
+- Stable internet connection
+
+**Monitor progress:**
+```bash
+# Check download status
+ls -la resources/SRA/
+
+# Count downloaded vs total samples
+wc -l config/samples_*.tsv
+ls resources/SRA/*.downloaded | wc -l
+```
+
+#### Database Downloads
 
 1. **NCBI BLAST Database**
 ```bash

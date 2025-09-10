@@ -29,6 +29,9 @@ cp config/samples_test.tsv config/current_samples.tsv
 # Edit config to use test samples
 echo "samples: config/current_samples.tsv" > config/config.yaml
 
+# IMPORTANT: Download SRA data first
+workflow/scripts/download_sra.sh
+
 # Dry run to check workflow
 snakemake -n --configfile config/config.yaml
 
@@ -51,6 +54,9 @@ ls results/*/09_*_megan6_results.csv
 ```bash
 # Use complete dataset (279 samples)
 echo "samples: config/samples_all.tsv" > config/config.yaml
+
+# Download all SRA data (this may take hours)
+workflow/scripts/download_sra.sh
 
 # Run full analysis (will take days)
 nohup snakemake --use-conda -c32 -p --configfile config/config.yaml > output.log 2>&1 &
