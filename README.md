@@ -85,16 +85,34 @@ Edit `config/samples_*.tsv` files to specify your SRA accessions:
 - `samples_test.tsv` - Small test dataset (253 test samples)
 - `samples_all.tsv` - Complete dataset (278 samples - 253 test + 25 control samples)
 
-### Database Setup TK
+### Database Setup
 
-Required databases are automatically downloaded, but you can pre-download:
+#### Required Databases
 
+**Note:** Databases need to be downloaded manually
+
+1. **NCBI BLAST Database**
 ```bash
-# Download nr.dmnd database (~100GB)
-wget -P resources/ https://example.com/nr.dmnd
+# Create database directory
+mkdir -p blast_db
 
-# Download tpdb2.dmnd database
-wget -P resources/ https://example.com/tpdb2.dmnd
+# Download all BLAST databases
+wget --directory-prefix=blast_db --cut-dirs=2 -Anr* ftp://ftp.ncbi.nlm.nih.gov/blast/db/*
+```
+
+2. **Tobamovirus Protein Database (tpdb2)**
+```bash
+# Build the tobamovirus database tpdb2
+diamond makedb --in <path/to/tobamo_proteins.fasta> -d <path/to/output/tpdb2.dmnd>
+
+# Copy to resources directory
+cp <path/to/tpdb2.dmnd> resources/tpdb2.dmnd
+```
+
+3. **MEGAN Mapping Database**
+```bash
+# Download MEGAN mapping files
+wget -P resources/ https://software-ab.cs.uni-tuebingen.de/download/megan6/megan-map-Feb2022.db
 ```
 
 ## Usage
@@ -216,8 +234,6 @@ The `analysis/` folder contains post-processing scripts and notebooks:
 
 - **`contigs_report/`** - Contig filtering and metadata analysis
 - **`model/`** - Machine learning pipeline for viral classification  
-- **`palmprint/`** - Sequence motif analysis tools
-- **`data/`** - Processed FASTA files from Snakemake output and input by domain scientists
 See [analysis/readme.md](analysis/readme.md) for detailed information.
 
 ### Log Files

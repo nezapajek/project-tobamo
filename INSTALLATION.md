@@ -85,10 +85,10 @@ wget --directory-prefix=blast_db --cut-dirs=2 -Anr* ftp://ftp.ncbi.nlm.nih.gov/b
 2. **Tobamovirus Protein Database (tpdb2)**
 ```bash
 # Build the tobamovirus database tpdb2
-diamond makedb --in /home/tobamo/analize/2022-01-03_diamond_1000plant/baza/identical_protein_groups_tobamovirus_2.fasta -d /home/tobamo/analize/2022-01-03_diamond_1000plant/baza/tobamo_protein_db_2.dmnd
+diamond makedb --in <path/to/tobamo_proteins.fasta> -d <path/to/output/tpdb2.dmnd>
 
 # Copy to resources directory
-cp /home/tobamo/analize/2022-01-03_diamond_1000plant/baza/tobamo_protein_db_2.dmnd resources/tpdb2.dmnd
+cp <path/to/tpdb2.dmnd> resources/tpdb2.dmnd
 ```
 
 3. **MEGAN Mapping Database**
