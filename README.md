@@ -6,7 +6,7 @@
 
 ## Overview
 
-A comprehensive Snakemake workflow for the preparation of a curated catalogue of sequences of possible new tobamoviruses by scanning large accumulated datasets from different metagenomics data repositories.
+A Snakemake workflow for the preparation of a curated catalogue of sequences of possible new tobamoviruses by scanning large accumulated datasets from different metagenomics data repositories.
 
 **Project Website:** http://projects.nib.si/tobamo/
 
@@ -25,14 +25,14 @@ A comprehensive Snakemake workflow for the preparation of a curated catalogue of
 
 ## Documentation
 
-### 📚 Complete Documentation
+### Complete Documentation
 
-- **🚀 [Quick Start Guide](QUICKSTART.md)** - Get running in 15 minutes
-- **💾 [Installation Guide](INSTALLATION.md)** - Detailed setup instructions
-- **⚙️ [Configuration Guide](config/README.md)** - Sample and parameter configuration
-- **🔧 [Workflow Rules](workflow/RULES.md)** - Detailed workflow documentation
-- **❓ [FAQ](FAQ.md)** - Frequently asked questions and troubleshooting
-- **📊 [Analysis Pipeline](analysis/readme.md)** - Post-processing and machine learning
+- [Quick Start Guide](QUICKSTART.md) - Get running in 15 minutes
+- [Installation Guide](INSTALLATION.md) - Detailed setup instructions
+- [Configuration Guide](config/README.md) - Sample and parameter configuration
+- [Workflow Rules](workflow/RULES.md) - Detailed workflow documentation
+- [FAQ](FAQ.md) - Frequently asked questions and troubleshooting
+- [Analysis Pipeline](analysis/readme.md) - Post-processing and machine learning
 
 ## Quick Start
 
@@ -96,7 +96,7 @@ Edit `config/samples_*.tsv` files to specify your SRA accessions:
 
 ### SRA Data Download
 
-**⚠️ IMPORTANT:** SRA data must be downloaded before running the workflow.
+**IMPORTANT:** SRA data must be downloaded before running the workflow.
 
 ```bash
 # Download SRA data for configured samples

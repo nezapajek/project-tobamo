@@ -1,6 +1,6 @@
 # Quick Start Guide
 
-Get up and running with project-tobamo in 15 minutes!
+Get up and running with project-tobamo in 15 minutes.
 
 ## Prerequisites
 
@@ -8,7 +8,7 @@ Get up and running with project-tobamo in 15 minutes!
 - Conda/Miniconda installed
 - ~50GB free disk space (for test run)
 
-## 1. Installation (5 minutes)
+## 1. Installation
 
 ```bash
 # Clone repository
@@ -20,7 +20,7 @@ conda create -n tobamo-snakemake snakemake=7.32.4 python=3.10 -c conda-forge -c 
 conda activate tobamo-snakemake
 ```
 
-## 2. Quick Test (10 minutes)
+## 2. Quick Test
 
 ```bash
 # Run with test dataset (few samples)
@@ -95,7 +95,7 @@ snakemake --use-conda -c4 -p results/SRR1234567/09_SRR1234567_megan6_results.csv
 
 ## Getting Help
 
-- 📖 **Full Documentation:** [README.md](README.md)
-- 🛠️ **Installation Issues:** [INSTALLATION.md](INSTALLATION.md)  
-- ⚙️ **Configuration:** [config/README.md](config/README.md)
-- 🐛 **Bug Reports:** [GitHub Issues](https://github.com/nezapajek/project-tobamo/issues)
+- **Full Documentation:** [README.md](README.md)
+- **Installation Issues:** [INSTALLATION.md](INSTALLATION.md)  
+- **Configuration:** [config/README.md](config/README.md)
+- **Bug Reports:** [GitHub Issues](https://github.com/nezapajek/project-tobamo/issues)
