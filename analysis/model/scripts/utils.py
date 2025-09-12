@@ -2,17 +2,22 @@ import os
 import subprocess
 import sys
 import tempfile
+import warnings
 from collections import defaultdict
 from concurrent.futures import ProcessPoolExecutor
 from datetime import datetime
 from glob import glob
 from itertools import product
+from pathlib import Path
 
 import matplotlib.pyplot as plt
+import matplotlib.patches as mpatches
 import mpu
 import numpy as np
 import pandas as pd
 import seaborn as sns
+from scipy.interpolate import interp1d
+from scipy.stats import sem, t
 from Bio import AlignIO, SeqIO
 from Bio.Align import AlignInfo, MultipleSeqAlignment
 from Bio.Seq import Seq
@@ -24,52 +29,22 @@ from sklearn.cluster import KMeans
 from sklearn.discriminant_analysis import StandardScaler
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.linear_model import LinearRegression, LogisticRegression
-from sklearn.metrics import (
-    ConfusionMatrixDisplay,
-    accuracy_score,
-    adjusted_rand_score,
-    auc,
-    classification_report,
-    confusion_matrix,
-    f1_score,
-    make_scorer,
-    mean_squared_error,
-    precision_recall_curve,
-    precision_score,
-    recall_score,
-    roc_auc_score,
-    roc_curve,
-)
-from sklearn.model_selection import (
-    GridSearchCV,
-    LeaveOneOut,
-    ParameterGrid,
-    StratifiedKFold,
-    TunedThresholdClassifierCV,
-    cross_val_predict,
-    train_test_split,
-)
+from sklearn.metrics import (ConfusionMatrixDisplay, accuracy_score,
+                             adjusted_rand_score, auc, classification_report,
+                             confusion_matrix, f1_score, make_scorer,
+                             mean_squared_error, precision_recall_curve,
+                             precision_score, recall_score, roc_auc_score,
+                             roc_curve)
+from sklearn.model_selection import (GridSearchCV, LeaveOneOut, ParameterGrid,
+                                     StratifiedKFold,
+                                     TunedThresholdClassifierCV,
+                                     cross_val_predict, train_test_split)
 from sklearn.naive_bayes import GaussianNB
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.preprocessing import LabelEncoder, StandardScaler
 from sklearn.svm import SVC
 from sklearn.tree import DecisionTreeClassifier
 from tqdm import tqdm
-
-
-def train_lr_and_predict_tuned(morf_predictions):
-    bin_df = prepare_bin_df_refs(morf_predictions, "stacking", num_bins=10)
-    X = bin_df.drop(columns=["ground_truth"])
-    y = bin_df["ground_truth"]
-
-    scorer = make_scorer(accuracy_score)
-    base_model = LogisticRegression(max_iter=1000)
-    model = TunedThresholdClassifierCV(base_model, scoring=scorer, cv=StratifiedKFold(n_splits=10))
-
-    model.fit(X, y)
-    best_score = model.best_threshold_
-
-    return "stacking", model, best_score
 
 
 def check_file_exists(filepath, filetype):
@@ -209,20 +184,7 @@ def predict_orfs(test, morf, sorf, refs: bool = True):
     return predictions_df
 
 
-# def train_lr_and_predict(all_predictions):
-#     models = {}
-#     methods = ["stacking", "cumsum", "cumsum_reverse"]
 
-#     for method_name in methods:
-#         bin_df = prepare_bin_df_refs(all_predictions, method_name, num_bins=10)
-#         X = bin_df.drop(columns=["ground_truth"])
-#         y = bin_df["ground_truth"]
-#         model_lr = LogisticRegression(max_iter=1000)
-#         model_lr.fit(X, y)
-
-#         models[method_name] = model_lr
-
-#     return models
 
 
 def train_lr_and_predict(all_predictions, methods=["stacking", "cumsum", "cumsum_reverse"]):
@@ -277,20 +239,20 @@ def train_lr_and_predict_hist_test(all_predictions, nums: list):
 
     return models
 
-def train_lr_final_model(all_predictions, num_bins, fixed_threshold=0.5):
-    """Train final logistic regression model with fixed threshold"""
-    bin_df = prepare_bin_df_refs_hist_test(all_predictions, "stacking", num_bins=num_bins)
-    X = bin_df.drop(columns=["ground_truth"])
-    y = bin_df["ground_truth"]
+# def train_lr_final_model(all_predictions, num_bins, fixed_threshold=0.5):
+#     """Train final logistic regression model with fixed threshold"""
+#     bin_df = prepare_bin_df_refs_hist_test(all_predictions, "stacking", num_bins=num_bins)
+#     X = bin_df.drop(columns=["ground_truth"])
+#     y = bin_df["ground_truth"]
     
-    # Use regular LogisticRegression for final model
-    model_lr = LogisticRegression(max_iter=1000)
-    model_lr.fit(X, y)
+#     # Use regular LogisticRegression for final model
+#     model_lr = LogisticRegression(max_iter=1000)
+#     model_lr.fit(X, y)
     
-    return {
-        'model': model_lr,
-        'threshold': fixed_threshold
-    }
+#     return {
+#         'model': model_lr,
+#         'threshold': fixed_threshold
+#     }
 
 
 def prepare_bin_df_refs_hist_test(all_predictions, method_name, num_bins):
@@ -983,33 +945,7 @@ def calculate_identity(seq1, seq2):
     return (matches / length) * 100 if length > 0 else 0
 
 
-def filter_by_identity(input_file, output_file, threshold, min_length):
-    """
-    Filter sequences with less than the specified percent identity
-    and remove sequences shorter than the minimum length.
-    """
-    records = list(SeqIO.parse(input_file, "fasta"))
-    filtered = []
 
-    for rec1 in records:
-        # Skip sequences shorter than the minimum length
-        if len(rec1.seq) < min_length:
-            continue
-
-        unique = True
-        for rec2 in filtered:
-            identity = calculate_identity(str(rec1.seq), str(rec2.seq))
-            if identity > threshold:
-                unique = False
-                break
-        if unique:
-            filtered.append(rec1)
-
-    SeqIO.write(filtered, output_file, "fasta")
-    print(
-        f"After filtering by {threshold}% identity and removing sequences shorter than {min_length} nucleotides, "
-        f"{len(filtered)} out of {len(records)} sequences remain."
-    )
 
 
 def reverse_complement_record(record):
@@ -1280,32 +1216,7 @@ def calculate_alignment_length(aln):
     return aln_len, aln_orf_len
 
 
-def create_confusion_matrix(df, label_col="label", prediction_col="prediction"):
-    """
-    Create and display a confusion matrix for binary classification.
 
-    Parameters:
-    - df (pd.DataFrame): The input DataFrame with 'label' and 'prediction' columns.
-    - label_col (str): The name of the label column. ('tobamo' = 1, 'outgroup' & 'random' = 0)
-    - prediction_col (str): The name of the prediction column, containing binary predictions (0 or 1).
-
-    Returns:
-    - None: Displays the confusion matrix.
-    """
-    # Map the label column to binary values: 'tobamo' = 1, 'outgroup' and 'random' = 0
-    label_mapping = {"tobamo": 1, "outgroup": 0, "random": 0}
-    df["binary_label"] = df[label_col].map(label_mapping)
-
-    # Extract the true labels and predictions
-    y_true = df["binary_label"]
-    y_pred = df[prediction_col]
-
-    # Generate the confusion matrix
-    cm = confusion_matrix(y_true, y_pred)
-
-    # Display the confusion matrix
-    disp = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=["Outgroup/Random", "Tobamo"])
-    disp.plot(cmap="Blues", values_format="d")
 
 
 def calculate_histogram(group, num_bins: int):
@@ -1504,3 +1415,89 @@ def plot_sampled_contigs_lens(outdir, subsampled, n):
     os.makedirs(os.path.dirname(save_path), exist_ok=True)
     plt.savefig(save_path)
     plt.close(fig)
+
+
+# def train_lr_and_predict_tuned(morf_predictions):
+#     bin_df = prepare_bin_df_refs(morf_predictions, "stacking", num_bins=10)
+#     X = bin_df.drop(columns=["ground_truth"])
+#     y = bin_df["ground_truth"]
+
+#     scorer = make_scorer(accuracy_score)
+#     base_model = LogisticRegression(max_iter=1000)
+#     model = TunedThresholdClassifierCV(base_model, scoring=scorer, cv=StratifiedKFold(n_splits=10))
+
+#     model.fit(X, y)
+#     best_score = model.best_threshold_
+
+#     return "stacking", model, best_score
+
+
+# def create_confusion_matrix(df, label_col="label", prediction_col="prediction"):
+#     """
+#     Create and display a confusion matrix for binary classification.
+
+#     Parameters:
+#     - df (pd.DataFrame): The input DataFrame with 'label' and 'prediction' columns.
+#     - label_col (str): The name of the label column. ('tobamo' = 1, 'outgroup' & 'random' = 0)
+#     - prediction_col (str): The name of the prediction column, containing binary predictions (0 or 1).
+
+#     Returns:
+#     - None: Displays the confusion matrix.
+#     """
+#     # Map the label column to binary values: 'tobamo' = 1, 'outgroup' and 'random' = 0
+#     label_mapping = {"tobamo": 1, "outgroup": 0, "random": 0}
+#     df["binary_label"] = df[label_col].map(label_mapping)
+
+#     # Extract the true labels and predictions
+#     y_true = df["binary_label"]
+#     y_pred = df[prediction_col]
+
+#     # Generate the confusion matrix
+#     cm = confusion_matrix(y_true, y_pred)
+
+#     # Display the confusion matrix
+#     disp = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=["Outgroup/Random", "Tobamo"])
+#     disp.plot(cmap="Blues", values_format="d")
+
+# def filter_by_identity(input_file, output_file, threshold, min_length):
+#     """
+#     Filter sequences with less than the specified percent identity
+#     and remove sequences shorter than the minimum length.
+#     """
+#     records = list(SeqIO.parse(input_file, "fasta"))
+#     filtered = []
+
+#     for rec1 in records:
+#         # Skip sequences shorter than the minimum length
+#         if len(rec1.seq) < min_length:
+#             continue
+
+#         unique = True
+#         for rec2 in filtered:
+#             identity = calculate_identity(str(rec1.seq), str(rec2.seq))
+#             if identity > threshold:
+#                 unique = False
+#                 break
+#         if unique:
+#             filtered.append(rec1)
+
+#     SeqIO.write(filtered, output_file, "fasta")
+#     print(
+#         f"After filtering by {threshold}% identity and removing sequences shorter than {min_length} nucleotides, "
+#         f"{len(filtered)} out of {len(records)} sequences remain."
+#     )
+
+# def train_lr_and_predict(all_predictions):
+#     models = {}
+#     methods = ["stacking", "cumsum", "cumsum_reverse"]
+
+#     for method_name in methods:
+#         bin_df = prepare_bin_df_refs(all_predictions, method_name, num_bins=10)
+#         X = bin_df.drop(columns=["ground_truth"])
+#         y = bin_df["ground_truth"]
+#         model_lr = LogisticRegression(max_iter=1000)
+#         model_lr.fit(X, y)
+
+#         models[method_name] = model_lr
+
+#     return models
