@@ -112,3 +112,9 @@ Snakefile_Old
 test_*
 debug_*
 *.test
+
+# ------------------------------------------------------------------------------
+# Analysis-specific temporary files
+# ------------------------------------------------------------------------------
+# Reference selection mapper files (covered by *.txt pattern above)
+analysis/model/notebooks/results/reference_selection/**
