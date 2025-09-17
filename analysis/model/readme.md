@@ -52,7 +52,7 @@ This process involves several steps. Each step corresponds to a specific script 
 
 First we take a look inside the Snakemake pipeline output. This part demands some manual checkup and needs to be tailored for each study. In our case, we removed contigs that had hits on *cellular organisms* and contigs from *SRR6846476*, after consulting domain scientists. We then fitted a curve on contig length distribution of the selected contigs, which we'll later use for random weighted sampling of reference genomes, to generate training data.
 
-Example implementation is available in [`notebooks/01_fit_distribution_curve.ipynb`](notebooks/00_fit_distribution_curve.ipynb).
+Example implementation is available in [`notebooks/fit_distribution_curve.ipynb`](notebooks/fit_distribution_curve.ipynb).
 
 ## **3.2 Simulating Sequencing and Assembly for Training Data**
 

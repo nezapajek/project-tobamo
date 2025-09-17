@@ -10,6 +10,7 @@ The analysis pipeline is organized into 4 main components, each focused on a dis
 analysis/
 ├── contigs_report/    # Contig inspection and filtering
 ├── model/            # Machine learning pipeline 
+├── clustering/       # Contig clustering for phylogenetic analysis
 ```
 
 ## Folder Structure
@@ -39,6 +40,20 @@ analysis/
 **Output:** Trained models, performance metrics, and classification predictions
 
 See [model/readme.md](model/readme.md) for detailed information.
+
+
+### `clustering/`
+
+**Purpose:** Cluster contigs obtained from the Snakemake workflow for downstream phylogenetic analysis.
+
+**Key Functions:**
+- Group similar contigs based on sequence similarity
+- Prepare clustered sequences for phylogenetic tree construction
+- Generate baseline for selecting representative sequences from clusters for further analysis
+- Support downstream evolutionary and comparative genomics studies
+
+**Input:** Contigs from Snakemake workflow output
+**Output:** Clustered contig groups ready for phylogenetic analysis
 
 
 ### Prerequisites

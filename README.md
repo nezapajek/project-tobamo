@@ -88,12 +88,6 @@ Edit `config/samples_*.tsv` files to specify your SRA accessions:
 - `samples_test.tsv` - Small test dataset (253 test samples)
 - `samples_all.tsv` - Complete dataset (278 samples - 253 test + 25 control samples)
 
-### Database Setup
-
-#### Required Databases
-
-**Note:** Databases need to be downloaded manually
-
 ### SRA Data Download
 
 **IMPORTANT:** SRA data must be downloaded before running the workflow.
@@ -124,6 +118,9 @@ wc -l config/samples_*.tsv
 ls resources/SRA/*.downloaded | wc -l
 ```
 
+### Database Setup
+
+**Note:** Databases need to be downloaded manually
 #### Database Downloads
 
 1. **NCBI BLAST Database**
@@ -270,6 +267,7 @@ The `analysis/` folder contains post-processing scripts and notebooks:
 - **`contigs_report/`** - Contig filtering and metadata analysis
 - **`model/`** - Machine learning pipeline for viral classification  
 See [analysis/readme.md](analysis/readme.md) for detailed information.
+- **`clustering`** - Blast based script for clustering   
 
 ### Log Files
 
@@ -292,4 +290,4 @@ This project is licensed under [LICENSE](LICENSE).
 
 ## Contact
 
-For questions and support, please open an issue on GitHub or contact [contact information].
+For questions and support, please open an issue on GitHub or contact neza.pajekarambasic@fri.uni-lj.si
