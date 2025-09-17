@@ -118,3 +118,4 @@ debug_*
 # ------------------------------------------------------------------------------
 # Reference selection mapper files (covered by *.txt pattern above)
 analysis/model/notebooks/results/reference_selection/**
+analysis/model/notebooks/makeviz_scrapbook.ipynb
