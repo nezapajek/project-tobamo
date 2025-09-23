@@ -1,44 +1,35 @@
 # ============================================================================
-# Snakemake Workflow - Project Tobamo
+# Project Tobamo - Snakemake Workflow
 # ============================================================================
 
 # ------------------------------------------------------------------------------
 # Snakemake generated files and directories
 # ------------------------------------------------------------------------------
 .snakemake/
-.snakemake
 logs/**
 results/**
 
 # ------------------------------------------------------------------------------
-# Data and resources (large files)
-# ------------------------------------------------------------------------------
-resources/**
-# Exception: keep essential config files in resources
-!resources/*.fa
-!resources/*.yaml
-!resources/*.yml
-
-# ------------------------------------------------------------------------------
-# Temporary and cache files
-# ------------------------------------------------------------------------------
-fasterq.tmp.tobamo.*
-temp_dev/**
-output*.txt
-*.tmp
-*.cache
-
-# ------------------------------------------------------------------------------
-# Python files
+# Python cache and compiled files
 # ------------------------------------------------------------------------------
 *.pyc
 __pycache__/
 *.pyo
 *.pyd
 .Python
+*.cache
 
 # ------------------------------------------------------------------------------
-# Data file formats (typically large)
+# Data and resources (large files)
+# ------------------------------------------------------------------------------
+resources/**
+# Exception: keep essential config files
+!resources/*.yaml
+!resources/*.yml
+!resources/*.tsv
+
+# ------------------------------------------------------------------------------
+# Bioinformatics data formats
 # ------------------------------------------------------------------------------
 *.fasta
 *.fastq
@@ -48,14 +39,16 @@ __pycache__/
 *.fq.gz
 *.sam
 *.bam
+*.bai
 *.bed
 *.vcf
 *.gff
 *.gtf
 *.daa
+*.dmnd
 
 # ------------------------------------------------------------------------------
-# Output and result formats
+# Output and analysis files
 # ------------------------------------------------------------------------------
 *.csv
 *.tsv
@@ -63,9 +56,11 @@ __pycache__/
 *.json
 *.xml
 *.log
+*.out
+*.txt
 
 # ------------------------------------------------------------------------------
-# Image and visualization files
+# Images and visualization files
 # ------------------------------------------------------------------------------
 *.png
 *.jpg
@@ -77,6 +72,15 @@ __pycache__/
 *.ps
 
 # ------------------------------------------------------------------------------
+# Temporary and cache files
+# ------------------------------------------------------------------------------
+fasterq.tmp.tobamo.*
+temp_dev/**
+*.tmp
+*.temp
+output*
+
+# ------------------------------------------------------------------------------
 # Archive and backup directories
 # ------------------------------------------------------------------------------
 archive/**
@@ -85,38 +89,34 @@ old/**
 training/**
 
 # ------------------------------------------------------------------------------
-# Analysis pipeline specific
+# Analysis pipeline directories
 # ------------------------------------------------------------------------------
-analysis/model/archive/**
 analysis/data/**
+analysis/model/archive/**
 analysis/model/results/**
 analysis/model/scripts/archive/**
+analysis/model/notebooks/results/**
+analysis/model/notebooks/archive/**
+analysis/palmprint/results/**
 
 # ------------------------------------------------------------------------------
-# Configuration files (temporary/local)
+# Configuration files (local/temporary)
 # ------------------------------------------------------------------------------
 config/samples_temp.tsv
 config/samples_local.tsv
 config/config_local.yaml
 
 # ------------------------------------------------------------------------------
-# Dependencies and environment files (generated)
+# Generated dependency files
 # ------------------------------------------------------------------------------
 analysis_conda-requirements.txt
 analysis_requirements.txt
 
 # ------------------------------------------------------------------------------
-# Development and testing
+# Development and testing files
 # ------------------------------------------------------------------------------
 Snakefile_Old
 test_*
 debug_*
 *.test
-
-# ------------------------------------------------------------------------------
-# Analysis-specific temporary files
-# ------------------------------------------------------------------------------
-# Reference selection mapper files (covered by *.txt pattern above)
-analysis/model/notebooks/results/reference_selection/**
-analysis/model/notebooks/makeviz_scrapbook.ipynb
-analysis/model/notebooks/archive/**
+*.bak
