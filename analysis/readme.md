@@ -10,6 +10,7 @@ The analysis pipeline is organized into 4 main components, each focused on a dis
 analysis/
 ├── contigs_report/    # Contig inspection and filtering
 ├── model/            # Machine learning pipeline 
+├── palmprint/        # Viral palmprint domain identification
 ├── clustering/       # Contig clustering for phylogenetic analysis
 ```
 
@@ -40,6 +41,22 @@ analysis/
 **Output:** Trained models, performance metrics, and classification predictions
 
 See [model/readme.md](model/readme.md) for detailed information.
+
+
+### `palmprint/`
+
+**Purpose:** Identify viral palmprint domains (conserved RNA-dependent RNA polymerase regions) in contig sequences.
+
+**Key Components:**
+- **ORF prediction:** Extract open reading frames using GETORF (EMBOSS) or ORFIPY
+- **Domain scanning:** Search for viral palmprints using PalmScan and position-specific scoring matrices (PSSMs)
+- **Sequence analysis:** Generate detailed reports and extract palmprint-containing sequences
+- **Docker integration:** Containerized PalmScan workflow for reproducible analysis
+
+**Input:** Nucleotide sequences from contigs (converted to amino acids via ORF prediction)
+**Output:** TSV hit tables, detailed reports, and FASTA files with identified palmprint sequences
+
+See [palmprint/README.md](palmprint/README.md) and [palmprint/protocol.md](palmprint/protocol.md) for detailed workflows.
 
 
 ### `clustering/`

@@ -120,3 +120,5 @@ test_*
 debug_*
 *.test
 *.bak
+analysis/contigs_report/2_supplementary_data_table_prep.ipynb
+analysis/contigs_report/metadata_analysis.ipynb
