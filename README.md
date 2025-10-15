@@ -266,8 +266,10 @@ The `analysis/` folder contains post-processing scripts and notebooks:
 
 - **`contigs_report/`** - Contig filtering and metadata analysis
 - **`model/`** - Machine learning pipeline for viral classification  
-See [analysis/readme.md](analysis/readme.md) for detailed information.
-- **`clustering`** - Blast based script for clustering   
+- **`palmprint/`** - Viral palmprint domain identification using PalmScan
+- **`clustering/`** - BLAST-based contig clustering for phylogenetic analysis
+
+See [analysis/readme.md](analysis/readme.md) for detailed information.   
 
 ### Log Files
 
