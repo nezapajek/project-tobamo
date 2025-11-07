@@ -29,6 +29,8 @@ python scripts/train_model_pipeline.py results/training/training_input.csv ../da
 # 3. Train final model - using RF + LR stacking with bins=10:
 python scripts/train_model_pipeline.py results/training/training_input.csv ../data/tobamo/reference_database.xlsx results/training/sampling/2025-07-11_sampled_contigs_30.fasta --stage final --outdir final_model
 
+python scripts/train_model_pipeline.py results/training/training_input.csv ../data/tobamo/reference_database.xlsx results/training/sampling/2025-07-11_sampled_contigs_30.fasta --stage final --outdir final_model2
+
 
 ---------------------
 

@@ -108,8 +108,8 @@ def predict_contigs(input_path, model_dir, outdir, bin_num=10):
     print(f"ORF predictions saved to results/{predictions_dir}/orf_predictions.csv")
 
     # Prepare predictions for contig prediction
-    print(f"Preparing histogram with {bin_num} bins for contig-level prediction...")
-    bin_df = prepare_bin_df(results_df, "histogram", num_bins=bin_num)
+    print(f"Preparing stacking with {bin_num} bins for contig-level prediction...")
+    bin_df = prepare_bin_df(results_df, "stacking", num_bins=bin_num)
     X_test = bin_df
 
     # Predict contigs

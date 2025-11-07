@@ -29,16 +29,31 @@ from sklearn.cluster import KMeans
 from sklearn.discriminant_analysis import StandardScaler
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.linear_model import LinearRegression, LogisticRegression
-from sklearn.metrics import (ConfusionMatrixDisplay, accuracy_score,
-                             adjusted_rand_score, auc, classification_report,
-                             confusion_matrix, f1_score, make_scorer,
-                             mean_squared_error, precision_recall_curve,
-                             precision_score, recall_score, roc_auc_score,
-                             roc_curve)
-from sklearn.model_selection import (GridSearchCV, LeaveOneOut, ParameterGrid,
-                                     StratifiedKFold,
-                                     TunedThresholdClassifierCV,
-                                     cross_val_predict, train_test_split)
+from sklearn.metrics import (
+    ConfusionMatrixDisplay,
+    accuracy_score,
+    adjusted_rand_score,
+    auc,
+    classification_report,
+    confusion_matrix,
+    f1_score,
+    make_scorer,
+    mean_squared_error,
+    precision_recall_curve,
+    precision_score,
+    recall_score,
+    roc_auc_score,
+    roc_curve,
+)
+from sklearn.model_selection import (
+    GridSearchCV,
+    LeaveOneOut,
+    ParameterGrid,
+    StratifiedKFold,
+    TunedThresholdClassifierCV,
+    cross_val_predict,
+    train_test_split,
+)
 from sklearn.naive_bayes import GaussianNB
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.preprocessing import LabelEncoder, StandardScaler
@@ -51,9 +66,9 @@ import scipy.spatial.distance as ssd
 
 def remove_duplicates(fin_path, fout_path, mapper_path):
     """Remove duplicate sequences and create mapping file"""
-    with open(fin_path, 'r') as fin, open(fout_path, 'w') as fout, open(mapper_path, 'w') as mapper:
-        fin_rec = list(SeqIO.parse(fin_path, 'fasta'))
-        
+    with open(fin_path, "r") as fin, open(fout_path, "w") as fout, open(mapper_path, "w") as mapper:
+        fin_rec = list(SeqIO.parse(fin_path, "fasta"))
+
         # Use a dictionary to store unique sequences and their corresponding IDs
         unique_sequences = {}
         for rec in fin_rec:
@@ -62,15 +77,15 @@ def remove_duplicates(fin_path, fout_path, mapper_path):
                 unique_sequences[seq_str] = [rec.id]
             else:
                 unique_sequences[seq_str].append(rec.id)
-        
+
         # Write unique sequences to the output file
         unique_records = [SeqRecord(Seq(seq), id=ids[0], description="") for seq, ids in unique_sequences.items()]
-        SeqIO.write(unique_records, fout, 'fasta')
-        
+        SeqIO.write(unique_records, fout, "fasta")
+
         # Write the mapping of identical sequences to the mapper file
         for ids in unique_sequences.values():
             mapper.write(f"{ids[0]}: {', '.join(ids)}\n")
-        
+
         print(f"    Total records: {len(fin_rec)}")
         print(f"    Unique sequences: {len(unique_sequences)}")
         print(f"    Duplicates removed: {len(fin_rec) - len(unique_sequences)}")
@@ -83,45 +98,41 @@ def pairwise_refs(fasta_path):
     Perform pairwise alignment between all sequences in a FASTA file
     Returns a DataFrame with alignment results
     """
-    sequences = list(SeqIO.parse(fasta_path, 'fasta'))
+    sequences = list(SeqIO.parse(fasta_path, "fasta"))
     results = []
-    
+
     print(f"    Performing pairwise alignments for {len(sequences)} sequences...")
-    
+
     if len(sequences) < 2:
         print(f"    Warning: Only {len(sequences)} sequence(s) found. No pairwise comparisons needed.")
-        return pd.DataFrame(columns=['orf_name', 'ref_name', 'identity_score'])
-    
+        return pd.DataFrame(columns=["orf_name", "ref_name", "identity_score"])
+
     for i, seq1 in enumerate(tqdm(sequences)):
         for j, seq2 in enumerate(sequences):
             if i != j:  # Don't compare sequence with itself
                 # Calculate identity score using alignment
                 identity = calculate_identity_simple(str(seq1.seq), str(seq2.seq))
-                results.append({
-                    'orf_name': seq1.id,
-                    'ref_name': seq2.id,
-                    'identity_score': identity
-                })
-    
+                results.append({"orf_name": seq1.id, "ref_name": seq2.id, "identity_score": identity})
+
     return pd.DataFrame(results)
 
 
 def calculate_identity_simple(seq1, seq2):
     """Calculate sequence identity between two sequences using simple pairwise alignment"""
     from Bio.Align import PairwiseAligner
-    
+
     aligner = PairwiseAligner()
     aligner.match_score = 1
     aligner.mismatch_score = 0
     aligner.open_gap_score = -1
     aligner.extend_gap_score = -0.5
-    
+
     alignment = aligner.align(seq1, seq2)[0]
-    
+
     # Calculate identity as matches / alignment_length
-    matches = sum(1 for a, b in zip(alignment[0], alignment[1]) if a == b and a != '-')
+    matches = sum(1 for a, b in zip(alignment[0], alignment[1]) if a == b and a != "-")
     alignment_length = len(alignment[0])
-    
+
     return matches / alignment_length if alignment_length > 0 else 0.0
 
 
@@ -134,18 +145,18 @@ def prepend_length(ref, length_mapper):
 def prep_df(df, length_mapper, selected_col):
     """Prepare dataframe for distance matrix calculation"""
     if df.empty:
-        return pd.DataFrame(columns=['ref1', 'ref2', 'diff'])
-    
-    df = df[['orf_name', 'ref_name', selected_col]].copy()
-    df.rename(columns={'orf_name': 'ref1', 'ref_name': 'ref2'}, inplace=True)
-    
-    if selected_col == 'identity_score':
-        df['diff'] = 1 - df['identity_score']
-        df.drop(columns='identity_score', inplace=True)
-    
-    df['ref1'] = df['ref1'].apply(lambda x: prepend_length(x, length_mapper))
-    df['ref2'] = df['ref2'].apply(lambda x: prepend_length(x, length_mapper))
-    
+        return pd.DataFrame(columns=["ref1", "ref2", "diff"])
+
+    df = df[["orf_name", "ref_name", selected_col]].copy()
+    df.rename(columns={"orf_name": "ref1", "ref_name": "ref2"}, inplace=True)
+
+    if selected_col == "identity_score":
+        df["diff"] = 1 - df["identity_score"]
+        df.drop(columns="identity_score", inplace=True)
+
+    df["ref1"] = df["ref1"].apply(lambda x: prepend_length(x, length_mapper))
+    df["ref2"] = df["ref2"].apply(lambda x: prepend_length(x, length_mapper))
+
     return df
 
 
@@ -153,16 +164,21 @@ def make_distance_matrix(df, selected_col):
     """Create distance matrix from pairwise alignment data"""
     if df.empty:
         return pd.DataFrame(), pd.DataFrame(), []
-    
-    idx = pd.concat([df['ref1'], df['ref2']]).unique()
-    col = 'diff' if selected_col == 'identity_score' else 'clustering_score'
-    
-    res = pd.pivot(df, index=['ref1'], columns=['ref2'], values=col).reindex(index=idx, columns=idx).fillna(0).astype(float)
+
+    idx = pd.concat([df["ref1"], df["ref2"]]).unique()
+    col = "diff" if selected_col == "identity_score" else "clustering_score"
+
+    res = (
+        pd.pivot(df, index=["ref1"], columns=["ref2"], values=col)
+        .reindex(index=idx, columns=idx)
+        .fillna(0)
+        .astype(float)
+    )
     matrix = res + res.T
-    
+
     # Ensure diagonal is 0 (distance from sequence to itself)
     np.fill_diagonal(matrix.values, 0)
-    
+
     return matrix, res, idx
 
 
@@ -170,32 +186,35 @@ def make_dendrograms_genus(matrix, res, selected_col, genus):
     """Create dendrogram for genus-specific clustering with error handling"""
     try:
         condensed_distance_matrix = ssd.squareform(matrix)
-        
+
         # Check for negative distances
         if np.any(condensed_distance_matrix < 0):
             print(f"      Warning: Negative distances detected for {genus}. Setting to 0.")
             condensed_distance_matrix = np.maximum(condensed_distance_matrix, 0)
-        
+
         # Check for insufficient diversity
         if len(np.unique(condensed_distance_matrix)) < 3:
             print(f"      Warning: Insufficient distance diversity for {genus}.")
             return None
-        
-        linkage_matrix = sch.linkage(condensed_distance_matrix, method='single', optimal_ordering=True)
+
+        linkage_matrix = sch.linkage(condensed_distance_matrix, method="single", optimal_ordering=True)
         num_labels = len(res.index)
         fig_height = max(10, num_labels * 0.3)
-        
+
         plt.figure(figsize=(12, fig_height))
-        dendrogram = sch.dendrogram(linkage_matrix, labels=res.index, orientation='left')
-        plt.title(f'Hierarchical Dendrogram of {genus.upper()} based on {selected_col}')
-        plt.xlabel('Distance')
-        
-        os.makedirs('results/reference_selection/dendrograms', exist_ok=True)
-        plt.savefig(f'results/reference_selection/dendrograms/{genus}_RNA1_{selected_col}_dendrogram.png', 
-                    dpi=300, bbox_inches='tight')
+        dendrogram = sch.dendrogram(linkage_matrix, labels=res.index, orientation="left")
+        plt.title(f"Hierarchical Dendrogram of {genus.upper()} based on {selected_col}")
+        plt.xlabel("Distance")
+
+        os.makedirs("results/reference_selection/dendrograms", exist_ok=True)
+        plt.savefig(
+            f"results/reference_selection/dendrograms/{genus}_RNA1_{selected_col}_dendrogram.png",
+            dpi=300,
+            bbox_inches="tight",
+        )
         plt.close()
         return linkage_matrix
-        
+
     except Exception as e:
         print(f"      Error creating dendrogram for {genus}: {str(e)}")
         return None
@@ -204,46 +223,45 @@ def make_dendrograms_genus(matrix, res, selected_col, genus):
 def make_cluster_df_genus(linkage_matrix, idx, selected_col, genus):
     """Create cluster analysis dataframe for genus with error handling"""
     if linkage_matrix is None:
-        return pd.DataFrame(columns=['distance', 'identity', 'clusters'])
-    
+        return pd.DataFrame(columns=["distance", "identity", "clusters"])
+
     try:
         distances = linkage_matrix[:, 2]
         unique_distances = sorted(np.unique(distances))
         results = []
-        
+
         for dist in unique_distances:
-            clusters = sch.fcluster(linkage_matrix, t=dist, criterion='distance')
+            clusters = sch.fcluster(linkage_matrix, t=dist, criterion="distance")
             cluster_labels = {i: [] for i in np.unique(clusters)}
-            
+
             for label, cluster in zip(idx, clusters):
                 cluster_labels[cluster].append(label)
-            
-            results.append({
-                'distance': dist, 
-                'identity': 1-dist, 
-                'clusters': len(cluster_labels)
-            })
+
+            results.append({"distance": dist, "identity": 1 - dist, "clusters": len(cluster_labels)})
 
         clusters_df = pd.DataFrame(results)
-        os.makedirs('results/reference_selection/clusters', exist_ok=True)
-        clusters_df.to_csv(f'results/reference_selection/clusters/{genus}_RNA1_{selected_col}_clusters.csv', index=False)
+        os.makedirs("results/reference_selection/clusters", exist_ok=True)
+        clusters_df.to_csv(
+            f"results/reference_selection/clusters/{genus}_RNA1_{selected_col}_clusters.csv", index=False
+        )
         return clusters_df
-        
+
     except Exception as e:
         print(f"      Error creating cluster analysis for {genus}: {str(e)}")
-        return pd.DataFrame(columns=['distance', 'identity', 'clusters'])
+        return pd.DataFrame(columns=["distance", "identity", "clusters"])
 
 
 # Function to select one species per cluster
 def select_one_species(group):
-    if group['orig_ref'].sum() > 0:
-        return group[group['orig_ref'] == 1].iloc[0]
+    if group["orig_ref"].sum() > 0:
+        return group[group["orig_ref"] == 1].iloc[0]
     else:
-        return group.loc[group['length'].idxmax()]
+        return group.loc[group["length"].idxmax()]
+
 
 # select species
 def select_species(linkage_matrix, distance_threshold, idx, orig_ref, selected_col, genus):
-    clusters = sch.fcluster(linkage_matrix, t=distance_threshold, criterion='distance')
+    clusters = sch.fcluster(linkage_matrix, t=distance_threshold, criterion="distance")
     cluster_labels = {i: [] for i in np.unique(clusters)}
 
     for label, cluster in zip(idx, clusters):
@@ -253,125 +271,140 @@ def select_species(linkage_matrix, distance_threshold, idx, orig_ref, selected_c
     data = []
     for cluster, species_list in cluster_labels.items():
         for species in species_list:
-            data.append({'cluster': cluster, 'species': species})
+            data.append({"cluster": cluster, "species": species})
 
     # Convert the list of dictionaries to a DataFrame
     dd = pd.DataFrame(data)
-    dd['length'] = dd['species'].apply(lambda x: int(x.split('_')[0]))
-    dd['orig_ref'] = np.where(dd['species'].isin(orig_ref), 1,0)
+    dd["length"] = dd["species"].apply(lambda x: int(x.split("_")[0]))
+    dd["orig_ref"] = np.where(dd["species"].isin(orig_ref), 1, 0)
 
     # Apply the function to each cluster
-    selected_species = dd.groupby('cluster').apply(select_one_species, include_groups=False).reset_index(drop=True)
-    selected_species_list = selected_species['species'].tolist()
+    selected_species = dd.groupby("cluster").apply(select_one_species, include_groups=False).reset_index(drop=True)
+    selected_species_list = selected_species["species"].tolist()
 
-    os.makedirs('results/selected_species', exist_ok=True)
-    selected_species.to_csv(f'results/selected_species/{genus}_{selected_col}_RNA1_selected_species.csv', index=False)
+    os.makedirs("results/selected_species", exist_ok=True)
+    selected_species.to_csv(f"results/selected_species/{genus}_{selected_col}_RNA1_selected_species.csv", index=False)
     return selected_species_list
 
+
 def make_distance_matrix(df, selected_col):
-        idx = pd.concat([df['ref1'], df['ref2']]).unique()
-        if selected_col == 'identity_score':
-            col = 'diff'
-        else:
-            col = 'clustering_score'
-        res = pd.pivot(df, index=['ref1'], columns=['ref2'], values=col).reindex(index=idx, columns=idx).fillna(0).astype(float)
-        matrix = res + res.T
-        return matrix, res, idx
+    idx = pd.concat([df["ref1"], df["ref2"]]).unique()
+    if selected_col == "identity_score":
+        col = "diff"
+    else:
+        col = "clustering_score"
+    res = (
+        pd.pivot(df, index=["ref1"], columns=["ref2"], values=col)
+        .reindex(index=idx, columns=idx)
+        .fillna(0)
+        .astype(float)
+    )
+    matrix = res + res.T
+    return matrix, res, idx
+
 
 def make_dendrograms(matrix, res, selected_col, genus):
     condensed_distance_matrix = ssd.squareform(matrix)
-    linkage_matrix = sch.linkage(condensed_distance_matrix, method='single', optimal_ordering=True)
+    linkage_matrix = sch.linkage(condensed_distance_matrix, method="single", optimal_ordering=True)
     num_labels = len(res.index)
     fig_height = max(10, num_labels * 0.3)  # Adjust the multiplier as needed for better fit
-    
+
     # Create the dendrogram plot
     plt.figure(figsize=(12, fig_height))
-    dendrogram = sch.dendrogram(linkage_matrix, labels=res.index, orientation='left')
-    plt.title(f'Hierarchical Dendrogram of {genus} RNA1 base on {selected_col}')
-    plt.xlabel('Distance')
-    os.makedirs('results/dendrograms', exist_ok=True)
+    dendrogram = sch.dendrogram(linkage_matrix, labels=res.index, orientation="left")
+    plt.title(f"Hierarchical Dendrogram of {genus} RNA1 base on {selected_col}")
+    plt.xlabel("Distance")
+    os.makedirs("results/dendrograms", exist_ok=True)
     # plt.savefig(f'results/dendrograms/{genus}_RNA1_{selected_col}_dendrogram.png', dpi=300, bbox_inches='tight')
     plt.close()
     return linkage_matrix
 
+
 def make_dendrogram_selected_species(matrix, res, selected_col, genus, selected_species_list, distance_threshold):
     # Convert the distance matrix to condensed form
     condensed_distance_matrix = ssd.squareform(matrix)
-    
+
     # Perform hierarchical clustering
-    linkage_matrix = sch.linkage(condensed_distance_matrix, method='single', optimal_ordering=True)
-    
+    linkage_matrix = sch.linkage(condensed_distance_matrix, method="single", optimal_ordering=True)
+
     # Determine the figure size based on the number of labels
     num_labels = len(res.index)
     fig_height = max(10, num_labels * 0.3)  # Adjust the multiplier as needed for better fit
-    
+
     # Create the dendrogram plot
     plt.figure(figsize=(12, fig_height))
-    dendrogram = sch.dendrogram(linkage_matrix, labels=res.index, orientation='left', color_threshold=distance_threshold, above_threshold_color='grey')
-    plt.title(f'Hierarchical Dendrogram of {genus} RNA1 based on {selected_col}: identity threshold = {1-distance_threshold:.2f}')
-    plt.xlabel('Distance')
-    
+    dendrogram = sch.dendrogram(
+        linkage_matrix,
+        labels=res.index,
+        orientation="left",
+        color_threshold=distance_threshold,
+        above_threshold_color="grey",
+    )
+    plt.title(
+        f"Hierarchical Dendrogram of {genus} RNA1 based on {selected_col}: identity threshold = {1-distance_threshold:.2f}"
+    )
+    plt.xlabel("Distance")
+
     # Get the current axis
     ax = plt.gca()
-    
+
     # Get the y-axis labels
     y_labels = ax.get_ymajorticklabels()
-    
+
     # Make labels from selected_species_list in bold text
     for label in y_labels:
         if label.get_text() in selected_species_list:
-            label.set_fontweight('bold')
+            label.set_fontweight("bold")
         # if label.get_text() in all_ids_of_original_seqs_:
         #     label.set_color('darkgreen')
 
     # Plot a vertical line at the specified distance
-    plt.axvline(x=distance_threshold, color='black', linestyle='--')
-    
+    plt.axvline(x=distance_threshold, color="black", linestyle="--")
+
     # Adjust layout to ensure labels are not cut off
     plt.subplots_adjust(left=0.5, right=0.9, top=0.9, bottom=0.1)  # Adjust margins as needed
-    
+
     # Create the output directory if it doesn't exist
-    out_path = 'results/reference_selection/dendrograms_selected_species'
-    os.makedirs('out_path', exist_ok=True)
-    
+    out_path = "results/reference_selection/dendrograms_selected_species"
+    os.makedirs("out_path", exist_ok=True)
+
     # Save the dendrogram plot
-    plt.savefig(f'{out_path}/{genus}_RNA1_{selected_col}_dendrogram.png', dpi=100, bbox_inches='tight')
+    plt.savefig(f"{out_path}/{genus}_RNA1_{selected_col}_dendrogram.png", dpi=100, bbox_inches="tight")
     # plt.show()
     plt.close()
+
 
 def make_cluster_df(linkage_matrix, idx, selected_col, genus):
     distances = linkage_matrix[:, 2]
     unique_distances = sorted(np.unique(distances))
     results = []
     for dist in unique_distances:
-        clusters = sch.fcluster(linkage_matrix, t=dist, criterion='distance')
+        clusters = sch.fcluster(linkage_matrix, t=dist, criterion="distance")
         cluster_labels = {i: [] for i in np.unique(clusters)}
-        
+
         for label, cluster in zip(idx, clusters):
             cluster_labels[cluster].append(label)
-        
-        results.append({'distance': dist, 'identity':1-dist, 'clusters':len(cluster_labels)})
+
+        results.append({"distance": dist, "identity": 1 - dist, "clusters": len(cluster_labels)})
 
     clusters_df = pd.DataFrame(results)
-    os.makedirs('results/clusters', exist_ok=True)
-    clusters_df.to_csv(f'results/clusters/{genus}_RNA1_{selected_col}_clusters.csv', index=False)
+    os.makedirs("results/clusters", exist_ok=True)
+    clusters_df.to_csv(f"results/clusters/{genus}_RNA1_{selected_col}_clusters.csv", index=False)
     return clusters_df
 
 
-def train_lr_final_model(all_predictions, num_bins, fixed_threshold=0.5):
+def train_lr_final_model(all_predictions, bin_num, fixed_threshold=0.5):
     """Train final logistic regression model with fixed threshold"""
-    bin_df = prepare_bin_df_refs_hist_test(all_predictions, "stacking", num_bins=num_bins)
+    bin_df = prepare_bin_df_refs_hist_test(all_predictions, "stacking", num_bins=bin_num)
     X = bin_df.drop(columns=["ground_truth"])
     y = bin_df["ground_truth"]
-    
+
     # Use regular LogisticRegression for final model
     model_lr = LogisticRegression(max_iter=1000)
     model_lr.fit(X, y)
-    
-    return {
-        'model': model_lr,
-        'threshold': fixed_threshold
-    }
+
+    return {"model": model_lr, "threshold": fixed_threshold, "bin_df": bin_df}  # Return bin_df for saving
+
 
 def check_file_exists(filepath, filetype):
     if not os.path.isfile(filepath):
@@ -510,9 +543,6 @@ def predict_orfs(test, morf, sorf, refs: bool = True):
     return predictions_df
 
 
-
-
-
 def train_lr_and_predict(all_predictions, methods=["stacking", "cumsum", "cumsum_reverse"]):
     """
     Train Logistic Regression models for the specified methods.
@@ -554,27 +584,25 @@ def train_lr_and_predict_hist_test(all_predictions, nums: list):
         scorer = make_scorer(accuracy_score)
         base_model = LogisticRegression(max_iter=1000)
         model_lr = TunedThresholdClassifierCV(base_model, scoring=scorer, cv=StratifiedKFold(n_splits=10))
-        
+
         model_lr.fit(X, y)
 
         # Store both the model and the best threshold
-        models[f"stacking_{num}"] = {
-            'model': model_lr,
-            'best_threshold':model_lr.best_threshold_
-        }
+        models[f"stacking_{num}"] = {"model": model_lr, "best_threshold": model_lr.best_threshold_}
 
     return models
+
 
 # def train_lr_final_model(all_predictions, num_bins, fixed_threshold=0.5):
 #     """Train final logistic regression model with fixed threshold"""
 #     bin_df = prepare_bin_df_refs_hist_test(all_predictions, "stacking", num_bins=num_bins)
 #     X = bin_df.drop(columns=["ground_truth"])
 #     y = bin_df["ground_truth"]
-    
+
 #     # Use regular LogisticRegression for final model
 #     model_lr = LogisticRegression(max_iter=1000)
 #     model_lr.fit(X, y)
-    
+
 #     return {
 #         'model': model_lr,
 #         'threshold': fixed_threshold
@@ -696,24 +724,24 @@ def prepare_bin_df(all_predictions, method_name, num_bins=10):
 
 def generate_threshold_summary(hist_results, outdir):
     """Generate a concise threshold analysis summary"""
-    
+
     # Calculate basic statistics
-    overall_mean = hist_results['threshold'].mean()
-    overall_std = hist_results['threshold'].std()
-    overall_min = hist_results['threshold'].min()
-    overall_max = hist_results['threshold'].max()
-    
+    overall_mean = hist_results["threshold"].mean()
+    overall_std = hist_results["threshold"].std()
+    overall_min = hist_results["threshold"].min()
+    overall_max = hist_results["threshold"].max()
+
     # Per-iteration means
-    iter_means = hist_results.groupby('iteration')['threshold'].mean()
+    iter_means = hist_results.groupby("iteration")["threshold"].mean()
     iter_mean_avg = iter_means.mean()
     iter_mean_std = iter_means.std()
-    
+
     # Simple recommendation
     if abs(overall_mean - 0.5) < 0.05:
         recommendation = "Use default threshold 0.5"
     else:
         recommendation = f"Consider CV threshold: {overall_mean:.3f}"
-    
+
     # Create short report
     report = f"""
         THRESHOLD ANALYSIS SUMMARY
@@ -727,15 +755,16 @@ def generate_threshold_summary(hist_results, outdir):
         
         Recommendation: {recommendation}
         """
-    
+
     # Save to file
     with open(f"results/{outdir}/threshold_summary.txt", "w") as f:
         f.write(report)
-    
+
     # Print to console
     print(report)
-    
+
     return overall_mean, overall_std
+
 
 def predict_contigs(predictions, mc, idx, mc_name, refs_: bool):
 
@@ -910,7 +939,9 @@ def add_info_to_training_input_df(input_df, orf_fasta_path: str, inv_nt_virusnam
     return input_df
 
 
-def add_info_basic(input_df, orf_fasta_path: str, snakemake: bool, contig_fasta_path=None):  # , contig_fasta_path: str):
+def add_info_basic(
+    input_df, orf_fasta_path: str, snakemake: bool, contig_fasta_path=None
+):  # , contig_fasta_path: str):
     """
     Add additional information to the input DataFrame from ORF and contig FASTA files.
 
@@ -1186,6 +1217,7 @@ def pairwise_refs(ref_path):
     df = pd.DataFrame(results)
     return df
 
+
 def subsample_contigs(refs: pd.DataFrame, contigs, num: int, output_dir: str, random_seed):
     """
     Subsample contigs for each virus name and save the results as JSON files.
@@ -1279,9 +1311,6 @@ def calculate_identity(seq1, seq2):
     matches = sum(a == b for a, b in zip(seq1, seq2) if a != "-" and b != "-")
     length = min(len(seq1.replace("-", "")), len(seq2.replace("-", "")))
     return (matches / length) * 100 if length > 0 else 0
-
-
-
 
 
 def reverse_complement_record(record):
@@ -1550,9 +1579,6 @@ def calculate_alignment_length(aln):
         aln_len = 0
     aln_orf_len = aln_len - sum(1 for n1 in aln.seqA[first_match:last_match] if n1 == "-")
     return aln_len, aln_orf_len
-
-
-
 
 
 def calculate_histogram(group, num_bins: int):
