@@ -145,3 +145,17 @@ analysis/phylogenetic_placement/setup_environment_alternative.sh
 analysis/phylogenetic_placement/setup_environment.sh
 analysis/phylogenetic_placement/verify_environment.sh
 analysis/phylogenetic_placement/environment.yml
+
+
+
+analysis/phylogenetic_placement/epa-ng/papara_nt-master/**
+analysis/phylogenetic_placement/epa-ng/papara_nt-master.zip
+analysis/phylogenetic_placement/epa-ng/papara_nt-2.5-static_x86_64-linux.tar.gz
+analysis/phylogenetic_placement/epa-ng/papara_nt-2.5-static_x86_64
+analysis/phylogenetic_placement/epa-ng/papara_nt_v1.0.3/**
+analysis/phylogenetic_placement/epa-ng/results3/**
+analysis/phylogenetic_placement/epa-ng/papara_nt-2.5-static_x86_64.tar.gz
+analysis/phylogenetic_placement/epa-ng/papara_static_x86_64
+analysis/phylogenetic_placement/epa-ng/master.zip
+analysis/phylogenetic_placement/epa-ng/index.html
+analysis/phylogenetic_placement/epa-ng/find_batch_size.sh
