@@ -4,14 +4,15 @@ This folder contains the post-processing analysis pipeline and related code for 
 
 ## Overview
 
-The analysis pipeline is organized into 4 main components, each focused on a distinct part of the post-workflow analysis:
+The analysis pipeline is organized into 5 main components, each focused on a distinct part of the post-workflow analysis:
 
 ```
 analysis/
-├── contigs_report/    # Contig inspection and filtering
-├── model/            # Machine learning pipeline 
-├── palmprint/        # Viral palmprint domain identification
-├── clustering/       # Contig clustering for phylogenetic analysis
+├── contigs_report/         # Contig inspection and filtering
+├── model/                  # Machine learning pipeline 
+├── palmprint/              # Viral palmprint domain identification
+├── clustering/             # Contig clustering for phylogenetic analysis
+├── phylogenetic_placement/ # Phylogenetic placement using EPA-ng
 ```
 
 ## Folder Structure
@@ -73,15 +74,17 @@ See [palmprint/README.md](palmprint/README.md) and [palmprint/protocol.md](palmp
 **Output:** Clustered contig groups ready for phylogenetic analysis
 
 
-### Prerequisites
+### `phylogenetic_placement/`
 
-Install analysis dependencies:
+**Purpose:** Phylogenetic placement of viral contigs onto reference trees using EPA-ng.
 
-```bash
-# Option 1: Using pip
-pip install -r analysis_requirements.txt
+**Key Components:**
+- **Reference preparation:** Align reference sequences and build phylogenetic tree with MAFFT and IQ-TREE
+- **Phylogenetic placement:** Place query contigs onto reference tree using EPA-ng
+- **Visualization:** Convert placement results to annotated trees with gappa
+- **Orientation handling:** Tools to test both forward and reverse complement orientations
 
-# Option 2: Using conda  
-conda env create -f analysis_conda-requirements.txt
-conda activate tobamo-analysis
-```
+**Input:** Viral contigs from Snakemake workflow and curated reference sequences
+**Output:** Phylogenetic placement results (.jplace) and annotated tree visualizations
+
+See [phylogenetic_placement/README.md](phylogenetic_placement/README.md) and [phylogenetic_placement/protocol.md](phylogenetic_placement/protocol.md) for detailed workflows.
