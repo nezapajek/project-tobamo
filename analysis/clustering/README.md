@@ -2,6 +2,9 @@
 
 This folder contains scripts for clustering contigs obtained from the Snakemake workflow for downstream phylogenetic analysis.
 
+Sequences are clustered by first performing an all-vs-all blastn search to asses pairwise similarity between contigs. Hits that meet the specified criteria for identity and alignment length are used to build a network graph, with clusters defined as connected components within the graph.
+
+
 ## Overview
 
 The clustering pipeline groups similar contigs based on sequence similarity using BLAST-based network analysis. This enables:
@@ -230,20 +233,6 @@ MIN_LENGTH = 0.6
 - Use multiple CPU cores for BLAST step (`-num_threads` parameter)
 - Monitor disk space during BLAST database creation
 
-## Integration with Main Pipeline
+## Contact
 
-This clustering pipeline is designed to work with contigs from the main Snakemake workflow:
-
-```bash
-# Use filtered contigs from main pipeline
-cp ../contigs_report/filtered_contigs.fasta input_contigs.fasta
-
-# Run clustering pipeline
-./blast.sh
-python filter_self_hits.py  
-python filter_blast_results.py
-python clustering.py
-
-# Use clusters for phylogenetic analysis
-# (clusters.tsv contains cluster assignments)
-```
+For questions and support, contact lana.vogrinec@nib.si
