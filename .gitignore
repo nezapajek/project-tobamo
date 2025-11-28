@@ -12,12 +12,12 @@ results/**
 # ------------------------------------------------------------------------------
 # Python cache and compiled files
 # ------------------------------------------------------------------------------
-*.pyc
 __pycache__/
+*.pyc
 *.pyo
 *.pyd
-.Python
 *.cache
+.Python
 
 # ------------------------------------------------------------------------------
 # Data and resources (large files)
@@ -32,10 +32,10 @@ resources/**
 # Bioinformatics data formats
 # ------------------------------------------------------------------------------
 *.fasta
-*.fastq
-*.fastq.gz
 *.fa
+*.fastq
 *.fq
+*.fastq.gz
 *.fq.gz
 *.sam
 *.bam
@@ -89,17 +89,6 @@ old/**
 training/**
 
 # ------------------------------------------------------------------------------
-# Analysis pipeline directories
-# ------------------------------------------------------------------------------
-analysis/data/**
-analysis/model/archive/**
-analysis/model/results/**
-analysis/model/scripts/archive/**
-analysis/model/notebooks/results/**
-analysis/model/notebooks/archive/**
-analysis/palmprint/results/**
-
-# ------------------------------------------------------------------------------
 # Configuration files (local/temporary)
 # ------------------------------------------------------------------------------
 config/samples_temp.tsv
@@ -120,47 +109,32 @@ test_*
 debug_*
 *.test
 *.bak
+
+# ------------------------------------------------------------------------------
+# Analysis-specific directories and files
+# ------------------------------------------------------------------------------
+# Data directories
+analysis/data/**
+
+# Model analysis
+analysis/model/archive/**
+analysis/model/results/**
+analysis/model/scripts/archive/**
+analysis/model/notebooks/archive/**
+analysis/model/notebooks/results/**
+analysis/model/notebooks/rok_test.ipynb
+
+# Palmprint analysis
+analysis/palmprint/results/**
+
+# Contigs report
 analysis/contigs_report/2_supplementary_data_table_prep.ipynb
 analysis/contigs_report/metadata_analysis.ipynb
-analysis/model/notebooks/rok_test.ipynb
-analysis/phylogenetic_placement/pplacer/results/iqtree_for_pplacer.bionj
-analysis/phylogenetic_placement/pplacer/results/iqtree_for_pplacer.ckp.gz
-analysis/phylogenetic_placement/pplacer/results/iqtree_for_pplacer.iqtree
-analysis/phylogenetic_placement/pplacer/results/iqtree_for_pplacer.mldist
-analysis/phylogenetic_placement/pplacer/results/iqtree_for_pplacer.treefile
-analysis/phylogenetic_placement/pplacer/results/minimal_gtr.stats
-analysis/phylogenetic_placement/pplacer/results/reference_tree.bionj
-analysis/phylogenetic_placement/pplacer/results/reference_tree.ckp.gz
-analysis/phylogenetic_placement/pplacer/results/reference_tree.iqtree
-analysis/phylogenetic_placement/pplacer/results/reference_tree.mldist
-analysis/phylogenetic_placement/pplacer/results/reference_tree.tre
-analysis/phylogenetic_placement/pplacer/results/tob2_contigs.fasta.map
 
-analysis/phylogenetic_placement/epa-ng/raxml-ng_v1.2.2/**
-analysis/phylogenetic_placement/epa-ng/results/**
-analysis/phylogenetic_placement/epa-ng/results2/**
-analysis/phylogenetic_placement/epa-ng/data/**
-analysis/phylogenetic_placement/epa-ng/raxml-ng_v1.2.2_linux_x86_64_MPI.zip
-analysis/phylogenetic_placement/setup_environment_alternative.sh
-analysis/phylogenetic_placement/setup_environment.sh
-analysis/phylogenetic_placement/verify_environment.sh
-analysis/phylogenetic_placement/environment.yml
-
-
-
-analysis/phylogenetic_placement/epa-ng/papara_nt-master/**
-analysis/phylogenetic_placement/epa-ng/papara_nt-master.zip
-analysis/phylogenetic_placement/epa-ng/papara_nt-2.5-static_x86_64-linux.tar.gz
-analysis/phylogenetic_placement/epa-ng/papara_nt-2.5-static_x86_64
-analysis/phylogenetic_placement/epa-ng/papara_nt_v1.0.3/**
-analysis/phylogenetic_placement/epa-ng/results3/**
-analysis/phylogenetic_placement/epa-ng/papara_nt-2.5-static_x86_64.tar.gz
-analysis/phylogenetic_placement/epa-ng/papara_static_x86_64
-analysis/phylogenetic_placement/epa-ng/master.zip
-analysis/phylogenetic_placement/epa-ng/index.html
-analysis/phylogenetic_placement/epa-ng/find_batch_size.sh
-
-
+# Phylogenetic placement
 analysis/phylogenetic_placement_dev/**
-
 analysis/phylogenetic_placement/archive/**
+analysis/phylogenetic_placement/results/trimmed/iqtree/**
+analysis/phylogenetic_placement/results/trimmed/*/epa_output/**
+analysis/phylogenetic_placement/results/untrimmed/iqtree/**
+analysis/phylogenetic_placement/results/untrimmed/*/epa_output/**
