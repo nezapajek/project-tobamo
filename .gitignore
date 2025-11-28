@@ -159,3 +159,8 @@ analysis/phylogenetic_placement/epa-ng/papara_static_x86_64
 analysis/phylogenetic_placement/epa-ng/master.zip
 analysis/phylogenetic_placement/epa-ng/index.html
 analysis/phylogenetic_placement/epa-ng/find_batch_size.sh
+
+
+analysis/phylogenetic_placement_dev/**
+
+analysis/phylogenetic_placement/archive/**
