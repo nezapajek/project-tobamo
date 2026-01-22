@@ -4,6 +4,6 @@ channels:
 dependencies:
   - diamond=0.9.14
   - python=3.9.0
-  - biopython=1.81
+  - biopython=1.86
   - pandas=2.1.1
   - megan=6.21.7
