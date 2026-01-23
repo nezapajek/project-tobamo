@@ -133,6 +133,7 @@ analysis/contigs_report/metadata_analysis.ipynb
 
 # Phylogenetic placement
 analysis/phylogenetic_placement_dev/**
+analysis/phylogenetic_placement/results/archive/**
 analysis/phylogenetic_placement/archive/**
 analysis/phylogenetic_placement/results/trimmed/iqtree/**
 analysis/phylogenetic_placement/results/trimmed/*/epa_output/**
