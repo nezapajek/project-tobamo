@@ -30,6 +30,11 @@ def parse_args():
     parser.add_argument(
         "--threshold", type=float, default=None, help="Custom classification threshold (overrides CV results)"
     )
+    parser.add_argument(
+        "--use_fixed_threshold",
+        action="store_true",
+        help="In evaluate stage, use fixed threshold (--threshold or 0.5) instead of CV-optimized thresholds",
+    )
     return parser.parse_args()
 
 
@@ -351,10 +356,21 @@ def model_selection(input_df, refs, contigs, outdir="model_selection", random_se
 
 
 def train_and_evaluate(
-    input_df, refs, contigs, outdir="cv_evaluation", iterations=30, sample_depth=30, random_seed=42, selected_model=None
+    input_df,
+    refs,
+    contigs,
+    outdir="cv_evaluation",
+    iterations=30,
+    sample_depth=30,
+    random_seed=42,
+    selected_model=None,
+    use_fixed_threshold=False,
+    fixed_threshold=0.5,
 ):
     """Perform extensive cross-validation with both prediction methods"""
     print(f"Starting comprehensive evaluation with {iterations} iterations...")
+    threshold_mode = "fixed" if use_fixed_threshold else "tuned"
+    print(f"Threshold mode: {threshold_mode} ({fixed_threshold if use_fixed_threshold else 'CV-optimized'})")
 
     os.makedirs(f"results/{outdir}", exist_ok=True)
 
@@ -423,11 +439,13 @@ def train_and_evaluate(
                 mc_name = mc_name_n.split("_")[0]
                 num = int(mc_name_n.split("_")[1])
                 mc = mc_info["model"]  # Extract the model
-                best_threshold = mc_info["best_threshold"]  # Extract the threshold
+                best_threshold = fixed_threshold if use_fixed_threshold else mc_info["best_threshold"]
 
                 final_predictions = predict_contigs_hist_test(test_orf_predictions, mc, idx, mc_name, num, refs_=True)
                 final_predictions["n"] = num
                 final_predictions["threshold"] = best_threshold
+                final_predictions["threshold_mode"] = threshold_mode
+                final_predictions["threshold_source"] = "fixed_user" if use_fixed_threshold else "cv_optimized"
                 final_predictions["random_seed"] = random_seed
                 final_predictions["iteration"] = iteration
                 all_hist_predictions.append(final_predictions)
@@ -438,6 +456,10 @@ def train_and_evaluate(
 
     hist_results = pd.concat(all_hist_predictions)
     hist_results.to_csv(f"results/{outdir}/stacking_predictions_results.csv", index=False)
+    threshold_suffix = (
+        f"fixed_{str(fixed_threshold).replace('.', 'p')}" if use_fixed_threshold else "tuned"
+    )
+    hist_results.to_csv(f"results/{outdir}/stacking_predictions_results_{threshold_suffix}.csv", index=False)
 
     orf_results = pd.concat(all_orf_predictions)
     orf_results.to_csv(f"results/{outdir}/orf_predictions_results.csv", index=False)
@@ -669,6 +691,10 @@ def main():
         model_selection(input_df, refs, contigs, outdir=args.outdir, random_seed=args.seed)
 
     elif args.stage == "evaluate":
+        fixed_threshold = args.threshold if args.threshold is not None else 0.5
+        if not 0 <= fixed_threshold <= 1:
+            raise ValueError("--threshold must be between 0 and 1")
+
         train_and_evaluate(
             input_df,
             refs,
@@ -678,6 +704,8 @@ def main():
             sample_depth=args.sample_depth,
             random_seed=args.seed,
             selected_model=default_selected_model,
+            use_fixed_threshold=args.use_fixed_threshold,
+            fixed_threshold=fixed_threshold,
         )
 
     elif args.stage == "final":
