@@ -88,6 +88,39 @@ def ensure_dirs(root: Path) -> dict[str, Path]:
     return paths
 
 
+def is_non_empty(path: Path) -> bool:
+    return path.exists() and path.stat().st_size > 0
+
+
+def genus_completed(genus: str, paths: dict[str, Path]) -> bool:
+    unique_fasta = paths["data"] / f"{genus}_RNA1_unique.fasta"
+    mapper_file = paths["data"] / f"{genus}_RNA1_mapper.txt"
+    pairwise_csv = paths["pairwise_aln"] / f"pairwise_aln_{genus}_RNA1_sequences.csv"
+    cluster_csv = paths["clusters"] / f"{genus}_RNA1_identity_score_clusters.csv"
+    selected_csv = paths["selected_species"] / f"{genus}_identity_score_RNA1_selected_species.csv"
+    dendrogram_png = paths["dendrograms"] / f"{genus}_RNA1_identity_score_dendrogram.png"
+    dendrogram_selected_png = paths["dendrograms_selected_species"] / f"{genus}_RNA1_identity_score_dendrogram.png"
+
+    full_outputs = [
+        unique_fasta,
+        mapper_file,
+        pairwise_csv,
+        cluster_csv,
+        selected_csv,
+        dendrogram_png,
+        dendrogram_selected_png,
+    ]
+    if all(is_non_empty(path) for path in full_outputs):
+        return True
+
+    short_path_outputs = [
+        unique_fasta,
+        mapper_file,
+        selected_csv,
+    ]
+    return all(is_non_empty(path) for path in short_path_outputs)
+
+
 def check_mafft_available() -> None:
     try:
         subprocess.run(["mafft", "--version"], check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
@@ -338,6 +371,10 @@ def process_genus(genus: str, config: PipelineConfig, paths: dict[str, Path]) ->
     input_fasta = config.input_dir / f"{genus}RNA1_sequences.fasta"
     if not input_fasta.exists():
         print(f"[{genus}] Missing input file: {input_fasta}")
+        return
+
+    if not config.overwrite and genus_completed(genus, paths):
+        print(f"[{genus}] Already completed successfully. Skipping.")
         return
 
     print(f"[{genus}] Processing...")
