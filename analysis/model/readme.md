@@ -192,10 +192,19 @@ python scripts/train_model_pipeline.py <path/to/training_input.csv> <path/to/ref
    - Compares two prediction methods for contig classification:
      - Most extreme probability approach
      - Stacking-based approach (using logistic regression with bins=10)
+     - Threshold behavior for stacking predictions:
+         - Default: CV-optimized threshold (tuned per fold)
+         - Optional fixed threshold: add `--use_fixed_threshold --threshold 0.5`
    - Generates comprehensive performance metrics
    
    ```bash
    python scripts/train_model_pipeline.py training_input.csv references.xlsx contigs.fasta --stage evaluate --iterations 30 --sample_depth 30 --outdir evaluation_results
+    ```
+
+    Example with fixed threshold:
+
+    ```bash
+    python scripts/train_model_pipeline.py training_input.csv references.xlsx contigs.fasta --stage evaluate --iterations 30 --sample_depth 30 --use_fixed_threshold --threshold 0.5 --outdir evaluation_results
     ```
 
 3. **Final Model Training** (`--stage final`)
@@ -214,7 +223,9 @@ python scripts/train_model_pipeline.py <path/to/training_input.csv> <path/to/ref
 
 - **Cross-Validation Evaluation**:
   - `results/<outdir>/extreme_predictions_results.csv` - Results using most extreme probability method
-  - `results/<outdir>/stacking_predictions_results.csv` - Results using stacking-based approach
+    - `results/<outdir>/stacking_predictions_results.csv` - Legacy/default stacking output (always written)
+    - `results/<outdir>/stacking_predictions_results_tuned.csv` - Stacking output with CV-optimized thresholds
+    - `results/<outdir>/stacking_predictions_results_fixed_<threshold>.csv` - Stacking output with fixed threshold (e.g. `fixed_0p5`)
   - `results/<outdir>/method_comparison.csv` - Performance comparison between methods
   - `results/<outdir>/best_method.txt` - Information about the best-performing method
 
@@ -365,6 +376,18 @@ python scripts/train_model_pipeline.py \
     --sample_depth 30 \
     --outdir evaluation_results
 
+# Stage 2 alternative: fixed threshold evaluation (recommended for parity with final model threshold=0.5)
+python scripts/train_model_pipeline.py \
+    results/training/training_input.csv \
+    ../data/tobamo/reference_database.xlsx \
+    results/training/sampling/2025-07-11_sampled_contigs_30.fasta \
+    --stage evaluate \
+    --iterations 30 \
+    --sample_depth 30 \
+    --use_fixed_threshold \
+    --threshold 0.5 \
+    --outdir evaluation_results_fixed05
+
 # Stage 3: Train final model using RF + LR stacking with bins=10
 python scripts/train_model_pipeline.py \
     results/training/training_input.csv \
@@ -457,6 +480,7 @@ results/
 ├── evaluation_results/
 │   ├── extreme_predictions_results.csv
 │   ├── stacking_predictions_results.csv
+│   ├── stacking_predictions_results_tuned.csv
 │   └── method_comparison.csv
 ├── final_model/
 │   ├── rf_model.joblib
