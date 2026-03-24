@@ -26,6 +26,12 @@ python scripts/train_model_pipeline.py results/training/training_input.csv ../da
 # 2. Cross-validation evaluation - 30 iterations of 5-fold CV with both methods:
 python scripts/train_model_pipeline.py results/training/training_input.csv ../data/tobamo/reference_database.xlsx results/training/sampling/2025-07-11_sampled_contigs_30.fasta --stage evaluate --iterations 30 --sample_depth 30 --outdir evaluation_results
 
+# evaluation with fixed threshold
+python scripts/train_model_pipeline.py results/training/training_input.csv ../data/tobamo/reference_database.xlsx results/training/sampling/2025-07-11_sampled_contigs_30.fasta --stage evaluate --iterations 30 --sample_depth 30 --use_fixed_threshold --threshold 0.5 --outdir evaluation_results_fixed05
+
+# bintest
+python scripts/train_model_pipeline.py results/training/training_input.csv ../data/tobamo/reference_database.xlsx results/training/sampling/2025-07-11_sampled_contigs_30.fasta --stage evaluate --outdir eval_once_bins_5_10_15_20_t05 --bins 5 10 15 20 --use_fixed_threshold --threshold 0.5 --iterations 30 --sample_depth 30 --seed 42 --n-jobs 28
+
 # 3. Train final model - using RF + LR stacking with bins=10:
 python scripts/train_model_pipeline.py results/training/training_input.csv ../data/tobamo/reference_database.xlsx results/training/sampling/2025-07-11_sampled_contigs_30.fasta --stage final --outdir final_model
 
