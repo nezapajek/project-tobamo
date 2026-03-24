@@ -12,6 +12,11 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import accuracy_score, f1_score, roc_auc_score, recall_score, precision_score
 
+try:
+    from joblib.externals.loky.process_executor import TerminatedWorkerError
+except Exception:
+    TerminatedWorkerError = None
+
 
 def parse_args():
     """Parse command line arguments"""
@@ -26,6 +31,12 @@ def parse_args():
     parser.add_argument("--iterations", type=int, default=30, help="Number of iterations for cross-validation")
     parser.add_argument("--sample_depth", type=int, default=30, help="Number of contigs to sample per species")
     parser.add_argument("--seed", type=int, default=42, help="Random seed")
+    parser.add_argument(
+        "--n-jobs",
+        type=int,
+        default=2,
+        help="Number of parallel workers for model fitting (-1 uses all cores, default: 2)",
+    )
     parser.add_argument("--bin-num", type=int, default=10, help="Number of bins for stacking model (default: 10)")
     parser.add_argument(
         "--threshold", type=float, default=None, help="Custom classification threshold (overrides CV results)"
@@ -34,6 +45,13 @@ def parse_args():
         "--use_fixed_threshold",
         action="store_true",
         help="In evaluate stage, use fixed threshold (--threshold or 0.5) instead of CV-optimized thresholds",
+    )
+    parser.add_argument(
+        "--bins",
+        type=int,
+        nargs="+",
+        default=[10],
+        help="Bin counts to evaluate in --stage evaluate (default: 10)",
     )
     return parser.parse_args()
 
@@ -51,9 +69,48 @@ def check_inputs(input_df_path, refs_path, contig_fasta_path):
     )
 
 
-def model_selection_old(input_df, refs, contigs, outdir="model_selection", random_seed=42):
+def run_grid_search_with_retry(model, params, X_train, y_train, n_jobs, pre_dispatch, cv=5, scoring="accuracy"):
+    """Run GridSearchCV and fall back to serial execution if loky workers terminate unexpectedly."""
+    grid_search = GridSearchCV(
+        model,
+        param_grid=params,
+        n_jobs=n_jobs,
+        pre_dispatch=pre_dispatch,
+        cv=cv,
+        scoring=scoring,
+    )
+
+    try:
+        grid_search.fit(X_train, y_train)
+        return grid_search
+    except Exception as exc:
+        is_terminated_worker_error = (
+            TerminatedWorkerError is not None and isinstance(exc, TerminatedWorkerError)
+        ) or "A worker process managed by the executor was unexpectedly terminated" in str(exc)
+
+        if not is_terminated_worker_error or n_jobs == 1:
+            raise
+
+        print("    Warning: loky worker terminated during GridSearchCV. Retrying this model with n_jobs=1...")
+
+        fallback_grid_search = GridSearchCV(
+            model,
+            param_grid=params,
+            n_jobs=1,
+            pre_dispatch=1,
+            cv=cv,
+            scoring=scoring,
+        )
+        fallback_grid_search.fit(X_train, y_train)
+        return fallback_grid_search
+
+
+def model_selection_old(input_df, refs, contigs, outdir="model_selection", random_seed=42, n_jobs=2):
     """Perform model selection and hyperparameter tuning"""
     print("Starting model selection and hyperparameter tuning...")
+    print(f"Parallel workers: {n_jobs}")
+
+    grid_pre_dispatch = n_jobs if n_jobs > 0 else "2*n_jobs"
 
     # Define the models and their parameter grids
     models = {
@@ -67,7 +124,7 @@ def model_selection_old(input_df, refs, contigs, outdir="model_selection", rando
             },
         },
         "RandomForest": {
-            "model": RandomForestClassifier(),
+            "model": RandomForestClassifier(n_jobs=1, random_state=random_seed),
             "params": {"n_estimators": [50, 100, 150, 200, 300], "max_depth": [5, 10, 20, 40, 50, None]},
         },
         "SVM": {"model": SVC(), "params": {"C": [10, 50, 100], "kernel": ["linear", "rbf", "poly"]}},
@@ -126,8 +183,16 @@ def model_selection_old(input_df, refs, contigs, outdir="model_selection", rando
             print(f"  Testing {model_name}...")
             model, params = model_info["model"], model_info["params"]
 
-            grid_search = GridSearchCV(model, param_grid=params, n_jobs=-1, cv=5, scoring="accuracy")
-            grid_search.fit(X_train, y_train)
+            grid_search = run_grid_search_with_retry(
+                model,
+                params,
+                X_train,
+                y_train,
+                n_jobs=n_jobs,
+                pre_dispatch=grid_pre_dispatch,
+                cv=5,
+                scoring="accuracy",
+            )
 
             if grid_search.best_score_ > best_score:
                 best_model = grid_search.best_estimator_
@@ -176,9 +241,12 @@ def model_selection_old(input_df, refs, contigs, outdir="model_selection", rando
     print(f"Model selection completed! Best model: {best_model}")
 
 
-def model_selection(input_df, refs, contigs, outdir="model_selection", random_seed=42, iterations=5):
+def model_selection(input_df, refs, contigs, outdir="model_selection", random_seed=42, iterations=5, n_jobs=2):
     """Perform model selection and hyperparameter tuning with multiple iterations"""
     print(f"Starting model selection and hyperparameter tuning with {iterations} iterations...")
+    print(f"Parallel workers: {n_jobs}")
+
+    grid_pre_dispatch = n_jobs if n_jobs > 0 else "2*n_jobs"
 
     # Define the models and their parameter grids
     models = {
@@ -192,7 +260,7 @@ def model_selection(input_df, refs, contigs, outdir="model_selection", random_se
             },
         },
         "RandomForest": {
-            "model": RandomForestClassifier(),
+            "model": RandomForestClassifier(n_jobs=1, random_state=random_seed),
             "params": {"n_estimators": [50, 100, 150, 200, 300], "max_depth": [5, 10, 20, 40, 50, None]},
         },
         "SVM": {"model": SVC(), "params": {"C": [10, 50, 100], "kernel": ["linear", "rbf", "poly"]}},
@@ -263,8 +331,16 @@ def model_selection(input_df, refs, contigs, outdir="model_selection", random_se
                 print(f"  Testing {model_name}...")
                 model, params = model_info["model"], model_info["params"]
 
-                grid_search = GridSearchCV(model, param_grid=params, n_jobs=-1, cv=5, scoring="accuracy")
-                grid_search.fit(X_train, y_train)
+                grid_search = run_grid_search_with_retry(
+                    model,
+                    params,
+                    X_train,
+                    y_train,
+                    n_jobs=n_jobs,
+                    pre_dispatch=grid_pre_dispatch,
+                    cv=5,
+                    scoring="accuracy",
+                )
 
                 if grid_search.best_score_ > best_score:
                     best_model = grid_search.best_estimator_
@@ -366,11 +442,14 @@ def train_and_evaluate(
     selected_model=None,
     use_fixed_threshold=False,
     fixed_threshold=0.5,
+    bins_to_evaluate=None,
 ):
     """Perform extensive cross-validation with both prediction methods"""
     print(f"Starting comprehensive evaluation with {iterations} iterations...")
     threshold_mode = "fixed" if use_fixed_threshold else "tuned"
     print(f"Threshold mode: {threshold_mode} ({fixed_threshold if use_fixed_threshold else 'CV-optimized'})")
+    bins_to_evaluate = [10] if bins_to_evaluate is None else list(bins_to_evaluate)
+    print(f"Evaluating stacking bins: {bins_to_evaluate}")
 
     os.makedirs(f"results/{outdir}", exist_ok=True)
 
@@ -414,8 +493,7 @@ def train_and_evaluate(
             morf_predictions = train_rf_and_predict(train, selected_model)  # make predictions using LOOCV
 
             # Train Logistic Regression model on LOOCV prediction
-            bins = [10]  # or test a list of bins e.g. [5, 10, 20]
-            mc_dict = train_lr_and_predict_hist_test(morf_predictions, bins)
+            mc_dict = train_lr_and_predict_hist_test(morf_predictions, bins_to_evaluate)
 
             # Train RandomForest model on all training data
             morf, sorf, _ = train_rf_on_all_data(train, selected_model)
@@ -456,22 +534,28 @@ def train_and_evaluate(
 
     hist_results = pd.concat(all_hist_predictions)
     hist_results.to_csv(f"results/{outdir}/stacking_predictions_results.csv", index=False)
-    threshold_suffix = (
-        f"fixed_{str(fixed_threshold).replace('.', 'p')}" if use_fixed_threshold else "tuned"
-    )
+    threshold_suffix = f"fixed_{str(fixed_threshold).replace('.', 'p')}" if use_fixed_threshold else "tuned"
     hist_results.to_csv(f"results/{outdir}/stacking_predictions_results_{threshold_suffix}.csv", index=False)
 
     orf_results = pd.concat(all_orf_predictions)
     orf_results.to_csv(f"results/{outdir}/orf_predictions_results.csv", index=False)
 
-    # Calculate summary performance metrics
-    methods = {"extreme": extreme_results, "stacking": hist_results}
+    # Calculate summary performance metrics.
+    # With multiple bins, evaluate each stacking bin as its own method.
+    methods = {"extreme": extreme_results}
+    if not hist_results.empty:
+        for n in sorted(hist_results["n"].unique()):
+            methods[f"stacking_bin_{int(n)}"] = hist_results[hist_results["n"] == n].copy()
 
     summary_metrics = []
 
     for method_name, results_df in methods.items():
-        # Add predicted class based on probability threshold
-        results_df["predicted_class"] = np.where(results_df["prob_1"] >= 0.5, 1, 0)
+        # Add predicted class based on method threshold.
+        # Stacking predictions include per-row threshold; extreme method defaults to 0.5.
+        if "threshold" in results_df.columns:
+            results_df["predicted_class"] = np.where(results_df["prob_1"] >= results_df["threshold"], 1, 0)
+        else:
+            results_df["predicted_class"] = np.where(results_df["prob_1"] >= 0.5, 1, 0)
 
         # Group by iteration to calculate per-iteration metrics
         iteration_metrics = []
@@ -640,7 +724,7 @@ def train_final_model(
     # Train Logistic Regression stacking model with selected bins num
     mc_dict = train_lr_final_model(morf_predictions, bin_num, fixed_threshold)
     hist_model = mc_dict["model"]
-    threshold = mc_dict["threshold"] 
+    threshold = mc_dict["threshold"]
     bin_df = mc_dict["bin_df"]
 
     # Save bin_df for reproducibility and analysis
@@ -677,23 +761,37 @@ def main():
     args = parse_args()
     print(f"Starting pipeline at stage: {args.stage}")
 
+    if args.n_jobs == 0:
+        raise ValueError("--n-jobs cannot be 0. Use -1 for all cores or a positive integer.")
+
     # Check inputs and load data
     input_df, refs, contigs = check_inputs(args.input_df, args.refs, args.contigs)
     print("Input data loaded successfully")
 
     # Default selected model
     default_selected_model = {
-        "model": RandomForestClassifier(n_estimators=200, max_depth=50, n_jobs=-1, random_state=args.seed)
+        "model": RandomForestClassifier(n_estimators=200, max_depth=50, n_jobs=args.n_jobs, random_state=args.seed)
     }
 
     # Run the requested pipeline stage
     if args.stage == "select":
-        model_selection(input_df, refs, contigs, outdir=args.outdir, random_seed=args.seed)
+        model_selection(
+            input_df,
+            refs,
+            contigs,
+            outdir=args.outdir,
+            random_seed=args.seed,
+            iterations=args.iterations,
+            n_jobs=args.n_jobs,
+        )
 
     elif args.stage == "evaluate":
         fixed_threshold = args.threshold if args.threshold is not None else 0.5
         if not 0 <= fixed_threshold <= 1:
             raise ValueError("--threshold must be between 0 and 1")
+        bins_to_evaluate = sorted(set(args.bins))
+        if any(n <= 0 for n in bins_to_evaluate):
+            raise ValueError("--bins values must be positive integers")
 
         train_and_evaluate(
             input_df,
@@ -706,6 +804,7 @@ def main():
             selected_model=default_selected_model,
             use_fixed_threshold=args.use_fixed_threshold,
             fixed_threshold=fixed_threshold,
+            bins_to_evaluate=bins_to_evaluate,
         )
 
     elif args.stage == "final":
