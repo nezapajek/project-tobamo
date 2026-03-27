@@ -268,6 +268,7 @@ The `analysis/` folder contains post-processing scripts and notebooks:
 - **`model/`** - Machine learning pipeline for viral classification  
 - **`palmprint/`** - Viral palmprint domain identification using PalmScan
 - **`clustering/`** - BLAST-based contig clustering for phylogenetic analysis
+- **`phylogenetic_placement/`** - EPA-ng based phylogenetic placement of candidate viral contigs
 
 See [analysis/readme.md](analysis/readme.md) for detailed information.   
 
