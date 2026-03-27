@@ -282,7 +282,7 @@ python scripts/preprocess.py <path/to/reference_database.xlsx> <path/to/orf.fast
 Once you have the processed input features and the trained models, run the prediction script:
 
 ```bash
-python scripts/predict_contigs.py results/<output_dir>/testing_input.csv results/final_model --outdir predictions --bin-num 10
+python scripts/predict_query_contigs.py results/<output_dir>/testing_input.csv results/final_model --outdir predictions --bin-num 10
 ```
 
 **Arguments**
@@ -328,7 +328,7 @@ jupyter notebook notebooks/01_fit_distribution_curve.ipynb
 ### **Step 2: Sample Reference Genomes**
 ```bash
 # Generate training contigs from reference genomes
-python scripts/02_sample_refs.py \
+python scripts/sample_refs.py \
     ../data/tobamo/reference_nukleotidne.fasta \
     training \
     300 \
@@ -339,7 +339,7 @@ python scripts/02_sample_refs.py \
 ### **Step 3: ORF Detection and Pairwise Alignment**
 ```bash
 # Process sampled contigs to find ORFs and perform alignments
-time python scripts/03_getorfs_pairwise_aln.py \
+time python scripts/getorfs_pairwise_aln.py \
     results/training/sampling/2025-07-11_sampled_contigs_30.fasta \
     training \
     unknown
@@ -348,12 +348,13 @@ time python scripts/03_getorfs_pairwise_aln.py \
 ### **Step 4: Preprocess Training Data**
 ```bash
 # Generate training input features
-python scripts/04_preprocess_training.py \
+python scripts/preprocess.py \
     ../data/tobamo/reference_database.xlsx \
-    results/training/sampling/2025-07-11_sampled_contigs_30.fasta \
     results/training/orfs/combined_orfs.fasta \
     results/training/pairwise_aln.csv \
-    training
+    training \
+    --train \
+    --contigs results/training/sampling/2025-07-11_sampled_contigs_30.fasta
 ```
 
 ### **Step 5: Model Training (3-stage process)**
