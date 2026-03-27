@@ -32,7 +32,7 @@ python scripts/train_model_pipeline.py results/training/training_input.csv ../da
 # bintest
 python scripts/train_model_pipeline.py results/training/training_input.csv ../data/tobamo/reference_database.xlsx results/training/sampling/2025-07-11_sampled_contigs_30.fasta --stage evaluate --outdir eval_once_bins_5_10_15_20_t05 --bins 5 10 15 20 --use_fixed_threshold --threshold 0.5 --iterations 30 --sample_depth 30 --seed 42 --n-jobs 28
 
-# 3. Train final model - using RF + LR stacking with bins=10:
+# 3. Train final model - using RF + LR binned prediction with bins=10:
 python scripts/train_model_pipeline.py results/training/training_input.csv ../data/tobamo/reference_database.xlsx results/training/sampling/2025-07-11_sampled_contigs_30.fasta --stage final --outdir final_model
 
 python scripts/train_model_pipeline.py results/training/training_input.csv ../data/tobamo/reference_database.xlsx results/training/sampling/2025-07-11_sampled_contigs_30.fasta --stage final --outdir final_model2

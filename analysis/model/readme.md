@@ -142,10 +142,10 @@ We then compare two different strategies for contig-level prediction:
 - **ORF Prediction**: All models use Random Forest for Open Reading Frame (ORF) classification (best performing model from previous step)
 - **Contig Prediction Methods**:
   - **Extreme Method**: Uses the most confident ORF prediction score
-  - **Stacking Method**: Bins ORF predictions and uses Logistic Regression
+    - **Binned Prediction Method (stacked generalization)**: Bins ORF predictions and uses Logistic Regression
 - **Validation Process**: 5 fold Cross-Validation repeated 30 times
 - **Performance Assessment**: Comprehensive metrics including accuracy, F1 score, precision, and recall
-- **Winner**: Stacking-based approach (bins=10) achieved superior performance
+- **Winner**: Binned prediction approach (bins=10) achieved superior performance
 
 ### **3.5.3 Final Model Training**
 
@@ -194,10 +194,10 @@ python scripts/train_model_pipeline.py <path/to/training_input.csv> <path/to/ref
 
 2. **Cross-Validation Evaluation** (`--stage evaluate`)
    - Performs extensive evaluation using multiple iterations of 5-fold cross-validation
-   - Compares two prediction methods for contig classification:
-     - Most extreme probability approach
-     - Stacking-based approach (using logistic regression with bins=10)
-     - Threshold behavior for stacking predictions:
+     - Compares two prediction methods for contig classification:
+         - Extreme prediction (most extreme ORF probability)
+         - Binned prediction (logistic regression on binned ORF probabilities, bins=10)
+     - Threshold behavior for binned predictions:
          - Default: CV-optimized threshold (tuned per fold)
          - Optional fixed threshold: add `--use_fixed_threshold --threshold 0.5`
    - Generates comprehensive performance metrics
@@ -214,7 +214,7 @@ python scripts/train_model_pipeline.py <path/to/training_input.csv> <path/to/ref
 
 3. **Final Model Training** (`--stage final`)
    - Trains the final production model on all training data
-   - Uses the best-performing approach (Random Forest for ORF classification + Logistic Regression stacking for contig level classification)
+    - Uses the best-performing approach (Random Forest for ORF classification + Logistic Regression binned prediction for contig-level classification)
    - Saves all necessary model files for deployment
    
    ```bash
@@ -227,20 +227,20 @@ python scripts/train_model_pipeline.py <path/to/training_input.csv> <path/to/ref
     - `results/<outdir>/model_selection_summary.txt` - Summary of model rankings and best-performing model
 
 - **Cross-Validation Evaluation**:
-  - `results/<outdir>/extreme_predictions_results.csv` - Results using most extreme probability method
-    - `results/<outdir>/stacking_predictions_results.csv` - Legacy/default stacking output (always written)
-    - `results/<outdir>/stacking_predictions_results_tuned.csv` - Stacking output with CV-optimized thresholds
-    - `results/<outdir>/stacking_predictions_results_fixed_<threshold>.csv` - Stacking output with fixed threshold (e.g. `fixed_0p5`)
+    - `results/<outdir>/extreme_predictions_results.csv` - Results using extreme prediction
+    - `results/<outdir>/binned_predictions_results.csv` - Binned prediction output (default)
+    - `results/<outdir>/binned_predictions_results_tuned.csv` - Binned prediction output with CV-optimized thresholds
+    - `results/<outdir>/binned_predictions_results_fixed_<threshold>.csv` - Binned prediction output with fixed threshold (e.g. `fixed_0p5`)
     - `results/<outdir>/method_comparison_stats.csv` - Detailed performance comparison between methods
     - `results/<outdir>/method_comparison_simplified.csv` - Mean ± std summary comparison between methods
-  - `results/<outdir>/best_method.txt` - Information about the best-performing method
+    - `results/<outdir>/best_method.txt` - Information about the best-performing method
 
 - **Final Model**:
-  - `results/<outdir>/rf_model.joblib` - Trained Random Forest model
-  - `results/<outdir>/rf_scaler.joblib` - StandardScaler for feature normalization
-  - `results/<outdir>/rf_feature_names.csv` - Feature names used by the model
-  - `results/<outdir>/lr_stacking_10_model.joblib` - Trained Logistic Regression stacking model
-  - `results/<outdir>/feature_importances.csv` - All feature importances ranked
+    - `results/<outdir>/rf_model.joblib` - Trained Random Forest model
+    - `results/<outdir>/rf_scaler.joblib` - StandardScaler for feature normalization
+    - `results/<outdir>/rf_feature_names.csv` - Feature names used by the model
+    - `results/<outdir>/lr_binned_10_model.joblib` - Trained Logistic Regression binned prediction model
+    - `results/<outdir>/feature_importances.csv` - All feature importances ranked
     - `results/<outdir>/top_40_features.csv` - Top 40 features
 
 ---
@@ -297,13 +297,13 @@ python scripts/predict_query_contigs.py results/<output_dir>/testing_input.csv r
 | `<testing_input_df.csv>`     | Path to the processed input CSV file from preprocessing step.              |
 | `<model_dir>`                | Directory containing all model files (RF model, scaler, LR model, etc.).    |
 | `--outdir`                   | Name of output directory for prediction results (default: "predictions").   |
-| `--bin-num`                  | Number of bins for stacking approach (default: 10).                        |
+| `--bin-num`                  | Number of bins for binned prediction approach (default: 10).               |
 
 The script expects these files in the model directory with standard names:
 - `rf_model.joblib` - Trained Random Forest model
 - `rf_scaler.joblib` - StandardScaler for feature normalization
 - `rf_feature_names.csv` - Feature names used by the model
-- `lr_stacking_<bin-num>_model.joblib` - Trained Logistic Regression stacking model
+- `lr_binned_<bin-num>_model.joblib` - Trained Logistic Regression binned prediction model
 
 **Output Files**
 After running the script, the following files will be saved in `results/<outdir>/`:
@@ -395,7 +395,7 @@ python scripts/train_model_pipeline.py \
     --threshold 0.5 \
     --outdir evaluation_results_fixed05
 
-# Stage 3: Train final model using RF + LR stacking with bins=10
+# Stage 3: Train final model using RF + LR binned prediction with bins=10
 python scripts/train_model_pipeline.py \
     results/training/training_input.csv \
     ../data/tobamo/reference_database.xlsx \
@@ -486,14 +486,14 @@ results/
 │   └── model_selection_summary.txt
 ├── evaluation_results/
 │   ├── extreme_predictions_results.csv
-│   ├── stacking_predictions_results.csv
-│   ├── stacking_predictions_results_tuned.csv
+│   ├── binned_predictions_results.csv
+│   ├── binned_predictions_results_tuned.csv
 │   └── method_comparison_stats.csv
 ├── final_model/
 │   ├── rf_model.joblib
 │   ├── rf_scaler.joblib
 │   ├── rf_feature_names.csv
-│   ├── lr_stacking_10_model.joblib
+│   ├── lr_binned_10_model.joblib
 │   ├── feature_importances.csv
 │   └── top_40_features.csv
 ├── snakemake/
