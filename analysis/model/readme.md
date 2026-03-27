@@ -174,6 +174,11 @@ python scripts/train_model_pipeline.py <path/to/training_input.csv> <path/to/ref
 | `--iterations`                     | Number of iterations for cross-validation (default: 30).        |
 | `--sample_depth`                   | Number of contigs to sample per species (default: 30).          |
 | `--seed`                           | Random seed for reproducibility (default: 42).                  |
+| `--n-jobs`                         | Number of parallel workers for model fitting (`-1` uses all cores; default: 2). |
+| `--bin-num`                        | Number of bins for the final model (`--stage final`; default: 10). |
+| `--threshold`                      | Custom classification threshold (used in evaluate/final; overrides CV threshold in evaluate when combined with `--use_fixed_threshold`; default behavior uses CV-optimized thresholds in evaluate and 0.5 in final). |
+| `--use_fixed_threshold`            | In `--stage evaluate`, use a fixed threshold (`--threshold` or 0.5) instead of CV-optimized thresholds. |
+| `--bins`                           | Bin counts to evaluate in `--stage evaluate` (space-separated list, e.g. `--bins 5 10 15`; default: 10). |
 
 **Pipeline Stages**
 
@@ -218,15 +223,16 @@ python scripts/train_model_pipeline.py <path/to/training_input.csv> <path/to/ref
 
 **Output Files**
 - **Model Selection**:
-  - `results/<outdir>/performance_metrics.csv` - Performance metrics for all tested models
-  - `results/<outdir>/best_model.txt` - Information about the best-performing model
+    - `results/<outdir>/all_performance_metrics.csv` - Combined performance metrics across all iterations/folds
+    - `results/<outdir>/model_selection_summary.txt` - Summary of model rankings and best-performing model
 
 - **Cross-Validation Evaluation**:
   - `results/<outdir>/extreme_predictions_results.csv` - Results using most extreme probability method
     - `results/<outdir>/stacking_predictions_results.csv` - Legacy/default stacking output (always written)
     - `results/<outdir>/stacking_predictions_results_tuned.csv` - Stacking output with CV-optimized thresholds
     - `results/<outdir>/stacking_predictions_results_fixed_<threshold>.csv` - Stacking output with fixed threshold (e.g. `fixed_0p5`)
-  - `results/<outdir>/method_comparison.csv` - Performance comparison between methods
+    - `results/<outdir>/method_comparison_stats.csv` - Detailed performance comparison between methods
+    - `results/<outdir>/method_comparison_simplified.csv` - Mean ± std summary comparison between methods
   - `results/<outdir>/best_method.txt` - Information about the best-performing method
 
 - **Final Model**:
@@ -235,7 +241,7 @@ python scripts/train_model_pipeline.py <path/to/training_input.csv> <path/to/ref
   - `results/<outdir>/rf_feature_names.csv` - Feature names used by the model
   - `results/<outdir>/lr_stacking_10_model.joblib` - Trained Logistic Regression stacking model
   - `results/<outdir>/feature_importances.csv` - All feature importances ranked
-  - `results/<outdir>/top_20_features.csv` - Top 20
+    - `results/<outdir>/top_40_features.csv` - Top 40 features
 
 ---
 
@@ -476,19 +482,20 @@ results/
 │   ├── pairwise_aln.csv
 │   └── training_input.csv
 ├── model_selection/
-│   ├── performance_metrics.csv
-│   └── best_model.txt
+│   ├── all_performance_metrics.csv
+│   └── model_selection_summary.txt
 ├── evaluation_results/
 │   ├── extreme_predictions_results.csv
 │   ├── stacking_predictions_results.csv
 │   ├── stacking_predictions_results_tuned.csv
-│   └── method_comparison.csv
+│   └── method_comparison_stats.csv
 ├── final_model/
 │   ├── rf_model.joblib
 │   ├── rf_scaler.joblib
 │   ├── rf_feature_names.csv
 │   ├── lr_stacking_10_model.joblib
-│   └── feature_importances.csv
+│   ├── feature_importances.csv
+│   └── top_40_features.csv
 ├── snakemake/
 │   ├── orfs/
 │   │   └── combined_orfs.fasta
