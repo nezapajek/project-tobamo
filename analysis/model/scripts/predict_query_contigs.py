@@ -15,7 +15,7 @@ def parse_args():
     parser.add_argument("input_path", help="Path to the processed test data CSV file")
     parser.add_argument("model_dir", help="Directory containing all model files")
     parser.add_argument("--outdir", help="Output directory name")
-    parser.add_argument("--bin-num", type=int, default=10, help="Number of bins for histogram (default: 10)")
+    parser.add_argument("--bin-num", type=int, default=10, help="Number of bins for binned prediction (default: 10)")
     return parser.parse_args()
 
 
@@ -32,31 +32,39 @@ def predict_contigs(input_path, model_dir, outdir, bin_num=10):
     outdir : str
         Output directory name
     bin_num : int
-        Number of bins for histogram approach
+        Number of bins for binned prediction approach
 
     Returns:
     --------
     pd.DataFrame
         DataFrame with contig predictions
     """
-    print(f"Starting contig prediction using {bin_num} bins for histogram approach...")
+    print(f"Starting contig prediction using {bin_num} bins for binned prediction approach...")
 
     predictions_dir = f"{outdir}/predictions"
 
     # Construct model file paths
     rf_model_path = os.path.join(model_dir, "rf_model.joblib")
     rf_scaler_path = os.path.join(model_dir, "rf_scaler.joblib")
-    lr_model_path = os.path.join(model_dir, f"lr_histogram_{bin_num}_model.joblib")
+    lr_model_path = os.path.join(model_dir, f"lr_binned_{bin_num}_model.joblib")
     feature_names_path = os.path.join(model_dir, "rf_feature_names.csv")
 
     # Check if files exist
     for file_path in [rf_model_path, rf_scaler_path, lr_model_path, feature_names_path]:
         if not os.path.exists(file_path):
             print(f"Error: Required model file not found: {file_path}")
-            # Try fallback for LR model if specific bin number file not found
-            if "lr_histogram" in file_path and not os.path.exists(file_path):
-                fallback_path = os.path.join(model_dir, "lr_histogram_model.joblib")
-                if os.path.exists(fallback_path):
+            # Try fallbacks for LR model if specific bin file is not found.
+            # Naming evolved: histogram -> stacking -> binned.
+            if "lr_binned" in file_path and not os.path.exists(file_path):
+                fallback_candidates = [
+                    os.path.join(model_dir, f"lr_stacking_{bin_num}_model.joblib"),
+                    os.path.join(model_dir, f"lr_histogram_{bin_num}_model.joblib"),
+                    os.path.join(model_dir, "lr_binned_model.joblib"),
+                    os.path.join(model_dir, "lr_stacking_model.joblib"),
+                    os.path.join(model_dir, "lr_histogram_model.joblib"),
+                ]
+                fallback_path = next((p for p in fallback_candidates if os.path.exists(p)), None)
+                if fallback_path is not None:
                     print(f"Using fallback LR model: {fallback_path}")
                     lr_model_path = fallback_path
                 else:

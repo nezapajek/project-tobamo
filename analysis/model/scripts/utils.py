@@ -573,7 +573,7 @@ def train_lr_and_predict(all_predictions, methods=["stacking", "cumsum", "cumsum
     return models
 
 
-def train_lr_and_predict_hist_test(all_predictions, nums: list):
+def train_lr_and_predict_binned_test(all_predictions, nums: list):
     models = {}
 
     for num in nums:
@@ -722,17 +722,17 @@ def prepare_bin_df(all_predictions, method_name, num_bins=10):
     return bin_df
 
 
-def generate_threshold_summary(hist_results, outdir):
+def generate_threshold_summary(binned_results, outdir):
     """Generate a concise threshold analysis summary"""
 
     # Calculate basic statistics
-    overall_mean = hist_results["threshold"].mean()
-    overall_std = hist_results["threshold"].std()
-    overall_min = hist_results["threshold"].min()
-    overall_max = hist_results["threshold"].max()
+    overall_mean = binned_results["threshold"].mean()
+    overall_std = binned_results["threshold"].std()
+    overall_min = binned_results["threshold"].min()
+    overall_max = binned_results["threshold"].max()
 
     # Per-iteration means
-    iter_means = hist_results.groupby("iteration")["threshold"].mean()
+    iter_means = binned_results.groupby("iteration")["threshold"].mean()
     iter_mean_avg = iter_means.mean()
     iter_mean_std = iter_means.std()
 
@@ -796,7 +796,7 @@ def predict_contigs(predictions, mc, idx, mc_name, refs_: bool):
     return final_predictions_df
 
 
-def predict_contigs_hist_test(predictions, mc, idx, mc_name, num: int, refs_: bool):
+def predict_contigs_binned_test(predictions, mc, idx, mc_name, num: int, refs_: bool):
 
     if refs_:
         bin_df = prepare_bin_df_refs_hist_test(predictions, mc_name, num_bins=num)

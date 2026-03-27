@@ -449,13 +449,13 @@ def train_and_evaluate(
     threshold_mode = "fixed" if use_fixed_threshold else "tuned"
     print(f"Threshold mode: {threshold_mode} ({fixed_threshold if use_fixed_threshold else 'CV-optimized'})")
     bins_to_evaluate = [10] if bins_to_evaluate is None else list(bins_to_evaluate)
-    print(f"Evaluating stacking bins: {bins_to_evaluate}")
+    print(f"Evaluating binned prediction bins: {bins_to_evaluate}")
 
     os.makedirs(f"results/{outdir}", exist_ok=True)
 
     # Lists to store all results
     all_extreme_predictions = []
-    all_hist_predictions = []
+    all_binned_predictions = []
     all_orf_predictions = []
 
     for iteration in range(iterations):
@@ -493,7 +493,7 @@ def train_and_evaluate(
             morf_predictions = train_rf_and_predict(train, selected_model)  # make predictions using LOOCV
 
             # Train Logistic Regression model on LOOCV prediction
-            mc_dict = train_lr_and_predict_hist_test(morf_predictions, bins_to_evaluate)
+            mc_dict = train_lr_and_predict_binned_test(morf_predictions, bins_to_evaluate)
 
             # Train RandomForest model on all training data
             morf, sorf, _ = train_rf_on_all_data(train, selected_model)
@@ -519,23 +519,23 @@ def train_and_evaluate(
                 mc = mc_info["model"]  # Extract the model
                 best_threshold = fixed_threshold if use_fixed_threshold else mc_info["best_threshold"]
 
-                final_predictions = predict_contigs_hist_test(test_orf_predictions, mc, idx, mc_name, num, refs_=True)
+                final_predictions = predict_contigs_binned_test(test_orf_predictions, mc, idx, mc_name, num, refs_=True)
                 final_predictions["n"] = num
                 final_predictions["threshold"] = best_threshold
                 final_predictions["threshold_mode"] = threshold_mode
                 final_predictions["threshold_source"] = "fixed_user" if use_fixed_threshold else "cv_optimized"
                 final_predictions["random_seed"] = random_seed
                 final_predictions["iteration"] = iteration
-                all_hist_predictions.append(final_predictions)
+                all_binned_predictions.append(final_predictions)
 
     # Combine and save all results
     extreme_results = pd.concat(all_extreme_predictions)
     extreme_results.to_csv(f"results/{outdir}/extreme_predictions_results.csv", index=False)
 
-    hist_results = pd.concat(all_hist_predictions)
-    hist_results.to_csv(f"results/{outdir}/stacking_predictions_results.csv", index=False)
+    binned_results = pd.concat(all_binned_predictions)
+    binned_results.to_csv(f"results/{outdir}/binned_predictions_results.csv", index=False)
     threshold_suffix = f"fixed_{str(fixed_threshold).replace('.', 'p')}" if use_fixed_threshold else "tuned"
-    hist_results.to_csv(f"results/{outdir}/stacking_predictions_results_{threshold_suffix}.csv", index=False)
+    binned_results.to_csv(f"results/{outdir}/binned_predictions_results_{threshold_suffix}.csv", index=False)
 
     orf_results = pd.concat(all_orf_predictions)
     orf_results.to_csv(f"results/{outdir}/orf_predictions_results.csv", index=False)
@@ -543,9 +543,9 @@ def train_and_evaluate(
     # Calculate summary performance metrics.
     # With multiple bins, evaluate each stacking bin as its own method.
     methods = {"extreme": extreme_results}
-    if not hist_results.empty:
-        for n in sorted(hist_results["n"].unique()):
-            methods[f"stacking_bin_{int(n)}"] = hist_results[hist_results["n"] == n].copy()
+    if not binned_results.empty:
+        for n in sorted(binned_results["n"].unique()):
+            methods[f"binned_{int(n)}"] = binned_results[binned_results["n"] == n].copy()
 
     summary_metrics = []
 
@@ -653,7 +653,7 @@ def train_and_evaluate(
 
     # Add threshold analysis
     print("\nAnalyzing threshold optimization results...")
-    generate_threshold_summary(hist_results, outdir)
+    generate_threshold_summary(binned_results, outdir)
 
     print(f"\nEvaluation completed! Best method: {best_method}")
     print(f"Results saved to: results/{outdir}/")
@@ -723,7 +723,7 @@ def train_final_model(
 
     # Train Logistic Regression stacking model with selected bins num
     mc_dict = train_lr_final_model(morf_predictions, bin_num, fixed_threshold)
-    hist_model = mc_dict["model"]
+    binned_model = mc_dict["model"]
     threshold = mc_dict["threshold"]
     bin_df = mc_dict["bin_df"]
 
@@ -732,15 +732,15 @@ def train_final_model(
     print(f"Saved bin_df with {len(bin_df)} binned contig predictions")
 
     # Save LR stacking model
-    dump(hist_model, f"results/{outdir}/lr_stacking_{bin_num}_model.joblib")
-    print(f"Saved stacking model with {bin_num} bins")
+    dump(binned_model, f"results/{outdir}/lr_binned_{bin_num}_model.joblib")
+    print(f"Saved binned prediction model with {bin_num} bins")
 
     # Save threshold info
     with open(f"results/{outdir}/threshold_info.txt", "w") as f:
         f.write(f"Classification threshold: {threshold}\n")
         f.write(f"Source: {'default' if threshold == 0.5 else 'cross_validation'}\n")
 
-    print(f"Saved stacking model with {bin_num} bins and threshold {threshold}")
+    print(f"Saved binned prediction model with {bin_num} bins and threshold {threshold}")
 
     # Save feature importances
     feature_importances = morf.feature_importances_
