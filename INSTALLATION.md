@@ -55,7 +55,7 @@ conda activate tobamo-snakemake
 Dependencies are automatically managed by Snakemake when using the `--use-conda` flag
 
 Optional: Install analysis dependencies for post-processing only.
-See [analysis/readme.md](analysis/readme.md) for detailed information.
+See [analysis/README.md](analysis/README.md) for detailed information.
 ```bash
 pip install -r analysis_requirements.txt
 ```

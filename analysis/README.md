@@ -41,7 +41,7 @@ analysis/
 **Input:** Processed contigs from `contigs_report/` and `data/`
 **Output:** Trained models, performance metrics, and classification predictions
 
-See [model/readme.md](model/readme.md) for detailed information.
+See [model/README.md](model/README.md) for detailed information.
 
 
 ### `palmprint/`

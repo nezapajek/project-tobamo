@@ -32,7 +32,7 @@ A Snakemake workflow for the preparation of a curated catalogue of sequences of 
 - [Configuration Guide](config/README.md) - Sample and parameter configuration
 - [Workflow Rules](workflow/RULES.md) - Detailed workflow documentation
 - [FAQ](FAQ.md) - Frequently asked questions and troubleshooting
-- [Analysis Pipeline](analysis/readme.md) - Post-processing and machine learning
+- [Analysis Pipeline](analysis/README.md) - Post-processing and machine learning
 
 ## Quick Start
 
