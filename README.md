@@ -85,8 +85,8 @@ pip install -r analysis_requirements.txt
 Edit `config/samples_*.tsv` files to specify your SRA accessions:
 
 - `samples_debug.tsv` - Small debug dataset (2 samples, 1 single-end (SE) + 1 paired-end (PE))
-- `samples_test.tsv` - Small test dataset (253 test samples)
-- `samples_all.tsv` - Complete dataset (278 samples - 253 test + 25 control samples)
+- `samples_test.tsv` - Test dataset for validating a complete end-to-end run (253 test samples)
+- `samples_all.tsv` - Full manuscript dataset used for production analysis (278 samples = 253 test + 25 control samples)
 
 ### SRA Data Download
 
@@ -286,6 +286,8 @@ If you use this workflow in a paper, please cite:
 - This repository: `https://github.com/nezapajek/project-tobamo`
 - The workflow DOI: [Add DOI when available]
 - Related publication: [Add publication when available]
+
+If you publish results based on this workflow, we recommend creating a release-tagged archive (for example via Zenodo) so reviewers can reference an immutable version.
 
 ## License
 
