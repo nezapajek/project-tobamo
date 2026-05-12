@@ -139,3 +139,14 @@ analysis/phylogenetic_placement/results/trimmed/iqtree/**
 analysis/phylogenetic_placement/results/trimmed/*/epa_output/**
 analysis/phylogenetic_placement/results/untrimmed/iqtree/**
 analysis/phylogenetic_placement/results/untrimmed/*/epa_output/**
+
+# ------------------------------------------------------------------------------
+# Notebook tracking policy for manuscript documentation
+# ------------------------------------------------------------------------------
+# Keep all publication-focused visualization notebooks versioned.
+!analysis/model/visualizations/*.ipynb
+
+# Ignore exploratory/scratch notebooks outside visualization outputs.
+analysis/model/notebooks/check_false_positives.ipynb
+analysis/model/notebooks/makeviz_scrapbook.ipynb
+analysis/phylogenetic_placement/scripts/check_contig_orietntation.ipynb
