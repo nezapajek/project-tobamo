@@ -1,0 +1,224 @@
+RNA:
+  allowed_range: '{''RNA1'', ''RNA2'', ''RNA3''}'
+  description: Ribonucleic acid
+  examples:
+  - RNA1
+  - RNA2
+  - RNA3
+  expected_dtype: object
+  notes: 'description: exact-name rule; unit: default text rule; allowed_range: small
+    categorical rule'
+  review_status: auto_inferred
+  source_files:
+  - S6_reference_database
+  unit: n/a
+accession:
+  allowed_range: free text / categorical (125 unique values)
+  description: Accession identifier
+  examples:
+  - AJ132578.1
+  - AJ132579.1
+  - AJ132576.1
+  expected_dtype: object
+  notes: 'description: single-token rule: accession; unit: default text rule; allowed_range:
+    categorical summary rule; review this field before final reporting'
+  review_status: review_recommended
+  source_files:
+  - S6_reference_database
+  unit: n/a
+cp_record_id:
+  allowed_range: free text / categorical (87 unique values)
+  description: Record identifier for coat protein
+  examples:
+  - CAB57874.1_coat_protein_[Oat_golden_stripe_virus]
+  - CAB57864.1_coat_protein_[Soil-borne_cereal_mosaic_virus]
+  - CAB41774.2_coat_protein_[Chinese_wheat_mosaic_virus]
+  expected_dtype: object
+  notes: 'description: token rule: cp+record+id; unit: default text rule; allowed_range:
+    categorical summary rule'
+  review_status: auto_inferred
+  source_files:
+  - S6_reference_database
+  unit: n/a
+cp_ref:
+  allowed_range: free text / categorical (87 unique values)
+  description: Reference identifier for coat protein
+  examples:
+  - CAB57874.1
+  - CAB57864.1
+  - CAB41774.2
+  expected_dtype: object
+  notes: 'description: token rule: cp+ref; unit: default text rule; allowed_range:
+    categorical summary rule'
+  review_status: auto_inferred
+  source_files:
+  - S6_reference_database
+  unit: n/a
+genus:
+  allowed_range: '{''Furovirus'', ''Goravirus'', ''Hordeivirus'', ''Pecluvirus'',
+    ''Pomovirus'', ''Tobamovirus'', ''Tobravirus''}'
+  description: Taxonomic genus
+  examples:
+  - Furovirus
+  - Goravirus
+  - Hordeivirus
+  expected_dtype: object
+  notes: 'description: single-token rule: genus; unit: default text rule; allowed_range:
+    small categorical rule; review this field before final reporting'
+  review_status: review_recommended
+  source_files:
+  - S6_reference_database
+  unit: n/a
+length:
+  allowed_range: '[1799, 7226]'
+  description: Sequence length
+  examples:
+  - 7111
+  - 3232
+  - 7025
+  expected_dtype: int64
+  notes: 'description: single-token rule: length; unit: sequence-coordinate rule;
+    allowed_range: numeric min/max rule; review this field before final reporting'
+  review_status: review_recommended
+  source_files:
+  - S6_reference_database
+  unit: bp
+orf1_record_id:
+  allowed_range: free text / categorical (88 unique values)
+  description: Record identifier for ORF1
+  examples:
+  - AJ132578.1_rdrp_orf1_[Oat_golden_stripe_virus]
+  - AJ132576.1_rdrp_orf1_[Soil-borne_cereal_mosaic_virus]
+  - AJ012005.1_rdrp_orf1_[Chinese_wheat_mosaic_virus]
+  expected_dtype: object
+  notes: 'description: token rule: orf1+record+id; unit: default text rule; allowed_range:
+    categorical summary rule'
+  review_status: auto_inferred
+  source_files:
+  - S6_reference_database
+  unit: n/a
+orf1_ref:
+  allowed_range: free text / categorical (88 unique values)
+  description: Reference identifier for ORF1
+  examples:
+  - AJ132578.1
+  - AJ132576.1
+  - AJ012005.1
+  expected_dtype: object
+  notes: 'description: token rule: orf1+ref; unit: default text rule; allowed_range:
+    categorical summary rule'
+  review_status: auto_inferred
+  source_files:
+  - S6_reference_database
+  unit: n/a
+orf2_record_id:
+  allowed_range: free text / categorical (88 unique values)
+  description: Record identifier for ORF2
+  examples:
+  - AJ132578.1_rdrp_orf2_[Oat_golden_stripe_virus]
+  - AJ132576.1_rdrp_orf2_[Soil-borne_cereal_mosaic_virus]
+  - AJ012005.1_rdrp_orf2_[Chinese_wheat_mosaic_virus]
+  expected_dtype: object
+  notes: 'description: token rule: orf2+record+id; unit: default text rule; allowed_range:
+    categorical summary rule'
+  review_status: auto_inferred
+  source_files:
+  - S6_reference_database
+  unit: n/a
+orf2_ref:
+  allowed_range: free text / categorical (88 unique values)
+  description: Reference identifier for ORF2
+  examples:
+  - AJ132578.1
+  - AJ132576.1
+  - AJ012005.1
+  expected_dtype: object
+  notes: 'description: token rule: orf2+ref; unit: default text rule; allowed_range:
+    categorical summary rule'
+  review_status: auto_inferred
+  source_files:
+  - S6_reference_database
+  unit: n/a
+record_id:
+  allowed_range: free text / categorical (125 unique values)
+  description: UNCLEAR - human review required
+  examples:
+  - AJ132578.1_Oat_golden_stripe_virus_RNA1_complete_genome
+  - AJ132579.1_Oat_golden_stripe_virus_RNA2_complete_genome
+  - AJ132576.1_Soil-borne_cereal_mosaic_virus_RNA1_complete_genome
+  expected_dtype: object
+  notes: 'description: no confident inference rule matched for: record_id; unit: default
+    text rule; allowed_range: categorical summary rule; review this field before final
+    reporting'
+  review_status: unclear
+  source_files:
+  - S6_reference_database
+  unit: n/a
+sampling_prob:
+  allowed_range: '[0, 1]'
+  description: Sampling probability used during training set construction
+  examples:
+  - 0.6875181282026491
+  - 0.3124818717973509
+  - 0.6560515502428091
+  expected_dtype: float64
+  notes: 'description: exact-name rule; unit: generic numeric rule; allowed_range:
+    bounded numeric rule'
+  review_status: auto_inferred
+  source_files:
+  - S6_reference_database
+  unit: unitless
+species:
+  allowed_range: free text / categorical (60 unique values)
+  description: Taxonomic species
+  examples:
+  - Furovirus avenae
+  - Furovirus cerealis
+  - Furovirus chinense
+  expected_dtype: object
+  notes: 'description: single-token rule: species; unit: default text rule; allowed_range:
+    categorical summary rule; review this field before final reporting'
+  review_status: review_recommended
+  source_files:
+  - S6_reference_database
+  unit: n/a
+training:
+  allowed_range: '{0, 1}'
+  description: Training-set membership flag
+  examples:
+  - 1
+  - 0
+  expected_dtype: int64
+  notes: 'description: single-token rule: training; unit: binary flag rule; allowed_range:
+    binary flag rule; review this field before final reporting'
+  review_status: review_recommended
+  source_files:
+  - S6_reference_database
+  unit: unitless
+type:
+  allowed_range: '{''outgroup'', ''tobamo''}'
+  description: Record type
+  examples:
+  - outgroup
+  - tobamo
+  expected_dtype: object
+  notes: 'description: single-token rule: type; unit: default text rule; allowed_range:
+    small categorical rule; review this field before final reporting'
+  review_status: review_recommended
+  source_files:
+  - S6_reference_database
+  unit: n/a
+virus_name:
+  allowed_range: free text / categorical (88 unique values)
+  description: Virus or viral taxon
+  examples:
+  - oat golden stripe virus
+  - Soil-borne cereal mosaic virus
+  - Chinese wheat mosaic virus
+  expected_dtype: object
+  notes: 'description: single-token rule: virus; unit: default text rule; allowed_range:
+    categorical summary rule; review this field before final reporting'
+  review_status: review_recommended
+  source_files:
+  - S6_reference_database
+  unit: n/a

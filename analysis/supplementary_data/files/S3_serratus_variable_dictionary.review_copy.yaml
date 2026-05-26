@@ -1,0 +1,209 @@
+biosample_id:
+  allowed_range: free text / categorical (5931 unique values)
+  description: BioSample accession identifier
+  examples:
+  - SAMN06234584
+  - SAMEA3887642
+  - SAMEA6249642
+  expected_dtype: object
+  notes: 'description: exact-name rule; unit: default text rule; allowed_range: categorical
+    summary rule'
+  review_status: auto_inferred
+  source_files:
+  - S3_serratus
+  unit: n/a
+coverage:
+  allowed_range: '[0.45, 40683]'
+  description: Read coverage
+  examples:
+  - 241.17
+  - 0.91
+  - 5.58
+  expected_dtype: float64
+  notes: 'description: single-token rule: coverage; unit: coverage rule; allowed_range:
+    numeric min/max rule; review this field before final reporting'
+  review_status: review_recommended
+  source_files:
+  - S3_serratus
+  unit: unitless
+date:
+  allowed_range: '[2012-01-21, 2021-01-11]'
+  description: Collection or processing date
+  examples:
+  - '2017-01-19T12:09:35'
+  - '2016-03-14T20:49:33'
+  - '2019-11-30T22:04:41'
+  expected_dtype: datetime64[ns]
+  notes: 'description: single-token rule: date; unit: date rule; allowed_range: date
+    parsing rule; review this field before final reporting'
+  review_status: review_recommended
+  source_files:
+  - S3_serratus
+  unit: ISO-8601
+evalue:
+  allowed_range: '[0, 1]'
+  description: Alignment expectation value
+  examples:
+  - 0
+  expected_dtype: int64
+  notes: 'description: exact-name rule; unit: generic numeric rule; allowed_range:
+    bounded numeric rule'
+  review_status: auto_inferred
+  source_files:
+  - S3_serratus
+  unit: unitless
+file:
+  allowed_range: free text / categorical (35 unique values)
+  description: Source file name or path
+  examples:
+  - Yellow_tailflower_mild_mottle_virus_tmp_submission.sra.metadata
+  - Tropical_soda_apple_mosaic virus_tmp_submission.sra.metadata
+  - Tobacco_mild_green_mosaic_virus_tmp_submission.sra.metadata (4)
+  expected_dtype: object
+  notes: 'description: single-token rule: file; unit: default text rule; allowed_range:
+    categorical summary rule; review this field before final reporting'
+  review_status: review_recommended
+  source_files:
+  - S3_serratus
+  unit: n/a
+lat:
+  allowed_range: '[-90, 90]'
+  description: Latitude
+  examples:
+  - 52.52
+  - 36.56735
+  - 60.10867
+  expected_dtype: float64
+  notes: 'description: single-token rule: lat; unit: coordinate rule; allowed_range:
+    latitude bounds; review this field before final reporting'
+  review_status: review_recommended
+  source_files:
+  - S3_serratus
+  unit: degrees
+lng:
+  allowed_range: '[-180, 180]'
+  description: Longitude
+  examples:
+  - 13.405
+  - 103.93003
+  - -113.64258
+  expected_dtype: float64
+  notes: 'description: single-token rule: lng; unit: coordinate rule; allowed_range:
+    longitude bounds; review this field before final reporting'
+  review_status: review_recommended
+  source_files:
+  - S3_serratus
+  unit: degrees
+nickname:
+  allowed_range: free text / categorical (1165 unique values)
+  description: Nickname
+  examples:
+  - regionalUrchin
+  - banefulLignum
+  - unveiledPlatter
+  expected_dtype: object
+  notes: 'description: single-token rule: nickname; unit: default text rule; allowed_range:
+    categorical summary rule; review this field before final reporting'
+  review_status: review_recommended
+  source_files:
+  - S3_serratus
+  unit: n/a
+palm_id:
+  allowed_range: free text / categorical (1703 unique values)
+  description: Palmprint cluster identifier
+  examples:
+  - u6978
+  - u1160
+  - u88410
+  expected_dtype: object
+  notes: 'description: exact-name rule; unit: default text rule; allowed_range: categorical
+    summary rule'
+  review_status: auto_inferred
+  source_files:
+  - S3_serratus
+  unit: n/a
+pident:
+  allowed_range: '[39, 100]'
+  description: Percent identity of the alignment
+  examples:
+  - 92.1
+  - 88.1
+  - 86.1
+  expected_dtype: float64
+  notes: 'description: exact-name rule; unit: generic numeric rule; allowed_range:
+    numeric min/max rule'
+  review_status: auto_inferred
+  source_files:
+  - S3_serratus
+  unit: unitless
+qseqid:
+  allowed_range: free text / categorical (35 unique values)
+  description: Query sequence identifier
+  examples:
+  - YP_008802584.1
+  - YP_009254747.1
+  - QDO67152.1
+  expected_dtype: object
+  notes: 'description: exact-name rule; unit: default text rule; allowed_range: categorical
+    summary rule'
+  review_status: auto_inferred
+  source_files:
+  - S3_serratus
+  unit: n/a
+run_id:
+  allowed_range: free text / categorical (6870 unique values)
+  description: Sequencing run accession
+  examples:
+  - SRR5188792
+  - ERR1303188
+  - ERR3687348
+  expected_dtype: object
+  notes: 'description: exact-name rule; unit: default text rule; allowed_range: categorical
+    summary rule'
+  review_status: auto_inferred
+  source_files:
+  - S3_serratus
+  unit: n/a
+sOTU:
+  allowed_range: free text / categorical (1165 unique values)
+  description: UNCLEAR - human review required
+  examples:
+  - u5183
+  - u88410
+  - u1364
+  expected_dtype: object
+  notes: 'description: unresolved abbreviation in column name: sOTU; unit: default
+    text rule; allowed_range: categorical summary rule; review this field before final
+    reporting'
+  review_status: unclear
+  source_files:
+  - S3_serratus
+  unit: n/a
+scientific_name:
+  allowed_range: free text / categorical (1009 unique values)
+  description: Scientific name
+  examples:
+  - human metagenome
+  - viral metagenome
+  - Homo sapiens
+  expected_dtype: object
+  notes: 'description: exact-name rule; unit: default text rule; allowed_range: categorical
+    summary rule'
+  review_status: auto_inferred
+  source_files:
+  - S3_serratus
+  unit: n/a
+sra_sequence:
+  allowed_range: free text / categorical (1748 unique values)
+  description: SRA accession
+  examples:
+  - LELDISKYDKSQNEFHCAVEYEIWRRLGIDDFLAEVWKQGHRRTTLKDFTSGIKTCLWYQRKSGDVTTFIGNTVIIAACLASMLPMEKVIKAAFCGDDSLV
+  - LELDISKYDKSQNEFHCAVEYEIWKRLGLNEFLAEVWKQGHRKTTLKDYIAGIKTCLWYQRKSGDVTTFIGNTVIIAACLGSMLPMEKVIKGAFCGDDSVL
+  - LELDISKYDKSQNEFHCAVEYEIWKRLGLNEFLCIFLF**NSYQKTLKDYIAGIKTCLWYQRKSGDVTTFIGNTVIIAACLGSMLPMEKVIKGAFCGDDSVL
+  expected_dtype: object
+  notes: 'description: single-token rule: sra; unit: default text rule; allowed_range:
+    categorical summary rule; review this field before final reporting'
+  review_status: review_recommended
+  source_files:
+  - S3_serratus
+  unit: n/a

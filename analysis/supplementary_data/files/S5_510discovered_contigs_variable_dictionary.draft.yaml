@@ -1,0 +1,755 @@
+assembler:
+  allowed_range: '{''megahit'', ''spades''}'
+  description: Assembler name
+  examples:
+  - megahit
+  - spades
+  expected_dtype: object
+  notes: 'description: single-token rule: assembler; unit: default text rule; allowed_range:
+    small categorical rule; review this field before final reporting'
+  review_status: review_recommended
+  source_files:
+  - S5_510discovered_contigs
+  unit: n/a
+cluster_membership:
+  allowed_range: free text / categorical (56 unique values)
+  description: UNCLEAR - human review required
+  examples:
+  - Cluster_2
+  - Cluster_4
+  - Cluster_12
+  expected_dtype: object
+  notes: 'description: no confident inference rule matched for: cluster_membership;
+    unit: default text rule; allowed_range: categorical summary rule; review this
+    field before final reporting'
+  review_status: unclear
+  source_files:
+  - S5_510discovered_contigs
+  unit: n/a
+cluster_representative:
+  allowed_range: '{0, 1}'
+  description: UNCLEAR - human review required
+  examples:
+  - 1.0
+  expected_dtype: float64
+  notes: 'description: no confident inference rule matched for: cluster_representative;
+    unit: binary flag rule; allowed_range: binary flag rule; review this field before
+    final reporting'
+  review_status: unclear
+  source_files:
+  - S5_510discovered_contigs
+  unit: unitless
+collection_date:
+  allowed_range: '[2008-07-06, 2019-01-01]'
+  description: Collection date
+  examples:
+  - '2015'
+  - '2011-05-08'
+  - '2016'
+  expected_dtype: object
+  notes: 'description: exact-name rule; unit: date rule; allowed_range: date parsing
+    rule'
+  review_status: auto_inferred
+  source_files:
+  - S5_510discovered_contigs
+  unit: ISO-8601
+contig_id:
+  allowed_range: free text / categorical (510 unique values)
+  description: Contig identifier
+  examples:
+  - k119_47794_flag_1_multi_143.0000_len_5109_SRR5087336
+  - k141_112743_flag_1_multi_2.0000_len_612_SRR7288019
+  - k141_1210_flag_1_multi_2.0000_len_787_SRR1784304
+  expected_dtype: object
+  notes: 'description: single-token rule: contig; unit: default text rule; allowed_range:
+    categorical summary rule; review this field before final reporting'
+  review_status: review_recommended
+  source_files:
+  - S5_510discovered_contigs
+  unit: n/a
+contig_length:
+  allowed_range: '[606, 7832]'
+  description: Contig length
+  examples:
+  - 5109
+  - 612
+  - 787
+  expected_dtype: int64
+  notes: 'description: exact-name rule; unit: sequence-coordinate rule; allowed_range:
+    numeric min/max rule'
+  review_status: auto_inferred
+  source_files:
+  - S5_510discovered_contigs
+  unit: bp
+corresponding_srr:
+  allowed_range: free text / categorical (131 unique values)
+  description: UNCLEAR - human review required
+  examples:
+  - SRR5087336
+  - SRR7288019
+  - SRR1784304
+  expected_dtype: object
+  notes: 'description: no confident inference rule matched for: corresponding_srr;
+    unit: default text rule; allowed_range: categorical summary rule; review this
+    field before final reporting'
+  review_status: unclear
+  source_files:
+  - S5_510discovered_contigs
+  unit: n/a
+country:
+  allowed_range: free text / categorical (44 unique values)
+  description: Country of origin
+  examples:
+  - Germany
+  - China:Jiangsu
+  - 'Brazil: Amazon River'
+  expected_dtype: object
+  notes: 'description: single-token rule: country; unit: default text rule; allowed_range:
+    categorical summary rule; review this field before final reporting'
+  review_status: review_recommended
+  source_files:
+  - S5_510discovered_contigs
+  unit: n/a
+first_blastx_hit_alignment_length_aa:
+  allowed_range: '[50, 1889]'
+  description: Amino-acid alignment length of the top BLASTX hit
+  examples:
+  - 1175
+  - 203
+  - 155
+  expected_dtype: int64
+  notes: 'description: token rule: first+blastx+hit+alignment+length+aa; unit: sequence-coordinate
+    rule; allowed_range: numeric min/max rule'
+  review_status: auto_inferred
+  source_files:
+  - S5_510discovered_contigs
+  unit: bp
+first_blastx_hit_bit_score:
+  allowed_range: '[64.3, 3428]'
+  description: Bit score of the top BLASTX hit
+  examples:
+  - 972.0
+  - 424.0
+  - 192.0
+  expected_dtype: float64
+  notes: 'description: token rule: first+blastx+hit+bit+score; unit: generic numeric
+    rule; allowed_range: numeric min/max rule'
+  review_status: auto_inferred
+  source_files:
+  - S5_510discovered_contigs
+  unit: unitless
+first_blastx_hit_e_value:
+  allowed_range: '[0, 1]'
+  description: E-value of the top BLASTX hit
+  examples:
+  - 0.0
+  - 2.49e-148
+  - 1.33e-57
+  expected_dtype: float64
+  notes: 'description: token rule: first+blastx+hit+e+value; unit: generic numeric
+    rule; allowed_range: bounded numeric rule'
+  review_status: auto_inferred
+  source_files:
+  - S5_510discovered_contigs
+  unit: unitless
+first_blastx_hit_identity_percent:
+  allowed_range: '[22, 100]'
+  description: Percent identity of the top BLASTX hit
+  examples:
+  - 46.13
+  - 99.02
+  - 58.71
+  expected_dtype: float64
+  notes: 'description: token rule: first+blastx+hit+identity+percent; unit: percentage
+    rule; allowed_range: numeric min/max rule'
+  review_status: auto_inferred
+  source_files:
+  - S5_510discovered_contigs
+  unit: '%'
+first_blastx_hit_name_accession:
+  allowed_range: free text / categorical (237 unique values)
+  description: Accession identifier
+  examples:
+  - URA30365
+  - WAH70783
+  - YP_908763
+  expected_dtype: object
+  notes: 'description: single-token rule: accession; unit: default text rule; allowed_range:
+    categorical summary rule; review this field before final reporting'
+  review_status: review_recommended
+  source_files:
+  - S5_510discovered_contigs
+  unit: n/a
+first_blastx_hit_protein:
+  allowed_range: free text / categorical (212 unique values)
+  description: UNCLEAR - human review required
+  examples:
+  - RNA-dependent RNA polymerase [Astegopteryx formosana nege-like virus 1]
+  - 184 kDa replicase, partial [Tomato mosaic virus]
+  - 18 kDa coat protein [Cucumber mottle virus]
+  expected_dtype: object
+  notes: 'description: no confident inference rule matched for: first_blastx_hit_protein;
+    unit: default text rule; allowed_range: categorical summary rule; review this
+    field before final reporting'
+  review_status: unclear
+  source_files:
+  - S5_510discovered_contigs
+  unit: n/a
+first_diamond_blastx_hit_alignment_length_aa:
+  allowed_range: '[53, 2810]'
+  description: Amino-acid alignment length of the top BLASTX hit
+  examples:
+  - 1234
+  - 203
+  - 160
+  expected_dtype: int64
+  notes: 'description: token rule: first+blastx+hit+alignment+length+aa; unit: sequence-coordinate
+    rule; allowed_range: numeric min/max rule'
+  review_status: auto_inferred
+  source_files:
+  - S5_510discovered_contigs
+  unit: bp
+first_diamond_blastx_hit_identity_percent:
+  allowed_range: '[2.8, 99.9]'
+  description: Percent identity of the top BLASTX hit
+  examples:
+  - 43.7
+  - 99.5
+  - 59.4
+  expected_dtype: float64
+  notes: 'description: token rule: first+blastx+hit+identity+percent; unit: percentage
+    rule; allowed_range: numeric min/max rule'
+  review_status: auto_inferred
+  source_files:
+  - S5_510discovered_contigs
+  unit: '%'
+first_diamond_blastx_hit_name:
+  allowed_range: free text / categorical (40 unique values)
+  description: UNCLEAR - human review required
+  examples:
+  - Viruses; Riboviria
+  - Viruses; Riboviria; Orthornavirae; Kitrinoviricota; Alsuviricetes; Martellivirales;
+    Virgaviridae; Tobamovirus
+  - Viruses; Monodnaviria; Shotokuvirae; Cressdnaviricota
+  expected_dtype: object
+  notes: 'description: no confident inference rule matched for: first_diamond_blastx_hit_name;
+    unit: default text rule; allowed_range: categorical summary rule; review this
+    field before final reporting'
+  review_status: unclear
+  source_files:
+  - S5_510discovered_contigs
+  unit: n/a
+genbank_accession_number:
+  allowed_range: free text / categorical (63 unique values)
+  description: GenBank accession number
+  examples:
+  - BK075617
+  - BK075591
+  - BK075580
+  expected_dtype: object
+  notes: 'description: token rule: genbank+accession+number; unit: default text rule;
+    allowed_range: categorical summary rule'
+  review_status: auto_inferred
+  source_files:
+  - S5_510discovered_contigs
+  unit: n/a
+ground_truth_category:
+  allowed_range: '{''mas'', ''oth1'', ''oth2'', ''tob1'', ''tob2'', ''tob3''}'
+  description: Ground-truth category label
+  examples:
+  - oth2
+  - tob1
+  - tob2
+  expected_dtype: object
+  notes: 'description: token rule: ground+truth+category; unit: default text rule;
+    allowed_range: small categorical rule'
+  review_status: auto_inferred
+  source_files:
+  - S5_510discovered_contigs
+  unit: n/a
+known_or_potentially_novel_tobamovirus:
+  allowed_range: '{0, 1}'
+  description: UNCLEAR - human review required
+  examples:
+  - false
+  - true
+  expected_dtype: bool
+  notes: 'description: no confident inference rule matched for: known_or_potentially_novel_tobamovirus;
+    unit: binary flag rule; allowed_range: binary flag rule; review this field before
+    final reporting'
+  review_status: unclear
+  source_files:
+  - S5_510discovered_contigs
+  unit: unitless
+model_prediction:
+  allowed_range: '{0, 1}'
+  description: Model prediction label
+  examples:
+  - 1
+  - 0
+  expected_dtype: int64
+  notes: 'description: token rule: model+prediction; unit: binary flag rule; allowed_range:
+    binary flag rule'
+  review_status: auto_inferred
+  source_files:
+  - S5_510discovered_contigs
+  unit: unitless
+model_prediction_probabiility:
+  allowed_range: '[0, 1]'
+  description: Model prediction probability
+  examples:
+  - 0.999902432
+  - 0.99794394
+  - 0.998171342
+  expected_dtype: float64
+  notes: 'description: token rule: model+prediction+probabiility; unit: generic numeric
+    rule; allowed_range: bounded numeric rule'
+  review_status: auto_inferred
+  source_files:
+  - S5_510discovered_contigs
+  unit: unitless
+notes:
+  allowed_range: '{''missing orf3'', ''missing stop codon in orf3'', ''missing stop
+    codon in orf4'', ''missing stop codons in orf2 and orf3'', ''orf1 disrupted by
+    premature stop codon'', ''orf2 disrupted by premature stop codon'', ''two start
+    codons in orf3'', ''two start codons in orf3 and orf4'', ''two start codons in
+    orf4''}'
+  description: Free-text notes
+  examples:
+  - two start codons in orf4
+  - missing stop codon in orf4
+  - missing orf3
+  expected_dtype: object
+  notes: 'description: single-token rule: notes; unit: default text rule; allowed_range:
+    small categorical rule; review this field before final reporting'
+  review_status: review_recommended
+  source_files:
+  - S5_510discovered_contigs
+  unit: n/a
+orf1_complete:
+  allowed_range: '{0, 1}'
+  description: UNCLEAR - human review required
+  examples:
+  - 0.0
+  - 1.0
+  expected_dtype: float64
+  notes: 'description: unresolved abbreviation in column name: orf1_complete; unit:
+    binary flag rule; allowed_range: binary flag rule; review this field before final
+    reporting'
+  review_status: unclear
+  source_files:
+  - S5_510discovered_contigs
+  unit: unitless
+orf1_length:
+  allowed_range: '[0, 1135]'
+  description: Sequence length
+  examples:
+  - 0.0
+  - 269.0
+  - 343.0
+  expected_dtype: float64
+  notes: 'description: single-token rule: length; unit: sequence-coordinate rule;
+    allowed_range: numeric min/max rule; review this field before final reporting'
+  review_status: review_recommended
+  source_files:
+  - S5_510discovered_contigs
+  unit: bp
+orf1_partial:
+  allowed_range: '{0, 1}'
+  description: UNCLEAR - human review required
+  examples:
+  - 0.0
+  - 1.0
+  expected_dtype: float64
+  notes: 'description: unresolved abbreviation in column name: orf1_partial; unit:
+    binary flag rule; allowed_range: binary flag rule; review this field before final
+    reporting'
+  review_status: unclear
+  source_files:
+  - S5_510discovered_contigs
+  unit: unitless
+orf1_start:
+  allowed_range: '[0, 1]'
+  description: Start position
+  examples:
+  - 0.0
+  - 1.0
+  expected_dtype: float64
+  notes: 'description: single-token rule: start; unit: sequence-coordinate rule; allowed_range:
+    bounded numeric rule; review this field before final reporting'
+  review_status: review_recommended
+  source_files:
+  - S5_510discovered_contigs
+  unit: bp
+orf1_stop:
+  allowed_range: '[0, 1]'
+  description: Stop position
+  examples:
+  - 0.0
+  - 1.0
+  expected_dtype: float64
+  notes: 'description: single-token rule: stop; unit: sequence-coordinate rule; allowed_range:
+    bounded numeric rule; review this field before final reporting'
+  review_status: review_recommended
+  source_files:
+  - S5_510discovered_contigs
+  unit: bp
+orf1_tree_representative:
+  allowed_range: '{0, 1}'
+  description: UNCLEAR - human review required
+  examples:
+  - 0.0
+  - 1.0
+  expected_dtype: float64
+  notes: 'description: unresolved abbreviation in column name: orf1_tree_representative;
+    unit: binary flag rule; allowed_range: binary flag rule; review this field before
+    final reporting'
+  review_status: unclear
+  source_files:
+  - S5_510discovered_contigs
+  unit: unitless
+orf2_rdrp_complete:
+  allowed_range: '{0, 1}'
+  description: UNCLEAR - human review required
+  examples:
+  - 0.0
+  - 1.0
+  expected_dtype: float64
+  notes: 'description: unresolved abbreviation in column name: orf2_rdrp_complete;
+    unit: binary flag rule; allowed_range: binary flag rule; review this field before
+    final reporting'
+  review_status: unclear
+  source_files:
+  - S5_510discovered_contigs
+  unit: unitless
+orf2_rdrp_length:
+  allowed_range: '[0, 592]'
+  description: Sequence length
+  examples:
+  - 0.0
+  - 77.0
+  - 93.0
+  expected_dtype: float64
+  notes: 'description: single-token rule: length; unit: sequence-coordinate rule;
+    allowed_range: numeric min/max rule; review this field before final reporting'
+  review_status: review_recommended
+  source_files:
+  - S5_510discovered_contigs
+  unit: bp
+orf2_rdrp_partial:
+  allowed_range: '{0, 1}'
+  description: UNCLEAR - human review required
+  examples:
+  - 0.0
+  - 1.0
+  expected_dtype: float64
+  notes: 'description: unresolved abbreviation in column name: orf2_rdrp_partial;
+    unit: binary flag rule; allowed_range: binary flag rule; review this field before
+    final reporting'
+  review_status: unclear
+  source_files:
+  - S5_510discovered_contigs
+  unit: unitless
+orf2_start:
+  allowed_range: '[0, 1]'
+  description: Start position
+  examples:
+  - 0.0
+  - 1.0
+  expected_dtype: float64
+  notes: 'description: single-token rule: start; unit: sequence-coordinate rule; allowed_range:
+    bounded numeric rule; review this field before final reporting'
+  review_status: review_recommended
+  source_files:
+  - S5_510discovered_contigs
+  unit: bp
+orf2_stop:
+  allowed_range: '[0, 1]'
+  description: Stop position
+  examples:
+  - 0.0
+  - 1.0
+  expected_dtype: float64
+  notes: 'description: single-token rule: stop; unit: sequence-coordinate rule; allowed_range:
+    bounded numeric rule; review this field before final reporting'
+  review_status: review_recommended
+  source_files:
+  - S5_510discovered_contigs
+  unit: bp
+orf2_tree_representative:
+  allowed_range: '{0, 1}'
+  description: UNCLEAR - human review required
+  examples:
+  - 0.0
+  - 1.0
+  expected_dtype: float64
+  notes: 'description: unresolved abbreviation in column name: orf2_tree_representative;
+    unit: binary flag rule; allowed_range: binary flag rule; review this field before
+    final reporting'
+  review_status: unclear
+  source_files:
+  - S5_510discovered_contigs
+  unit: unitless
+orf3_mp_complete:
+  allowed_range: '{0, 1}'
+  description: UNCLEAR - human review required
+  examples:
+  - 0.0
+  - 1.0
+  expected_dtype: float64
+  notes: 'description: unresolved abbreviation in column name: orf3_mp_complete; unit:
+    binary flag rule; allowed_range: binary flag rule; review this field before final
+    reporting'
+  review_status: unclear
+  source_files:
+  - S5_510discovered_contigs
+  unit: unitless
+orf3_mp_length:
+  allowed_range: '[0, 306]'
+  description: Sequence length
+  examples:
+  - 0.0
+  - 143.0
+  - 96.0
+  expected_dtype: float64
+  notes: 'description: single-token rule: length; unit: sequence-coordinate rule;
+    allowed_range: numeric min/max rule; review this field before final reporting'
+  review_status: review_recommended
+  source_files:
+  - S5_510discovered_contigs
+  unit: bp
+orf3_mp_partial:
+  allowed_range: '{0, 1}'
+  description: UNCLEAR - human review required
+  examples:
+  - 0.0
+  - 1.0
+  expected_dtype: float64
+  notes: 'description: unresolved abbreviation in column name: orf3_mp_partial; unit:
+    binary flag rule; allowed_range: binary flag rule; review this field before final
+    reporting'
+  review_status: unclear
+  source_files:
+  - S5_510discovered_contigs
+  unit: unitless
+orf3_start:
+  allowed_range: '[0, 1]'
+  description: Start position
+  examples:
+  - 0.0
+  - 1.0
+  expected_dtype: float64
+  notes: 'description: single-token rule: start; unit: sequence-coordinate rule; allowed_range:
+    bounded numeric rule; review this field before final reporting'
+  review_status: review_recommended
+  source_files:
+  - S5_510discovered_contigs
+  unit: bp
+orf3_stop:
+  allowed_range: '[0, 1]'
+  description: Stop position
+  examples:
+  - 0.0
+  - 1.0
+  expected_dtype: float64
+  notes: 'description: single-token rule: stop; unit: sequence-coordinate rule; allowed_range:
+    bounded numeric rule; review this field before final reporting'
+  review_status: review_recommended
+  source_files:
+  - S5_510discovered_contigs
+  unit: bp
+orf3_tree_representative:
+  allowed_range: '{0, 1}'
+  description: UNCLEAR - human review required
+  examples:
+  - 0.0
+  - 1.0
+  expected_dtype: float64
+  notes: 'description: unresolved abbreviation in column name: orf3_tree_representative;
+    unit: binary flag rule; allowed_range: binary flag rule; review this field before
+    final reporting'
+  review_status: unclear
+  source_files:
+  - S5_510discovered_contigs
+  unit: unitless
+orf4_cp_complete:
+  allowed_range: '{0, 1}'
+  description: UNCLEAR - human review required
+  examples:
+  - 1.0
+  - 0.0
+  expected_dtype: float64
+  notes: 'description: unresolved abbreviation in column name: orf4_cp_complete; unit:
+    binary flag rule; allowed_range: binary flag rule; review this field before final
+    reporting'
+  review_status: unclear
+  source_files:
+  - S5_510discovered_contigs
+  unit: unitless
+orf4_cp_length:
+  allowed_range: '[0, 186]'
+  description: Sequence length
+  examples:
+  - 161.0
+  - 157.0
+  - 124.0
+  expected_dtype: float64
+  notes: 'description: single-token rule: length; unit: sequence-coordinate rule;
+    allowed_range: numeric min/max rule; review this field before final reporting'
+  review_status: review_recommended
+  source_files:
+  - S5_510discovered_contigs
+  unit: bp
+orf4_cp_partial:
+  allowed_range: '{0, 1}'
+  description: UNCLEAR - human review required
+  examples:
+  - 0.0
+  - 1.0
+  expected_dtype: float64
+  notes: 'description: unresolved abbreviation in column name: orf4_cp_partial; unit:
+    binary flag rule; allowed_range: binary flag rule; review this field before final
+    reporting'
+  review_status: unclear
+  source_files:
+  - S5_510discovered_contigs
+  unit: unitless
+orf4_start:
+  allowed_range: '[0, 1]'
+  description: Start position
+  examples:
+  - 1.0
+  - 0.0
+  expected_dtype: float64
+  notes: 'description: single-token rule: start; unit: sequence-coordinate rule; allowed_range:
+    bounded numeric rule; review this field before final reporting'
+  review_status: review_recommended
+  source_files:
+  - S5_510discovered_contigs
+  unit: bp
+orf4_stop:
+  allowed_range: '[0, 1]'
+  description: Stop position
+  examples:
+  - 1.0
+  - 0.0
+  expected_dtype: float64
+  notes: 'description: single-token rule: stop; unit: sequence-coordinate rule; allowed_range:
+    bounded numeric rule; review this field before final reporting'
+  review_status: review_recommended
+  source_files:
+  - S5_510discovered_contigs
+  unit: bp
+orf4_tree_representative:
+  allowed_range: '{0, 1}'
+  description: UNCLEAR - human review required
+  examples:
+  - 0.0
+  - 1.0
+  expected_dtype: float64
+  notes: 'description: unresolved abbreviation in column name: orf4_tree_representative;
+    unit: binary flag rule; allowed_range: binary flag rule; review this field before
+    final reporting'
+  review_status: unclear
+  source_files:
+  - S5_510discovered_contigs
+  unit: unitless
+organism_name:
+  allowed_range: free text / categorical (44 unique values)
+  description: Organism name
+  examples:
+  - Homo sapiens
+  - freshwater metagenome
+  - aquatic metagenome
+  expected_dtype: object
+  notes: 'description: token rule: organism+name; unit: default text rule; allowed_range:
+    categorical summary rule'
+  review_status: auto_inferred
+  source_files:
+  - S5_510discovered_contigs
+  unit: n/a
+sequence:
+  allowed_range: free text / categorical (510 unique values)
+  description: Nucleotide sequence
+  examples:
+  - GGACAGCAAAAAGTGACAGGGACATTCGGTGTGCAAGATTTCTATAGAAGAAACGATAATCTTTTCCGTTAATACGAAAAAGAAATGAGGACGTGGACAAAGTGATATTGTAAGTTTGGTAAAAGGATGTCACCGAACCACGGTAACCAGCACAGTGAACAATATCGGAAGAAAAGGTATGATGTACAATAGTCCGTCTGAAGGAACCAGAGGTACGCGGGAAACGTGGGCATTTGACACCGAATATTTTGTCCCAAACAGAAGCTTCGTAAAACCCATTGAATTTGTCATCGGGCAATAAAGTAGCGTTGGTGGTGAAGTGTTGGGATTCATAATGGATCATATCCGCGAATAAATCACTGACATGACCCATTTTTAAGTTGTTGGTGTACAAGTCATGTTGAGGAAGAATTTCCGCGCTGACAAAGCAAATAAGCACGAGGAACACAAACATTTTGATATGACTATGTTAAAGTAGCTTACCTATCTCATCGCGCATACCGGCGAATTGGAGCCTATTTTTATCAATGTTAGCTCCCTGTTCCTCAAAGTACAGACTACTAAAAAATTCTCTCTCGTGAATATTTGCCATCATGAGTATAACGTAGTGGTAATCGTATTCAACGTTATACCTTTCTCTAAGCGCGGGGACAAGAAGATGGGGAACGTACATATCTGAGTAATGCCTAACACTATCCTCAACGGAACGACGGTAACACTCGACGTGGTATTTATTAATCATATCTGATCGCCCAAGTTTTACTAGAAGTTTCAATGGATCAGGAACGAAATAAAATTTCCTTCCGTCAAACAACAAAAATTTTGAACAAAAGTATGGGTGCTCGTAGGAAAAAAATTTCACTTCAAGATTAAAGATGTACGCAAAGTTGTCCGGAATACAGTATTTTTTTAGGTTTATTGTGGATAATCGACTGAGAGGAATTTGGTGAGATATTACACCCATTAGGAAGATGGTATTCAAAATAAATGTCGACGCATCGCCAGATTTCCGTTGAAAAGGAATGAGACATTTCATCGCAGCGTTTCTGTCGTAGATCAACGTGAGAACATGGCCATTAAACCATAGATCGACCAACCATTCTGGAAATCCGAAGAATCGCATTATTTTGCAATCATAACACAGGGCCAAGTATCCTTGGGATTTATCGTATTTACTGATGTCGATCTCGAGTTTGTACGCGCCGTCAAAAATATATGAGTCATCACCAGAAAACATCGCGACGAAACCCTTATAAGATTGCGTAAGCTTTTCAGCGAATTCGTCGGGCGACATATCGGTAAACATATGGATGTAATCTTTCAGACAACGCATAACGCGTAGCTTTAGTTCTTTAAAAGCAGCACAAAATAATGCGTTGATATGTTTTTCATGGTAAACTATTGTCTGAAGAGCGGCGTACGTGCGTGTGGCGTCGATAGTTAAGTTAGGTTTTGGGGTGCGCTTAATAGAAAAGTTGTAGCGATTCACTTCACTCAAATGAAGGGGATAATCGGGGACGATCTGATCGACGACGACAGTAGGTTGACTTCTCAACCATTCATGTATTTCGTTCTCTGATATCCGTATCTTATCGCAATTATAGATATTCAATTTTGCGTTGTCAAGACATCCCTCGACAAACCTTTCAAGCATTTCATCAGTCACAGTTTCAACATCGACAACTCCGTTAATCTGGGGCACGTTTTTGTTCCTTTTGTCAAGCGCAAGTCGCGATTCTCTACTGGTGTACTGACGTGAGTGGTACATTGGAGTTTTTAACACTGGTTTTAAACAGTCGTATCTGGATATCTCGTAAATGGCCTTAACCCGTGAGAATTGAAGACCACCAGTGTACATCGTGAGGTCGTAATTGTGCACCATCCACGCATCTAGAGATTGATCAACGTATGCGTTTGATCCAAAGACGTTGTCGATAAAATTCTGCATCAGGGATACAGAAGGTCGCGGTCCGACAAATTTTATGACAGTTTCTTCGGGCATAACAATGTGCGTTCTGATTTTCTTTGGGTTCGGGAGTGCGATCATTGCGTTGGTATTCAAAAGCTCAAAAACCTGTGGTTCGATTTGTTCGACAAACTCGTTCGAACAAACCATTATTCGACATTTTACTGATTTGTAAAAAAGTTGAGCAAGTTCGGACGCCTGAATATGATTAAGTATCTCGGCATCGATACTAATTTTTTCAACATCGAAGGGCGAAGTGTTATTGCGGAGACTTCGTCTAATTACACGTAATGAGGGTTTGCAATAAGCATTATCAGCCGCAACTACGAACCAGTCCCGCCCGGATGGAGTAATGGAAAAAGTGACGGATTTTGTTTGGATAAAACTCTTCGACCGTGGTGTACTTTCGAAATGGCCGACACGAGGAACAAAGTGCATTCGTTCTCCCTGAACATCCGATAAACGCATATTTTTCATATGAAAAGTAGCGTATGAAGTGTTCACTGGACACTCCGACACAGTAAGTTCCTCGGAGTAGAAACCATTATCGACGGCTCCGATTGTAGTTTTTAAGAGACGTCGTATTTTGTCAGGTGAGGCGAGTTGAAAGACATTAACGTTGTCCACTTTGATTTTTTTACACACAAGATCATCCGTTCTGCGTGTGTAATAGACAAGTTCTTCAGTATGACGAGTTAAAGCGACTAAGACGTACGGATGTCGCAAGAATACGTCCGTCTGTGGATATTGGTTAAGTCTGACGAGGTATATGGTTTTAGCCTCTTTGCCTTGGAATTCATGTACTGTCGAGACATTATATTTCTTCATGGCAAGTTCGGTTTTTTCGGCTTGTGTAAAGACGAGATATTTAACTTCCTTACGGAGCGGGACCTCATTCAATGTCGATATTCGGACAAACCTACAGGTATTAACACCGTCGCGCGCACTCATCAAACCTACACCTTTTCCTGCTTTTTTGTTCACTTCACGGTAGTCGTCGGTAAACCTATAAACGACATCGACAGGACAGCGGTACGAGATAAAAAGTGAACCGACAATTGGGACCATTTTTTCCAAACGATCGTAACTCATCTTGAACTGCGGAGAACGGTTTACAAATGGAATTTGCAAGTTGTCACCGAGAAATCTAACTTTTGACGCACCAGACATCCAAACAGCATAAAAAACAGCTCCTGGATGGGACATCAAGGCTTCGTCAATAAAGATACTATCGGTTTTTCGGTTCTTTTCAGGGTGGAGCAGATAACTTGCAAGAGTGCGATAGTATATTTTTTGCAAATCGCGATTGCCTTCTTTTGGGTAAATTTTATTGACACGATCAATGAAGTCGTCTTTTCCCTCTACCGTCGCGAGTATGACAGTGGACGGATTGTCTGCAAAATAAGGCACGTGTTCTTTCAGGATCCATGTCGTTTTTCCAGTACCGGGTCCAGCTTGCATTGTTCCCATTTCCCGTGGAGGTGCAAAATTGGAAGGGTCCATAGGTTGGAGAATACGATACATTTCATGTTCCAGGGCAAATTCACAATAATCGTTAACGATGACAGGGTGTTTCTCGTTAACGAGGTTTTTCATATCAACGAATTCACCACTTGCGTAATATCTGAGGTATTTTTCCTTGGGTTGAGGTGGAGCAATTTCCCAACTACCATCAGGTTTCATGATGCCAAAACCATTCCCATGAGTCTTAATCGCGTTCACATCTCTTTTCAGTGGTAGAATTCTGTTGACAAATGATTTCATATTGTTAATTTCTGAATCATGTGTGAATTTAAGGTAGCGTGTAAATTCATCCATAGATTTGCGTATATCACCAACCTCTATCCTTTCTGTATCTGGTTTATCCTTCTCGACAGGTTCATCAAACGGCACGGGAGTTGCAGGAAGTTCACATTTTTGTACTTTGACGACTGCATAAATGGGTGAATAGGTTATTCCTGTACCTAAATCTGAGTCATCGAATTCAGGTTCATGTTCGTTGCAAGCTTCGACTGGGAAACATTCATCTGTTAGTTTTTTCTTAGCAGATTTGACAAATTTATCGAAAAATTTTTTTGGTCGAAACTTCTTTTTCTTTTGTGTTGACTCACAAGCAGTACAATAACTAAGTTCAGATACTGAACGTTCTTTTGTTGGCAATTCTACGGAACTTTCATCTTGATCGTCGGATAACAATCTGAAAGTCTCAATGTCCATCAATGCATCAAAGTGGTTATCGCCATTATTAACTACGGCAGCATCACCAAAACAGAAGAGTTCAGAAGTTTGTATGGTATTATTGGAATCGACCAAAGAGTGGACAATGACATCGTCAATTTTTTCGTACAGATGTGCTCGAACATTGTAAAGTTTGCAAAGGAATTTGAGGTGGATATCAGTAGTGAACCAACCGTTCTGATCACGTGGGTGGTGGTTTTCACATAGCGCGCGCATAGTTTTGAAATCTTCAGTTTTCCTTATTGAAGTGAGGAATGCGTGCAACAAACAGTCTCCATCACGTGGGACTGGAATCAATTGAAGACTGTCAGGGACAGATGTTTCAAGTGGCTGTGAAGTTTCCTTCATCTCAACCGCTTCTTCAGGGATGTCGAAAAAGTCGTTTCGCGTATTTTTCTTTGCAGGCCGTGTGAAATAAGTAAAAATGTTTTTTCCGACAGAAAGTTTGATATCGGGTGAATATGAAAGTACTTTTAGGTAACTCTCAACAATGTATTTCTCAGGGCGCAAAATTATCTCGCGTTTAGCGGCTGCGAAGTCGTAATGCTGGAGAAGAAGAGAAACAGCAGACACGTTCAATGCGTCGAATTCGCGCTGAATTTTCAAGGTGTTTTGGAAAAAGTTTTTTGGTACACGTCTCTCCTCGACGTTGGACGGTGCATTCCTAGGTACAAAAACACGTTCTTCTGGAGGACAAGAGAATTCATAACTTATTGCAGATTTGCGACTGACGTTTCGTGAGACTTTAAATCCTTGGCAAATGATATGCAATTCACTGGATGCTGGACGTGATGAATGGAGTTTCACAACTCTTACAGTATCGAAGCAACGTGTTAACCAGTATAGAATATACATATTATTTCGTGAAACAATTTCAAAAACTTTGAAATAGGCATTACCACCAA
+  - GTACAGGCATATGATTAAAGCGCAACCGAAGCAGAAACTGGATCTGTCAATTCAGACAGAATATCCAGCGTTGCAAACGATTGTGTATCATTCAAAGAAAATCAACGCAATATTCGGTCCTCTTTTCAGTGAGCTTACAAGGCATTTACTTGACAGTATTGACTCAAGCAGATTCTTGTTCTTTACGAGAAAGACACCGGCTCAGATCGAAGATTTCTTCGGAGATCTAGACAGTCATGTCCCAATGGACGTACTTGAGTTGGATATTTCGAAGTATGATAAGTCTCAAAACGAGTTTCATTGTGCTGTTGAGTACGAAATCTGGAGGAGACTGGGTCTGGAGGATTTCTTGGCAGAAGTGTGGAAACAAGGGCATAGAAAAACCACTCTGAAAGATTACACTGCTGGTATAAAAACGTGTTTATGGTACCAGAGAAAGAGTGGTGATGTTACAACTTTTATCGGTAATACCGTCATCATTGCTTCGTGTCTTGCATCAATGCTCCCGATGGAAAAATTGATAAAAGGAGCCTTCTGCGGAGATGACAGTTTGTTGTACTTTCCTAAGGGTTGTGAGTATCCCGATATACAACAAGCTGCTAATCTAATGTG
+  - GGTCCGCGAGGTCGTGCTAGAGGTAAGTCTGGTGTTGATCGTAAGGAAGATGCTGATGAATCTTCGGATTTTGTTATTGAAGATGCCGTACTCACCAGTGACTCCTAGCAATCTCGCTCTTTTTACTAATAATTATGCTTCTTTTATGGATTTTTCTAATTACCTGTCTTCAGCTGTTAGTGCAGCTTTCCAAACTCAAAATGGAAGGGATACTGTACGTCAAACAATCGGAGGATTTCTATCCGGACCTGTGGGTATAAATTCTCGGTTTCCTGAAACAGGGTTTTATGTTTATTTGAATCATCCTACAATCATGCCGTTGTATGATGCGTTGATGAGTTCGTTGGATACTAGGAATAGGGTTATTGAGGTGAATGAACCTTCCAATCCAACAACTTCTGAGACGTTAAATGCAACAAAACGTACTGATGATGCGTCTGTCGCGTCTAGGTCTAATTTGAGTCGCCTTAAAGAGGTCATCGACAGCGGTGTCGGTGTTTTCGATAGGGCTTTGTTTGAGTCTTCAAATGGGTTGACGTGGGCAACGTCTTCCTCTAGTTCTTAGTTGCTCGGTGCCTGCAACCATATGCAGGAGTGTTTTTGCCTCCACTTAAATCGAAGGCGGTTCTCTGTCGGTTTGCTGTAGACCTCTCGTCGTTTGACTGATGTCTGGCAGAGTACTATTACGGTAGTGGTTCGAATCCACCCCGTTCCCCTGGGTAAGGGGCCCAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+  expected_dtype: object
+  notes: 'description: single-token rule: sequence; unit: default text rule; allowed_range:
+    categorical summary rule; review this field before final reporting'
+  review_status: review_recommended
+  source_files:
+  - S5_510discovered_contigs
+  unit: n/a
+source_sample_category:
+  allowed_range: '{''Aquatic'', ''Host-associated'', ''Terrestrial''}'
+  description: Broad source sample category
+  examples:
+  - Host-associated
+  - Aquatic
+  - Terrestrial
+  expected_dtype: object
+  notes: 'description: token rule: source+sample+category; unit: default text rule;
+    allowed_range: small categorical rule'
+  review_status: auto_inferred
+  source_files:
+  - S5_510discovered_contigs
+  unit: n/a
+source_sample_subcategory:
+  allowed_range: '{''Animal'', ''Animal gut'', ''Freshwater'', ''Human'', ''Human
+    gut'', ''Other'', ''Plant'', ''Soil'', ''Wastewater''}'
+  description: Source sample subcategory
+  examples:
+  - Other
+  - Freshwater
+  - Wastewater
+  expected_dtype: object
+  notes: 'description: token rule: source+sample+subcategory; unit: default text rule;
+    allowed_range: small categorical rule'
+  review_status: auto_inferred
+  source_files:
+  - S5_510discovered_contigs
+  unit: n/a
+study_accession:
+  allowed_range: free text / categorical (57 unique values)
+  description: Study accession identifier
+  examples:
+  - SRP094753
+  - SRP150191
+  - SRP037995
+  expected_dtype: object
+  notes: 'description: exact-name rule; unit: default text rule; allowed_range: categorical
+    summary rule'
+  review_status: auto_inferred
+  source_files:
+  - S5_510discovered_contigs
+  unit: n/a
+study_title:
+  allowed_range: free text / categorical (57 unique values)
+  description: Study title
+  examples:
+  - IL10 and CpG stimulations of P493-6 cells
+  - Viral metagenome in river water samples
+  - Amazon Continuum Metatranscriptomes
+  expected_dtype: object
+  notes: 'description: token rule: study+title; unit: default text rule; allowed_range:
+    categorical summary rule'
+  review_status: auto_inferred
+  source_files:
+  - S5_510discovered_contigs
+  unit: n/a
+submitter:
+  allowed_range: free text / categorical (46 unique values)
+  description: Submitter name
+  examples:
+  - Institute of Functional Genomics, University of Regensburg
+  - Jiangsu University
+  - University of Georgia
+  expected_dtype: object
+  notes: 'description: single-token rule: submitter; unit: default text rule; allowed_range:
+    categorical summary rule; review this field before final reporting'
+  review_status: review_recommended
+  source_files:
+  - S5_510discovered_contigs
+  unit: n/a

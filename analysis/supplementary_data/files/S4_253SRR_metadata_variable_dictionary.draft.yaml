@@ -1,0 +1,2256 @@
+age:
+  allowed_range: free text / categorical (16 unique values)
+  description: UNCLEAR - human review required
+  examples:
+  - 60 days old plants
+  - 3 years old
+  - 1-year-old
+  expected_dtype: object
+  notes: 'description: no confident inference rule matched for: age; unit: default
+    text rule; allowed_range: categorical summary rule; review this field before final
+    reporting'
+  review_status: unclear
+  source_files:
+  - S4_253SRR_metadata
+  unit: n/a
+altitude:
+  allowed_range: UNCLEAR - human review required
+  description: UNCLEAR - human review required
+  examples: []
+  expected_dtype: float64
+  notes: 'description: no confident inference rule matched for: altitude; unit: column
+    has no non-null values; allowed_range: column has no non-null values; review this
+    field before final reporting'
+  review_status: unclear
+  source_files:
+  - S4_253SRR_metadata
+  unit: UNCLEAR - human review required
+arrayexpress-species:
+  allowed_range: '{''viral metagenome''}'
+  description: Taxonomic species
+  examples:
+  - viral metagenome
+  expected_dtype: object
+  notes: 'description: single-token rule: species; unit: default text rule; allowed_range:
+    small categorical rule; review this field before final reporting'
+  review_status: review_recommended
+  source_files:
+  - S4_253SRR_metadata
+  unit: n/a
+aws_access_type:
+  allowed_range: '{''Use Cloud Data Delivery'', ''anonymous'', ''aws identity''}'
+  description: Amazon Web Services access type
+  examples:
+  - aws identity
+  - anonymous
+  - Use Cloud Data Delivery
+  expected_dtype: object
+  notes: 'description: exact-name rule; unit: default text rule; allowed_range: small
+    categorical rule'
+  review_status: auto_inferred
+  source_files:
+  - S4_253SRR_metadata
+  unit: n/a
+aws_free_egress:
+  allowed_range: '{''-'', ''s3.us-east-1'', ''worldwide''}'
+  description: Amazon Web Services free-egress region or policy
+  examples:
+  - s3.us-east-1
+  - worldwide
+  - '-'
+  expected_dtype: object
+  notes: 'description: exact-name rule; unit: default text rule; allowed_range: small
+    categorical rule'
+  review_status: auto_inferred
+  source_files:
+  - S4_253SRR_metadata
+  unit: n/a
+aws_url:
+  allowed_range: free text / categorical (253 unique values)
+  description: Amazon Web Services URL
+  examples:
+  - s3://sra-pub-zq-1/DRR146894/DRR146894.sralite.1
+  - s3://sra-pub-zq-2/DRR146906/DRR146906.sralite.1
+  - s3://sra-pub-zq-7/ERR1356733/ERR1356733.lite.2
+  expected_dtype: object
+  notes: 'description: exact-name rule; unit: default text rule; allowed_range: categorical
+    summary rule'
+  review_status: auto_inferred
+  source_files:
+  - S4_253SRR_metadata
+  unit: n/a
+bacterial_count:
+  allowed_range: '{''3.58E06 cells/mL'', ''3.63E06 cells/mL'', ''3.76E06 cells/mL'',
+    ''3.94E06 cells/mL'', ''3.96E06 cells/mL''}'
+  description: Count
+  examples:
+  - 3.58E06 cells/mL
+  - 3.76E06 cells/mL
+  - 3.94E06 cells/mL
+  expected_dtype: object
+  notes: 'description: single-token rule: count; unit: default text rule; allowed_range:
+    small categorical rule; review this field before final reporting'
+  review_status: review_recommended
+  source_files:
+  - S4_253SRR_metadata
+  unit: n/a
+biological_replicate:
+  allowed_range: '[1, 3]'
+  description: UNCLEAR - human review required
+  examples:
+  - 2.0
+  - 1.0
+  - 3.0
+  expected_dtype: float64
+  notes: 'description: no confident inference rule matched for: biological_replicate;
+    unit: numeric column without confident semantic match; allowed_range: numeric
+    min/max rule; review this field before final reporting'
+  review_status: unclear
+  source_files:
+  - S4_253SRR_metadata
+  unit: UNCLEAR - human review required
+biomaterial_provider:
+  allowed_range: '{''Carolina Biological Supply Company'', ''Hui-Ling Liao'', ''Mark
+    Coggeshall, University of Missouri'', ''Prof. Dr. med Georg Bornkamm, HelmholtzZentrum
+    Munich'', ''Sugar Research Australia''}'
+  description: UNCLEAR - human review required
+  examples:
+  - Sugar Research Australia
+  - Hui-Ling Liao
+  - Mark Coggeshall, University of Missouri
+  expected_dtype: object
+  notes: 'description: no confident inference rule matched for: biomaterial_provider;
+    unit: default text rule; allowed_range: small categorical rule; review this field
+    before final reporting'
+  review_status: unclear
+  source_files:
+  - S4_253SRR_metadata
+  unit: n/a
+bioproject:
+  allowed_range: free text / categorical (69 unique values)
+  description: BioProject accession identifier
+  examples:
+  - PRJDB7231
+  - PRJEB13233
+  - PRJEB27424
+  expected_dtype: object
+  notes: 'description: exact-name rule; unit: default text rule; allowed_range: categorical
+    summary rule'
+  review_status: auto_inferred
+  source_files:
+  - S4_253SRR_metadata
+  unit: n/a
+biosample:
+  allowed_range: free text / categorical (247 unique values)
+  description: BioSample accession identifier
+  examples:
+  - SAMD00134143
+  - SAMD00134155
+  - SAMEA3923215
+  expected_dtype: object
+  notes: 'description: single-token rule: biosample; unit: default text rule; allowed_range:
+    categorical summary rule; review this field before final reporting'
+  review_status: review_recommended
+  source_files:
+  - S4_253SRR_metadata
+  unit: n/a
+biosamplemodel:
+  allowed_range: '{''Human'', ''Invertebrate'', ''MIGS/MIMS/MIMARKS.human-gut'', ''MIGS/MIMS/MIMARKS.water'',
+    ''Metagenome or environmental'', ''Microbe, viral or environmental'', ''Model
+    organism or animal'', ''Plant'', ''Viral''}'
+  description: UNCLEAR - human review required
+  examples:
+  - Plant
+  - Model organism or animal
+  - Metagenome or environmental
+  expected_dtype: object
+  notes: 'description: no confident inference rule matched for: biosamplemodel; unit:
+    default text rule; allowed_range: small categorical rule; review this field before
+    final reporting'
+  review_status: unclear
+  source_files:
+  - S4_253SRR_metadata
+  unit: n/a
+breed:
+  allowed_range: '{''Missing'', ''bashibai sheep'', ''citrus'', ''not applicable'',
+    ''not collected''}'
+  description: UNCLEAR - human review required
+  examples:
+  - bashibai sheep
+  - Missing
+  - not applicable
+  expected_dtype: object
+  notes: 'description: no confident inference rule matched for: breed; unit: default
+    text rule; allowed_range: small categorical rule; review this field before final
+    reporting'
+  review_status: unclear
+  source_files:
+  - S4_253SRR_metadata
+  unit: n/a
+broker name:
+  allowed_range: '{''ArrayExpress''}'
+  description: UNCLEAR - human review required
+  examples:
+  - ArrayExpress
+  expected_dtype: object
+  notes: 'description: no confident inference rule matched for: broker name; unit:
+    default text rule; allowed_range: small categorical rule; review this field before
+    final reporting'
+  review_status: unclear
+  source_files:
+  - S4_253SRR_metadata
+  unit: n/a
+cell type:
+  allowed_range: '{''S2 cells'', ''macrophage''}'
+  description: Cell type
+  examples:
+  - macrophage
+  - S2 cells
+  expected_dtype: object
+  notes: 'description: exact-name rule; unit: default text rule; allowed_range: small
+    categorical rule'
+  review_status: auto_inferred
+  source_files:
+  - S4_253SRR_metadata
+  unit: n/a
+cell_line:
+  allowed_range: '{''P493-4'', ''P493-5'', ''P493-6''}'
+  description: UNCLEAR - human review required
+  examples:
+  - P493-6
+  - P493-5
+  - P493-4
+  expected_dtype: object
+  notes: 'description: no confident inference rule matched for: cell_line; unit: default
+    text rule; allowed_range: small categorical rule; review this field before final
+    reporting'
+  review_status: unclear
+  source_files:
+  - S4_253SRR_metadata
+  unit: n/a
+cell_type:
+  allowed_range: '{''B-cell''}'
+  description: Cell type
+  examples:
+  - B-cell
+  expected_dtype: object
+  notes: 'description: exact-name rule; unit: default text rule; allowed_range: small
+    categorical rule'
+  review_status: auto_inferred
+  source_files:
+  - S4_253SRR_metadata
+  unit: n/a
+chlorophyll:
+  allowed_range: '{''0.87 ug/L'', ''1.67 ug/L'', ''1.99 ug/L'', ''3.23 ug/L'', ''3.82
+    ug/L''}'
+  description: UNCLEAR - human review required
+  examples:
+  - 3.82 ug/L
+  - 3.23 ug/L
+  - 1.99 ug/L
+  expected_dtype: object
+  notes: 'description: no confident inference rule matched for: chlorophyll; unit:
+    default text rule; allowed_range: small categorical rule; review this field before
+    final reporting'
+  review_status: unclear
+  source_files:
+  - S4_253SRR_metadata
+  unit: n/a
+collected_by:
+  allowed_range: '{''Dr Brett Williams'', ''Gretchen A Gerrish, James G Morin, Nicholai
+    M Hensley, Trevor J Rivers, Todd H Oakley, Emily A Ellis'', ''NOTRE DAME'', ''QAAFI,
+    University of Queensland''}'
+  description: UNCLEAR - human review required
+  examples:
+  - Gretchen A Gerrish, James G Morin, Nicholai M Hensley, Trevor J Rivers, Todd H
+    Oakley, Emily A Ellis
+  - QAAFI, University of Queensland
+  - NOTRE DAME
+  expected_dtype: object
+  notes: 'description: no confident inference rule matched for: collected_by; unit:
+    default text rule; allowed_range: small categorical rule; review this field before
+    final reporting'
+  review_status: unclear
+  source_files:
+  - S4_253SRR_metadata
+  unit: n/a
+collection date:
+  allowed_range: '[2014, 2014]'
+  description: Collection date
+  examples:
+  - 2014.0
+  expected_dtype: float64
+  notes: 'description: exact-name rule; unit: date rule; allowed_range: numeric min/max
+    rule'
+  review_status: auto_inferred
+  source_files:
+  - S4_253SRR_metadata
+  unit: ISO-8601
+collection_date:
+  allowed_range: '[2008-07-06, 2019-01-01]'
+  description: Collection date
+  examples:
+  - '2014'
+  - '2012'
+  - '2013'
+  expected_dtype: object
+  notes: 'description: exact-name rule; unit: date rule; allowed_range: date parsing
+    rule'
+  review_status: auto_inferred
+  source_files:
+  - S4_253SRR_metadata
+  unit: ISO-8601
+common name:
+  allowed_range: '{''human'', ''viral metagenome''}'
+  description: Common name
+  examples:
+  - human
+  - viral metagenome
+  expected_dtype: object
+  notes: 'description: exact-name rule; unit: default text rule; allowed_range: small
+    categorical rule'
+  review_status: auto_inferred
+  source_files:
+  - S4_253SRR_metadata
+  unit: n/a
+conduc:
+  allowed_range: '{''15.9 uS/cm'', ''55.3 uS/cm'', ''56.2 uS/cm'', ''56.4 uS/cm'',
+    ''61.5 uS/cm''}'
+  description: UNCLEAR - human review required
+  examples:
+  - 15.9 uS/cm
+  - 56.4 uS/cm
+  - 55.3 uS/cm
+  expected_dtype: object
+  notes: 'description: unresolved abbreviation in column name: conduc; unit: default
+    text rule; allowed_range: small categorical rule; review this field before final
+    reporting'
+  review_status: unclear
+  source_files:
+  - S4_253SRR_metadata
+  unit: n/a
+cultivar:
+  allowed_range: free text / categorical (14 unique values)
+  description: UNCLEAR - human review required
+  examples:
+  - Petit Havana
+  - not applicable
+  - Wonhwang
+  expected_dtype: object
+  notes: 'description: unresolved abbreviation in column name: cultivar; unit: default
+    text rule; allowed_range: categorical summary rule; review this field before final
+    reporting'
+  review_status: unclear
+  source_files:
+  - S4_253SRR_metadata
+  unit: n/a
+depth:
+  allowed_range: '{''0.5 m'', ''10 m'', ''14 m'', ''33 m''}'
+  description: Read depth
+  examples:
+  - 0.5 m
+  - 33 m
+  - 10 m
+  expected_dtype: object
+  notes: 'description: single-token rule: depth; unit: default text rule; allowed_range:
+    small categorical rule; review this field before final reporting'
+  review_status: review_recommended
+  source_files:
+  - S4_253SRR_metadata
+  unit: n/a
+dev_stage:
+  allowed_range: free text / categorical (14 unique values)
+  description: UNCLEAR - human review required
+  examples:
+  - V5
+  - not applicable
+  - 105DAF
+  expected_dtype: object
+  notes: 'description: no confident inference rule matched for: dev_stage; unit: default
+    text rule; allowed_range: categorical summary rule; review this field before final
+    reporting'
+  review_status: unclear
+  source_files:
+  - S4_253SRR_metadata
+  unit: n/a
+developmental stage:
+  allowed_range: '{''adult''}'
+  description: UNCLEAR - human review required
+  examples:
+  - adult
+  expected_dtype: object
+  notes: 'description: no confident inference rule matched for: developmental stage;
+    unit: default text rule; allowed_range: small categorical rule; review this field
+    before final reporting'
+  review_status: unclear
+  source_files:
+  - S4_253SRR_metadata
+  unit: n/a
+diss_inorg_carb:
+  allowed_range: '{''155 umol C/kg'', ''459 umol C/kg'', ''502 umol C/kg'', ''507
+    umol C/kg'', ''551 umol C/kg''}'
+  description: UNCLEAR - human review required
+  examples:
+  - 155 umol C/kg
+  - 551 umol C/kg
+  - 459 umol C/kg
+  expected_dtype: object
+  notes: 'description: no confident inference rule matched for: diss_inorg_carb; unit:
+    default text rule; allowed_range: small categorical rule; review this field before
+    final reporting'
+  review_status: unclear
+  source_files:
+  - S4_253SRR_metadata
+  unit: n/a
+ebi_access_type:
+  allowed_range: '{''anonymous''}'
+  description: EBI access type
+  examples:
+  - anonymous
+  expected_dtype: object
+  notes: 'description: exact-name rule; unit: default text rule; allowed_range: small
+    categorical rule'
+  review_status: auto_inferred
+  source_files:
+  - S4_253SRR_metadata
+  unit: n/a
+ebi_free_egress:
+  allowed_range: '{''worldwide''}'
+  description: EBI free-egress policy
+  examples:
+  - worldwide
+  expected_dtype: object
+  notes: 'description: exact-name rule; unit: default text rule; allowed_range: small
+    categorical rule'
+  review_status: auto_inferred
+  source_files:
+  - S4_253SRR_metadata
+  unit: n/a
+ebi_url:
+  allowed_range: '{''http://ftp.sra.ebi.ac.uk/vol1/run/ERR135/ERR1356733/RU122R2.fq.gz'',
+    ''http://ftp.sra.ebi.ac.uk/vol1/run/ERR266/ERR2660556/10_S2_R1_001.fastq.gz'',
+    ''http://ftp.sra.ebi.ac.uk/vol1/run/ERR273/ERR2737479/20730_1#94.cram'', ''http://ftp.sra.ebi.ac.uk/vol1/run/ERR301/ERR3010915/YS-16_CCGTCC_R2.fastq.gz'',
+    ''http://ftp.sra.ebi.ac.uk/vol1/run/ERR317/ERR3179625/20730_1#94.cram''}'
+  description: EBI download URL
+  examples:
+  - http://ftp.sra.ebi.ac.uk/vol1/run/ERR135/ERR1356733/RU122R2.fq.gz
+  - http://ftp.sra.ebi.ac.uk/vol1/run/ERR266/ERR2660556/10_S2_R1_001.fastq.gz
+  - http://ftp.sra.ebi.ac.uk/vol1/run/ERR273/ERR2737479/20730_1#94.cram
+  expected_dtype: object
+  notes: 'description: exact-name rule; unit: default text rule; allowed_range: small
+    categorical rule'
+  review_status: auto_inferred
+  source_files:
+  - S4_253SRR_metadata
+  unit: n/a
+ecotype:
+  allowed_range: '{''B73'', ''mising'', ''not applicable'', ''not collected''}'
+  description: UNCLEAR - human review required
+  examples:
+  - not applicable
+  - mising
+  - not collected
+  expected_dtype: object
+  notes: 'description: unresolved abbreviation in column name: ecotype; unit: default
+    text rule; allowed_range: small categorical rule; review this field before final
+    reporting'
+  review_status: unclear
+  source_files:
+  - S4_253SRR_metadata
+  unit: n/a
+elev:
+  allowed_range: UNCLEAR - human review required
+  description: UNCLEAR - human review required
+  examples: []
+  expected_dtype: float64
+  notes: 'description: unresolved abbreviation in column name: elev; unit: column
+    has no non-null values; allowed_range: column has no non-null values; review this
+    field before final reporting'
+  review_status: unclear
+  source_files:
+  - S4_253SRR_metadata
+  unit: UNCLEAR - human review required
+ena first public:
+  allowed_range: '{''2018-03-30''}'
+  description: ENA first public release date
+  examples:
+  - '2018-03-30T00:00:00'
+  expected_dtype: datetime64[ns]
+  notes: 'description: token rule: ena+first+public; unit: default text rule; allowed_range:
+    small categorical rule'
+  review_status: auto_inferred
+  source_files:
+  - S4_253SRR_metadata
+  unit: n/a
+ena last update:
+  allowed_range: '{''2016-10-21''}'
+  description: ENA last update date
+  examples:
+  - '2016-10-21T00:00:00'
+  expected_dtype: datetime64[ns]
+  notes: 'description: token rule: ena+last+update; unit: default text rule; allowed_range:
+    small categorical rule'
+  review_status: auto_inferred
+  source_files:
+  - S4_253SRR_metadata
+  unit: n/a
+ena-first-public:
+  allowed_range: '{''2018-06-11 19:03:00'', ''2019-02-08 18:04:04'', ''2019-02-26
+    18:02:58'', ''2019-04-19 06:02:37''}'
+  description: ENA first public release date
+  examples:
+  - '2019-02-08T18:04:04'
+  - '2018-06-11T19:03:00'
+  - '2019-04-19T06:02:37'
+  expected_dtype: datetime64[ns]
+  notes: 'description: token rule: ena+first+public; unit: default text rule; allowed_range:
+    small categorical rule'
+  review_status: auto_inferred
+  source_files:
+  - S4_253SRR_metadata
+  unit: n/a
+ena-last-update:
+  allowed_range: '{''2018-06-05 17:33:43'', ''2018-06-22 15:33:29'', ''2018-12-17
+    15:58:17'', ''2019-02-21 10:18:26''}'
+  description: ENA last update date
+  examples:
+  - '2018-06-22T15:33:29'
+  - '2018-06-05T17:33:43'
+  - '2018-12-17T15:58:17'
+  expected_dtype: datetime64[ns]
+  notes: 'description: token rule: ena+last+update; unit: default text rule; allowed_range:
+    small categorical rule'
+  review_status: auto_inferred
+  source_files:
+  - S4_253SRR_metadata
+  unit: n/a
+ena_fastq_ftp:
+  allowed_range: free text / categorical (131 unique values)
+  description: UNCLEAR - human review required
+  examples:
+  - era-fasp@fasp.sra.ebi.ac.uk:vol1/fastq/DRR146/DRR146894/DRR146894.fastq.gz
+  - era-fasp@fasp.sra.ebi.ac.uk:vol1/fastq/DRR146/DRR146906/DRR146906.fastq.gz
+  - era-fasp@fasp.sra.ebi.ac.uk:vol1/fastq/ERR266/006/ERR2660556/ERR2660556.fastq.gz
+  expected_dtype: object
+  notes: 'description: no confident inference rule matched for: ena_fastq_ftp; unit:
+    default text rule; allowed_range: categorical summary rule; review this field
+    before final reporting'
+  review_status: unclear
+  source_files:
+  - S4_253SRR_metadata
+  unit: n/a
+ena_fastq_ftp_1:
+  allowed_range: free text / categorical (122 unique values)
+  description: UNCLEAR - human review required
+  examples:
+  - era-fasp@fasp.sra.ebi.ac.uk:vol1/fastq/ERR135/003/ERR1356733/ERR1356733_1.fastq.gz
+  - era-fasp@fasp.sra.ebi.ac.uk:vol1/fastq/ERR273/009/ERR2737479/ERR2737479_1.fastq.gz
+  - era-fasp@fasp.sra.ebi.ac.uk:vol1/fastq/ERR301/005/ERR3010915/ERR3010915_1.fastq.gz
+  expected_dtype: object
+  notes: 'description: no confident inference rule matched for: ena_fastq_ftp_1; unit:
+    default text rule; allowed_range: categorical summary rule; review this field
+    before final reporting'
+  review_status: unclear
+  source_files:
+  - S4_253SRR_metadata
+  unit: n/a
+ena_fastq_ftp_2:
+  allowed_range: free text / categorical (121 unique values)
+  description: UNCLEAR - human review required
+  examples:
+  - era-fasp@fasp.sra.ebi.ac.uk:vol1/fastq/ERR135/003/ERR1356733/ERR1356733_2.fastq.gz
+  - era-fasp@fasp.sra.ebi.ac.uk:vol1/fastq/ERR273/009/ERR2737479/ERR2737479_2.fastq.gz
+  - era-fasp@fasp.sra.ebi.ac.uk:vol1/fastq/ERR301/005/ERR3010915/ERR3010915_2.fastq.gz
+  expected_dtype: object
+  notes: 'description: no confident inference rule matched for: ena_fastq_ftp_2; unit:
+    default text rule; allowed_range: categorical summary rule; review this field
+    before final reporting'
+  review_status: unclear
+  source_files:
+  - S4_253SRR_metadata
+  unit: n/a
+ena_fastq_http:
+  allowed_range: free text / categorical (131 unique values)
+  description: UNCLEAR - human review required
+  examples:
+  - http://ftp.sra.ebi.ac.uk/vol1/fastq/DRR146/DRR146894/DRR146894.fastq.gz
+  - http://ftp.sra.ebi.ac.uk/vol1/fastq/DRR146/DRR146906/DRR146906.fastq.gz
+  - http://ftp.sra.ebi.ac.uk/vol1/fastq/ERR266/006/ERR2660556/ERR2660556.fastq.gz
+  expected_dtype: object
+  notes: 'description: no confident inference rule matched for: ena_fastq_http; unit:
+    default text rule; allowed_range: categorical summary rule; review this field
+    before final reporting'
+  review_status: unclear
+  source_files:
+  - S4_253SRR_metadata
+  unit: n/a
+ena_fastq_http_1:
+  allowed_range: free text / categorical (122 unique values)
+  description: UNCLEAR - human review required
+  examples:
+  - http://ftp.sra.ebi.ac.uk/vol1/fastq/ERR135/003/ERR1356733/ERR1356733_1.fastq.gz
+  - http://ftp.sra.ebi.ac.uk/vol1/fastq/ERR273/009/ERR2737479/ERR2737479_1.fastq.gz
+  - http://ftp.sra.ebi.ac.uk/vol1/fastq/ERR301/005/ERR3010915/ERR3010915_1.fastq.gz
+  expected_dtype: object
+  notes: 'description: no confident inference rule matched for: ena_fastq_http_1;
+    unit: default text rule; allowed_range: categorical summary rule; review this
+    field before final reporting'
+  review_status: unclear
+  source_files:
+  - S4_253SRR_metadata
+  unit: n/a
+ena_fastq_http_2:
+  allowed_range: free text / categorical (121 unique values)
+  description: UNCLEAR - human review required
+  examples:
+  - http://ftp.sra.ebi.ac.uk/vol1/fastq/ERR135/003/ERR1356733/ERR1356733_2.fastq.gz
+  - http://ftp.sra.ebi.ac.uk/vol1/fastq/ERR273/009/ERR2737479/ERR2737479_2.fastq.gz
+  - http://ftp.sra.ebi.ac.uk/vol1/fastq/ERR301/005/ERR3010915/ERR3010915_2.fastq.gz
+  expected_dtype: object
+  notes: 'description: no confident inference rule matched for: ena_fastq_http_2;
+    unit: default text rule; allowed_range: categorical summary rule; review this
+    field before final reporting'
+  review_status: unclear
+  source_files:
+  - S4_253SRR_metadata
+  unit: n/a
+env_biome:
+  allowed_range: '{''ENVO:00009003'', ''river''}'
+  description: UNCLEAR - human review required
+  examples:
+  - river
+  - ENVO:00009003
+  expected_dtype: object
+  notes: 'description: no confident inference rule matched for: env_biome; unit: default
+    text rule; allowed_range: small categorical rule; review this field before final
+    reporting'
+  review_status: unclear
+  source_files:
+  - S4_253SRR_metadata
+  unit: n/a
+env_broad_scale:
+  allowed_range: UNCLEAR - human review required
+  description: UNCLEAR - human review required
+  examples: []
+  expected_dtype: float64
+  notes: 'description: no confident inference rule matched for: env_broad_scale; unit:
+    column has no non-null values; allowed_range: column has no non-null values; review
+    this field before final reporting'
+  review_status: unclear
+  source_files:
+  - S4_253SRR_metadata
+  unit: UNCLEAR - human review required
+env_feature:
+  allowed_range: '{''Amazon River'', ''ENVO:2100002''}'
+  description: UNCLEAR - human review required
+  examples:
+  - Amazon River
+  - ENVO:2100002
+  expected_dtype: object
+  notes: 'description: no confident inference rule matched for: env_feature; unit:
+    default text rule; allowed_range: small categorical rule; review this field before
+    final reporting'
+  review_status: unclear
+  source_files:
+  - S4_253SRR_metadata
+  unit: n/a
+env_local_scale:
+  allowed_range: UNCLEAR - human review required
+  description: UNCLEAR - human review required
+  examples: []
+  expected_dtype: float64
+  notes: 'description: no confident inference rule matched for: env_local_scale; unit:
+    column has no non-null values; allowed_range: column has no non-null values; review
+    this field before final reporting'
+  review_status: unclear
+  source_files:
+  - S4_253SRR_metadata
+  unit: UNCLEAR - human review required
+env_material:
+  allowed_range: '{''ENVO:00002003'', ''water''}'
+  description: UNCLEAR - human review required
+  examples:
+  - water
+  - ENVO:00002003
+  expected_dtype: object
+  notes: 'description: no confident inference rule matched for: env_material; unit:
+    default text rule; allowed_range: small categorical rule; review this field before
+    final reporting'
+  review_status: unclear
+  source_files:
+  - S4_253SRR_metadata
+  unit: n/a
+env_medium:
+  allowed_range: UNCLEAR - human review required
+  description: UNCLEAR - human review required
+  examples: []
+  expected_dtype: float64
+  notes: 'description: no confident inference rule matched for: env_medium; unit:
+    column has no non-null values; allowed_range: column has no non-null values; review
+    this field before final reporting'
+  review_status: unclear
+  source_files:
+  - S4_253SRR_metadata
+  unit: UNCLEAR - human review required
+environment (biome):
+  allowed_range: '{''wastewater''}'
+  description: UNCLEAR - human review required
+  examples:
+  - wastewater
+  expected_dtype: object
+  notes: 'description: no confident inference rule matched for: environment (biome);
+    unit: default text rule; allowed_range: small categorical rule; review this field
+    before final reporting'
+  review_status: unclear
+  source_files:
+  - S4_253SRR_metadata
+  unit: n/a
+environment (feature):
+  allowed_range: '{''wastewater treatment plant''}'
+  description: UNCLEAR - human review required
+  examples:
+  - wastewater treatment plant
+  expected_dtype: object
+  notes: 'description: no confident inference rule matched for: environment (feature);
+    unit: default text rule; allowed_range: small categorical rule; review this field
+    before final reporting'
+  review_status: unclear
+  source_files:
+  - S4_253SRR_metadata
+  unit: n/a
+environment (material):
+  allowed_range: '{''activated sludge''}'
+  description: UNCLEAR - human review required
+  examples:
+  - activated sludge
+  expected_dtype: object
+  notes: 'description: no confident inference rule matched for: environment (material);
+    unit: default text rule; allowed_range: small categorical rule; review this field
+    before final reporting'
+  review_status: unclear
+  source_files:
+  - S4_253SRR_metadata
+  unit: n/a
+experiment_accession:
+  allowed_range: free text / categorical (251 unique values)
+  description: Experiment accession identifier
+  examples:
+  - DRX137686
+  - DRX137698
+  - ERX1428208
+  expected_dtype: object
+  notes: 'description: exact-name rule; unit: default text rule; allowed_range: categorical
+    summary rule'
+  review_status: auto_inferred
+  source_files:
+  - S4_253SRR_metadata
+  unit: n/a
+experiment_alias:
+  allowed_range: free text / categorical (19 unique values)
+  description: UNCLEAR - human review required
+  examples:
+  - DRX137686
+  - DRX137698
+  - Site1_B1soil
+  expected_dtype: object
+  notes: 'description: no confident inference rule matched for: experiment_alias;
+    unit: default text rule; allowed_range: categorical summary rule; review this
+    field before final reporting'
+  review_status: unclear
+  source_files:
+  - S4_253SRR_metadata
+  unit: n/a
+experiment_desc:
+  allowed_range: free text / categorical (149 unique values)
+  description: Experiment description
+  examples:
+  - Illumina HiSeq 2000 sequencing of SAMD00134143
+  - Illumina HiSeq 2000 sequencing of SAMD00134155
+  - Illumina HiSeq 2500 paired end sequencing
+  expected_dtype: object
+  notes: 'description: token rule: experiment+desc; unit: default text rule; allowed_range:
+    categorical summary rule'
+  review_status: auto_inferred
+  source_files:
+  - S4_253SRR_metadata
+  unit: n/a
+experiment_title:
+  allowed_range: free text / categorical (149 unique values)
+  description: Experiment title
+  examples:
+  - Illumina HiSeq 2000 sequencing of SAMD00134143
+  - Illumina HiSeq 2000 sequencing of SAMD00134155
+  - Illumina HiSeq 2500 paired end sequencing
+  expected_dtype: object
+  notes: 'description: token rule: experiment+title; unit: default text rule; allowed_range:
+    categorical summary rule'
+  review_status: auto_inferred
+  source_files:
+  - S4_253SRR_metadata
+  unit: n/a
+'experimental factor: compound':
+  allowed_range: '{''ryegrass silage''}'
+  description: UNCLEAR - human review required
+  examples:
+  - ryegrass silage
+  expected_dtype: object
+  notes: 'description: no confident inference rule matched for: experimental factor:
+    compound; unit: default text rule; allowed_range: small categorical rule; review
+    this field before final reporting'
+  review_status: unclear
+  source_files:
+  - S4_253SRR_metadata
+  unit: n/a
+'experimental factor: dose':
+  allowed_range: '[1500, 1500]'
+  description: UNCLEAR - human review required
+  examples:
+  - 1500.0
+  expected_dtype: float64
+  notes: 'description: no confident inference rule matched for: experimental factor:
+    dose; unit: numeric column without confident semantic match; allowed_range: numeric
+    min/max rule; review this field before final reporting'
+  review_status: unclear
+  source_files:
+  - S4_253SRR_metadata
+  unit: UNCLEAR - human review required
+'experimental factor: growth condition':
+  allowed_range: '{''MCF-7 conditioned media''}'
+  description: UNCLEAR - human review required
+  examples:
+  - MCF-7 conditioned media
+  expected_dtype: object
+  notes: 'description: no confident inference rule matched for: experimental factor:
+    growth condition; unit: default text rule; allowed_range: small categorical rule;
+    review this field before final reporting'
+  review_status: unclear
+  source_files:
+  - S4_253SRR_metadata
+  unit: n/a
+'experimental factor: immunoprecipitate':
+  allowed_range: '{''anti-IgG''}'
+  description: UNCLEAR - human review required
+  examples:
+  - anti-IgG
+  expected_dtype: object
+  notes: 'description: no confident inference rule matched for: experimental factor:
+    immunoprecipitate; unit: default text rule; allowed_range: small categorical rule;
+    review this field before final reporting'
+  review_status: unclear
+  source_files:
+  - S4_253SRR_metadata
+  unit: n/a
+'experimental factor: stimulus':
+  allowed_range: '{''none''}'
+  description: UNCLEAR - human review required
+  examples:
+  - none
+  expected_dtype: object
+  notes: 'description: no confident inference rule matched for: experimental factor:
+    stimulus; unit: default text rule; allowed_range: small categorical rule; review
+    this field before final reporting'
+  review_status: unclear
+  source_files:
+  - S4_253SRR_metadata
+  unit: n/a
+external id:
+  allowed_range: '{''SAMEA3923215'', ''SAMEA4708865'', ''SAMEA4753698'', ''SAMEA5185551'',
+    ''SAMEA5365958''}'
+  description: UNCLEAR - human review required
+  examples:
+  - SAMEA3923215
+  - SAMEA4753698
+  - SAMEA4708865
+  expected_dtype: object
+  notes: 'description: no confident inference rule matched for: external id; unit:
+    default text rule; allowed_range: small categorical rule; review this field before
+    final reporting'
+  review_status: unclear
+  source_files:
+  - S4_253SRR_metadata
+  unit: n/a
+gcp_access_type:
+  allowed_range: '{''gcp identity''}'
+  description: Google Cloud access type
+  examples:
+  - gcp identity
+  expected_dtype: object
+  notes: 'description: exact-name rule; unit: default text rule; allowed_range: small
+    categorical rule'
+  review_status: auto_inferred
+  source_files:
+  - S4_253SRR_metadata
+  unit: n/a
+gcp_free_egress:
+  allowed_range: '{''gs.us-east1''}'
+  description: Google Cloud free-egress region or policy
+  examples:
+  - gs.us-east1
+  expected_dtype: object
+  notes: 'description: exact-name rule; unit: default text rule; allowed_range: small
+    categorical rule'
+  review_status: auto_inferred
+  source_files:
+  - S4_253SRR_metadata
+  unit: n/a
+gcp_url:
+  allowed_range: free text / categorical (253 unique values)
+  description: Google Cloud Storage URL
+  examples:
+  - gs://sra-pub-zq-105/DRR146894/DRR146894.zq.1
+  - gs://sra-pub-zq-105/DRR146906/DRR146906.zq.1
+  - gs://sra-pub-zq-106/ERR1356733/ERR1356733.lite.2
+  expected_dtype: object
+  notes: 'description: exact-name rule; unit: default text rule; allowed_range: categorical
+    summary rule'
+  review_status: auto_inferred
+  source_files:
+  - S4_253SRR_metadata
+  unit: n/a
+genotype:
+  allowed_range: '{''PB1+ Pi54'', ''Wildtype'', ''wild type genotype''}'
+  description: UNCLEAR - human review required
+  examples:
+  - wild type genotype
+  - Wildtype
+  - PB1+ Pi54
+  expected_dtype: object
+  notes: 'description: no confident inference rule matched for: genotype; unit: default
+    text rule; allowed_range: small categorical rule; review this field before final
+    reporting'
+  review_status: unclear
+  source_files:
+  - S4_253SRR_metadata
+  unit: n/a
+geo_loc_name:
+  allowed_range: free text / categorical (48 unique values)
+  description: Geographic location name
+  examples:
+  - Japan:Gumma
+  - Japan:Ibaraki
+  - India
+  expected_dtype: object
+  notes: 'description: token rule: geo+loc+name; unit: default text rule; allowed_range:
+    categorical summary rule'
+  review_status: auto_inferred
+  source_files:
+  - S4_253SRR_metadata
+  unit: n/a
+geographic location (country and/or sea):
+  allowed_range: '{''Switzerland''}'
+  description: 'Geographic location: country and/or sea'
+  examples:
+  - Switzerland
+  expected_dtype: object
+  notes: 'description: token rule: geographic+location+country+and+or+sea; unit: default
+    text rule; allowed_range: small categorical rule'
+  review_status: auto_inferred
+  source_files:
+  - S4_253SRR_metadata
+  unit: n/a
+geographic location (latitude):
+  allowed_range: '[-90, 90]'
+  description: Sampling latitude
+  examples:
+  - 47.40483
+  expected_dtype: float64
+  notes: 'description: token rule: geographic+location+latitude; unit: coordinate
+    rule; allowed_range: latitude bounds'
+  review_status: auto_inferred
+  source_files:
+  - S4_253SRR_metadata
+  unit: degrees
+geographic location (longitude):
+  allowed_range: '[-180, 180]'
+  description: Sampling longitude
+  examples:
+  - 8.60967
+  expected_dtype: float64
+  notes: 'description: token rule: geographic+location+longitude; unit: coordinate
+    rule; allowed_range: longitude bounds'
+  review_status: auto_inferred
+  source_files:
+  - S4_253SRR_metadata
+  unit: degrees
+geographic_location:
+  allowed_range: '{''not collected''}'
+  description: Sampling location
+  examples:
+  - not collected
+  expected_dtype: object
+  notes: 'description: single-token rule: location; unit: default text rule; allowed_range:
+    small categorical rule; review this field before final reporting'
+  review_status: review_recommended
+  source_files:
+  - S4_253SRR_metadata
+  unit: n/a
+gold ecosystem classification:
+  allowed_range: '{''Engineered | Bioreactor | Anaerobic | Digestate | Unclassified'',
+    ''Environmental | Terrestrial | Soil | Floodplain | Unclassified'', ''Environmental
+    | Terrestrial | Soil | Riparian zone | Unclassified'', ''Host-associated | Mammals
+    | Digestive system | Stomach | Rumen''}'
+  description: UNCLEAR - human review required
+  examples:
+  - Host-associated | Mammals | Digestive system | Stomach | Rumen
+  - Environmental | Terrestrial | Soil | Floodplain | Unclassified
+  - Environmental | Terrestrial | Soil | Riparian zone | Unclassified
+  expected_dtype: object
+  notes: 'description: no confident inference rule matched for: gold ecosystem classification;
+    unit: default text rule; allowed_range: small categorical rule; review this field
+    before final reporting'
+  review_status: unclear
+  source_files:
+  - S4_253SRR_metadata
+  unit: n/a
+growth condition:
+  allowed_range: '{''MCF-7 conditioned media''}'
+  description: UNCLEAR - human review required
+  examples:
+  - MCF-7 conditioned media
+  expected_dtype: object
+  notes: 'description: no confident inference rule matched for: growth condition;
+    unit: default text rule; allowed_range: small categorical rule; review this field
+    before final reporting'
+  review_status: unclear
+  source_files:
+  - S4_253SRR_metadata
+  unit: n/a
+host:
+  allowed_range: free text / categorical (16 unique values)
+  description: Host organism
+  examples:
+  - Citrus
+  - plant
+  - not applicable
+  expected_dtype: object
+  notes: 'description: single-token rule: host; unit: default text rule; allowed_range:
+    categorical summary rule; review this field before final reporting'
+  review_status: review_recommended
+  source_files:
+  - S4_253SRR_metadata
+  unit: n/a
+host_subject_id:
+  allowed_range: '[5.01762e+07, 5.01762e+07]'
+  description: Host subject identifier
+  examples:
+  - 50176181.0
+  expected_dtype: float64
+  notes: 'description: token rule: host+subject+id; unit: generic numeric rule; allowed_range:
+    numeric min/max rule'
+  review_status: auto_inferred
+  source_files:
+  - S4_253SRR_metadata
+  unit: unitless
+host_tissue_sampled:
+  allowed_range: '{''Gut''}'
+  description: Host organism
+  examples:
+  - Gut
+  expected_dtype: object
+  notes: 'description: single-token rule: host; unit: default text rule; allowed_range:
+    small categorical rule; review this field before final reporting'
+  review_status: review_recommended
+  source_files:
+  - S4_253SRR_metadata
+  unit: n/a
+identified_by:
+  allowed_range: '{''Gretchen A Gerrish, James G Morin, Nicholai M Hensley, Trevor
+    J Rivers, Todd H Oakley, Emily A Ellis''}'
+  description: UNCLEAR - human review required
+  examples:
+  - Gretchen A Gerrish, James G Morin, Nicholai M Hensley, Trevor J Rivers, Todd H
+    Oakley, Emily A Ellis
+  expected_dtype: object
+  notes: 'description: no confident inference rule matched for: identified_by; unit:
+    default text rule; allowed_range: small categorical rule; review this field before
+    final reporting'
+  review_status: unclear
+  source_files:
+  - S4_253SRR_metadata
+  unit: n/a
+indivudal:
+  allowed_range: '{''pool of donors 1 to 3''}'
+  description: UNCLEAR - human review required
+  examples:
+  - pool of donors 1 to 3
+  expected_dtype: object
+  notes: 'description: no confident inference rule matched for: indivudal; unit: default
+    text rule; allowed_range: small categorical rule; review this field before final
+    reporting'
+  review_status: unclear
+  source_files:
+  - S4_253SRR_metadata
+  unit: n/a
+insdc center alias:
+  allowed_range: '{''EAWAG''}'
+  description: UNCLEAR - human review required
+  examples:
+  - EAWAG
+  expected_dtype: object
+  notes: 'description: no confident inference rule matched for: insdc center alias;
+    unit: default text rule; allowed_range: small categorical rule; review this field
+    before final reporting'
+  review_status: unclear
+  source_files:
+  - S4_253SRR_metadata
+  unit: n/a
+insdc center name:
+  allowed_range: '{''Center for Biotechnology (CeBiTec) - Bielefeld University'',
+    ''EAWAG'', ''Faculty of Medicine, Goethe-University Frankfurt'', ''SC'', ''UNIVERSITY
+    OF EDINBURGH''}'
+  description: UNCLEAR - human review required
+  examples:
+  - EAWAG
+  - Faculty of Medicine, Goethe-University Frankfurt
+  - UNIVERSITY OF EDINBURGH
+  expected_dtype: object
+  notes: 'description: no confident inference rule matched for: insdc center name;
+    unit: default text rule; allowed_range: small categorical rule; review this field
+    before final reporting'
+  review_status: unclear
+  source_files:
+  - S4_253SRR_metadata
+  unit: n/a
+insdc first public:
+  allowed_range: '{''2018-03-30 19:02:14'', ''2018-06-11 19:03:00'', ''2019-02-08
+    18:04:04'', ''2019-02-26 18:02:58'', ''2019-04-19 06:02:37''}'
+  description: INSDC first public release date
+  examples:
+  - '2018-03-30T19:02:14'
+  - '2019-02-08T18:04:04'
+  - '2018-06-11T19:03:00'
+  expected_dtype: datetime64[ns]
+  notes: 'description: token rule: insdc+first+public; unit: default text rule; allowed_range:
+    small categorical rule'
+  review_status: auto_inferred
+  source_files:
+  - S4_253SRR_metadata
+  unit: n/a
+insdc last update:
+  allowed_range: '{''2016-10-21 11:43:06'', ''2018-06-05 17:33:43'', ''2018-06-22
+    15:33:29'', ''2018-12-17 15:58:17'', ''2019-02-21 10:18:26''}'
+  description: INSDC last update date
+  examples:
+  - '2016-10-21T11:43:06'
+  - '2018-06-22T15:33:29'
+  - '2018-06-05T17:33:43'
+  expected_dtype: datetime64[ns]
+  notes: 'description: token rule: insdc+last+update; unit: default text rule; allowed_range:
+    small categorical rule'
+  review_status: auto_inferred
+  source_files:
+  - S4_253SRR_metadata
+  unit: n/a
+insdc status:
+  allowed_range: '{''public''}'
+  description: UNCLEAR - human review required
+  examples:
+  - public
+  expected_dtype: object
+  notes: 'description: no confident inference rule matched for: insdc status; unit:
+    default text rule; allowed_range: small categorical rule; review this field before
+    final reporting'
+  review_status: unclear
+  source_files:
+  - S4_253SRR_metadata
+  unit: n/a
+instrument:
+  allowed_range: free text / categorical (11 unique values)
+  description: UNCLEAR - human review required
+  examples:
+  - Illumina HiSeq 2000
+  - Illumina HiSeq 2500
+  - NextSeq 500
+  expected_dtype: object
+  notes: 'description: no confident inference rule matched for: instrument; unit:
+    default text rule; allowed_range: categorical summary rule; review this field
+    before final reporting'
+  review_status: unclear
+  source_files:
+  - S4_253SRR_metadata
+  unit: n/a
+instrument_model:
+  allowed_range: free text / categorical (11 unique values)
+  description: Instrument model
+  examples:
+  - Illumina HiSeq 2000
+  - Illumina HiSeq 2500
+  - NextSeq 500
+  expected_dtype: object
+  notes: 'description: token rule: instrument+model; unit: default text rule; allowed_range:
+    categorical summary rule'
+  review_status: auto_inferred
+  source_files:
+  - S4_253SRR_metadata
+  unit: n/a
+instrument_model_desc:
+  allowed_range: '{''ILLUMINA''}'
+  description: Instrument model description
+  examples:
+  - ILLUMINA
+  expected_dtype: object
+  notes: 'description: token rule: instrument+model+desc; unit: default text rule;
+    allowed_range: small categorical rule'
+  review_status: auto_inferred
+  source_files:
+  - S4_253SRR_metadata
+  unit: n/a
+investigation type:
+  allowed_range: '{''metagenome''}'
+  description: Record type
+  examples:
+  - metagenome
+  expected_dtype: object
+  notes: 'description: single-token rule: type; unit: default text rule; allowed_range:
+    small categorical rule; review this field before final reporting'
+  review_status: review_recommended
+  source_files:
+  - S4_253SRR_metadata
+  unit: n/a
+investigation_type:
+  allowed_range: '{''Non-selective Metatranscriptome''}'
+  description: Record type
+  examples:
+  - Non-selective Metatranscriptome
+  expected_dtype: object
+  notes: 'description: single-token rule: type; unit: default text rule; allowed_range:
+    small categorical rule; review this field before final reporting'
+  review_status: review_recommended
+  source_files:
+  - S4_253SRR_metadata
+  unit: n/a
+isol_growth_condt:
+  allowed_range: UNCLEAR - human review required
+  description: UNCLEAR - human review required
+  examples: []
+  expected_dtype: float64
+  notes: 'description: no confident inference rule matched for: isol_growth_condt;
+    unit: column has no non-null values; allowed_range: column has no non-null values;
+    review this field before final reporting'
+  review_status: unclear
+  source_files:
+  - S4_253SRR_metadata
+  unit: UNCLEAR - human review required
+isolate:
+  allowed_range: free text / categorical (33 unique values)
+  description: Isolate identifier or isolate name
+  examples:
+  - superior individual from Jiangxi, China
+  - shoot tips of NILs-AA for RNA-seq at V5 stage
+  - not applicable
+  expected_dtype: object
+  notes: 'description: exact-name rule; unit: default text rule; allowed_range: categorical
+    summary rule'
+  review_status: auto_inferred
+  source_files:
+  - S4_253SRR_metadata
+  unit: n/a
+isolation source:
+  allowed_range: UNCLEAR - human review required
+  description: Material or environment from which the sample was isolated
+  examples: []
+  expected_dtype: float64
+  notes: 'description: exact-name rule; unit: column has no non-null values; allowed_range:
+    column has no non-null values; review this field before final reporting'
+  review_status: unclear
+  source_files:
+  - S4_253SRR_metadata
+  unit: UNCLEAR - human review required
+isolation_source:
+  allowed_range: free text / categorical (20 unique values)
+  description: Material or environment from which the sample was isolated
+  examples:
+  - Multiple species from Arthropoda
+  - Missing
+  - the riverside of the ancient canal in Zhenjiang city, China
+  expected_dtype: object
+  notes: 'description: exact-name rule; unit: default text rule; allowed_range: categorical
+    summary rule'
+  review_status: auto_inferred
+  source_files:
+  - S4_253SRR_metadata
+  unit: n/a
+lat_lon:
+  allowed_range: formatted latitude/longitude pair
+  description: Latitude/longitude coordinate pair
+  examples:
+  - 32.13188 N 119.43396 E
+  - 16.811598 N 88.082428 W
+  - not applicable
+  expected_dtype: object
+  notes: 'description: exact-name rule; unit: coordinate rule; allowed_range: coordinate-pair
+    rule'
+  review_status: auto_inferred
+  source_files:
+  - S4_253SRR_metadata
+  unit: degrees
+library_layout:
+  allowed_range: '{''PAIRED'', ''SINGLE''}'
+  description: Library layout
+  examples:
+  - SINGLE
+  - PAIRED
+  expected_dtype: object
+  notes: 'description: token rule: library+layout; unit: default text rule; allowed_range:
+    small categorical rule'
+  review_status: auto_inferred
+  source_files:
+  - S4_253SRR_metadata
+  unit: n/a
+library_name:
+  allowed_range: free text / categorical (198 unique values)
+  description: UNCLEAR - human review required
+  examples:
+  - unspecified
+  - IgG-ACM_1,2,3_s
+  - Sample 16_p
+  expected_dtype: object
+  notes: 'description: no confident inference rule matched for: library_name; unit:
+    default text rule; allowed_range: categorical summary rule; review this field
+    before final reporting'
+  review_status: unclear
+  source_files:
+  - S4_253SRR_metadata
+  unit: n/a
+library_selection:
+  allowed_range: free text / categorical (11 unique values)
+  description: Library selection method
+  examples:
+  - PolyA
+  - Inverse rRNA
+  - RT-PCR
+  expected_dtype: object
+  notes: 'description: token rule: library+selection; unit: default text rule; allowed_range:
+    categorical summary rule'
+  review_status: auto_inferred
+  source_files:
+  - S4_253SRR_metadata
+  unit: n/a
+library_source:
+  allowed_range: '{''GENOMIC'', ''METAGENOMIC'', ''METATRANSCRIPTOMIC'', ''TRANSCRIPTOMIC'',
+    ''TRANSCRIPTOMIC SINGLE CELL''}'
+  description: Library source
+  examples:
+  - TRANSCRIPTOMIC
+  - METATRANSCRIPTOMIC
+  - GENOMIC
+  expected_dtype: object
+  notes: 'description: token rule: library+source; unit: default text rule; allowed_range:
+    small categorical rule'
+  review_status: auto_inferred
+  source_files:
+  - S4_253SRR_metadata
+  unit: n/a
+library_strategy:
+  allowed_range: '{''RNA-Seq'', ''WGA'', ''WGS''}'
+  description: Library strategy
+  examples:
+  - RNA-Seq
+  - WGS
+  - WGA
+  expected_dtype: object
+  notes: 'description: token rule: library+strategy; unit: default text rule; allowed_range:
+    small categorical rule'
+  review_status: auto_inferred
+  source_files:
+  - S4_253SRR_metadata
+  unit: n/a
+max_filter_size:
+  allowed_range: "{'156 \xC2\xB5m', '2.0 um', '297 um'}"
+  description: UNCLEAR - human review required
+  examples:
+  - 2.0 um
+  - 297 um
+  - "156 \xC2\xB5m"
+  expected_dtype: object
+  notes: 'description: no confident inference rule matched for: max_filter_size; unit:
+    default text rule; allowed_range: small categorical rule; review this field before
+    final reporting'
+  review_status: unclear
+  source_files:
+  - S4_253SRR_metadata
+  unit: n/a
+min_filter_size:
+  allowed_range: "{'0.2 um', '2 um', '2.0 \xC2\xB5m'}"
+  description: UNCLEAR - human review required
+  examples:
+  - 0.2 um
+  - 2 um
+  - "2.0 \xC2\xB5m"
+  expected_dtype: object
+  notes: 'description: no confident inference rule matched for: min_filter_size; unit:
+    default text rule; allowed_range: small categorical rule; review this field before
+    final reporting'
+  review_status: unclear
+  source_files:
+  - S4_253SRR_metadata
+  unit: n/a
+ncbi_access_type:
+  allowed_range: '{''anonymous''}'
+  description: NCBI access type
+  examples:
+  - anonymous
+  expected_dtype: object
+  notes: 'description: exact-name rule; unit: default text rule; allowed_range: small
+    categorical rule'
+  review_status: auto_inferred
+  source_files:
+  - S4_253SRR_metadata
+  unit: n/a
+ncbi_free_egress:
+  allowed_range: '{''worldwide''}'
+  description: NCBI free-egress policy
+  examples:
+  - worldwide
+  expected_dtype: object
+  notes: 'description: exact-name rule; unit: default text rule; allowed_range: small
+    categorical rule'
+  review_status: auto_inferred
+  source_files:
+  - S4_253SRR_metadata
+  unit: n/a
+ncbi_url:
+  allowed_range: free text / categorical (253 unique values)
+  description: NCBI download URL
+  examples:
+  - https://sra-downloadb.be-md.ncbi.nlm.nih.gov/sos5/sra-pub-zq-11/DRR000/146/DRR146894/DRR146894.sralite.1
+  - https://sra-downloadb.be-md.ncbi.nlm.nih.gov/sos5/sra-pub-zq-11/DRR000/146/DRR146906/DRR146906.sralite.1
+  - https://sra-downloadb.be-md.ncbi.nlm.nih.gov/sos1/sra-pub-zq-38/ERR001/1356/ERR1356733/ERR1356733.lite.2
+  expected_dtype: object
+  notes: 'description: exact-name rule; unit: default text rule; allowed_range: categorical
+    summary rule'
+  review_status: auto_inferred
+  source_files:
+  - S4_253SRR_metadata
+  unit: n/a
+nucleic_acid:
+  allowed_range: '{''rna''}'
+  description: UNCLEAR - human review required
+  examples:
+  - rna
+  expected_dtype: object
+  notes: 'description: no confident inference rule matched for: nucleic_acid; unit:
+    default text rule; allowed_range: small categorical rule; review this field before
+    final reporting'
+  review_status: unclear
+  source_files:
+  - S4_253SRR_metadata
+  unit: n/a
+number_of_cells:
+  allowed_range: '[500000, 2e+06]'
+  description: UNCLEAR - human review required
+  examples:
+  - 1000000.0
+  - 2000000.0
+  - 500000.0
+  expected_dtype: float64
+  notes: 'description: no confident inference rule matched for: number_of_cells; unit:
+    numeric column without confident semantic match; allowed_range: numeric min/max
+    rule; review this field before final reporting'
+  review_status: unclear
+  source_files:
+  - S4_253SRR_metadata
+  unit: UNCLEAR - human review required
+organism part:
+  allowed_range: '{''blood''}'
+  description: UNCLEAR - human review required
+  examples:
+  - blood
+  expected_dtype: object
+  notes: 'description: no confident inference rule matched for: organism part; unit:
+    default text rule; allowed_range: small categorical rule; review this field before
+    final reporting'
+  review_status: unclear
+  source_files:
+  - S4_253SRR_metadata
+  unit: n/a
+organism_name:
+  allowed_range: free text / categorical (51 unique values)
+  description: Organism name
+  examples:
+  - Eotetranychus uncatus
+  - Schizotetranychus lespedezae
+  - metagenome
+  expected_dtype: object
+  notes: 'description: token rule: organism+name; unit: default text rule; allowed_range:
+    categorical summary rule'
+  review_status: auto_inferred
+  source_files:
+  - S4_253SRR_metadata
+  unit: n/a
+organism_taxid:
+  allowed_range: '[2708, 2.69692e+06]'
+  description: NCBI taxonomic identifier for the organism
+  examples:
+  - 1490235
+  - 1490253
+  - 256318
+  expected_dtype: int64
+  notes: 'description: token rule: organism+taxid; unit: generic numeric rule; allowed_range:
+    numeric min/max rule'
+  review_status: auto_inferred
+  source_files:
+  - S4_253SRR_metadata
+  unit: unitless
+phenotype:
+  allowed_range: '{''cyan gray'', ''white'', ''wild type phenotype''}'
+  description: UNCLEAR - human review required
+  examples:
+  - wild type phenotype
+  - cyan gray
+  - white
+  expected_dtype: object
+  notes: 'description: unresolved abbreviation in column name: phenotype; unit: default
+    text rule; allowed_range: small categorical rule; review this field before final
+    reporting'
+  review_status: unclear
+  source_files:
+  - S4_253SRR_metadata
+  unit: n/a
+progenitor cell type:
+  allowed_range: '{''peripheral blood mononuclear cell''}'
+  description: Record type
+  examples:
+  - peripheral blood mononuclear cell
+  expected_dtype: object
+  notes: 'description: single-token rule: type; unit: default text rule; allowed_range:
+    small categorical rule; review this field before final reporting'
+  review_status: review_recommended
+  source_files:
+  - S4_253SRR_metadata
+  unit: n/a
+project name:
+  allowed_range: '{''What biological and operational factors determine the release
+    of antibiotic resistance genes from WWTPs?''}'
+  description: UNCLEAR - human review required
+  examples:
+  - What biological and operational factors determine the release of antibiotic resistance
+    genes from WWTPs?
+  expected_dtype: object
+  notes: 'description: no confident inference rule matched for: project name; unit:
+    default text rule; allowed_range: small categorical rule; review this field before
+    final reporting'
+  review_status: unclear
+  source_files:
+  - S4_253SRR_metadata
+  unit: n/a
+propagation:
+  allowed_range: UNCLEAR - human review required
+  description: UNCLEAR - human review required
+  examples: []
+  expected_dtype: float64
+  notes: 'description: no confident inference rule matched for: propagation; unit:
+    column has no non-null values; allowed_range: column has no non-null values; review
+    this field before final reporting'
+  review_status: unclear
+  source_files:
+  - S4_253SRR_metadata
+  unit: UNCLEAR - human review required
+public_date:
+  allowed_range: '[2015-05-28, 2022-09-29]'
+  description: Public release date
+  examples:
+  - '2020-06-22T08:50:51'
+  - '2020-06-22T08:47:04'
+  - '2022-09-23T14:24:46'
+  expected_dtype: datetime64[ns]
+  notes: 'description: token rule: public+date; unit: date rule; allowed_range: date
+    parsing rule'
+  review_status: auto_inferred
+  source_files:
+  - S4_253SRR_metadata
+  unit: ISO-8601
+public_filename:
+  allowed_range: free text / categorical (253 unique values)
+  description: Publicly available file name
+  examples:
+  - DRR146894.sralite
+  - DRR146906.sralite
+  - ERR1356733.lite
+  expected_dtype: object
+  notes: 'description: token rule: public+filename; unit: default text rule; allowed_range:
+    categorical summary rule'
+  review_status: auto_inferred
+  source_files:
+  - S4_253SRR_metadata
+  unit: n/a
+public_md5:
+  allowed_range: free text / categorical (253 unique values)
+  description: MD5 checksum for the public file
+  examples:
+  - 63bba36ca214b9854fbc32365e4beb03
+  - 046b600c2be6e62137c7f00c3f393f8c
+  - 8bb958249b0a858cc965028f3b930100
+  expected_dtype: object
+  notes: 'description: token rule: public+md5; unit: default text rule; allowed_range:
+    categorical summary rule'
+  review_status: auto_inferred
+  source_files:
+  - S4_253SRR_metadata
+  unit: n/a
+public_semantic_name:
+  allowed_range: '{''SRA Lite'', ''SRA Normalized'', ''cram'', ''fastq''}'
+  description: Public file format label
+  examples:
+  - SRA Lite
+  - cram
+  - fastq
+  expected_dtype: object
+  notes: 'description: token rule: public+semantic+name; unit: default text rule;
+    allowed_range: small categorical rule'
+  review_status: auto_inferred
+  source_files:
+  - S4_253SRR_metadata
+  unit: n/a
+public_size:
+  allowed_range: '[1.32465e+07, 2.35906e+10]'
+  description: Size of the public file
+  examples:
+  - 768455546
+  - 510664308
+  - 1258890567
+  expected_dtype: int64
+  notes: 'description: token rule: public+size; unit: generic numeric rule; allowed_range:
+    numeric min/max rule'
+  review_status: auto_inferred
+  source_files:
+  - S4_253SRR_metadata
+  unit: unitless
+public_sratoolkit:
+  allowed_range: '{0, 1}'
+  description: Flag indicating whether the file is accessible via SRA Toolkit
+  examples:
+  - 1
+  - 0
+  expected_dtype: int64
+  notes: 'description: exact-name rule; unit: binary flag rule; allowed_range: binary
+    flag rule'
+  review_status: auto_inferred
+  source_files:
+  - S4_253SRR_metadata
+  unit: unitless
+public_supertype:
+  allowed_range: '{''Original'', ''Primary ETL''}'
+  description: Public file distribution class
+  examples:
+  - Primary ETL
+  - Original
+  expected_dtype: object
+  notes: 'description: token rule: public+supertype; unit: default text rule; allowed_range:
+    small categorical rule'
+  review_status: auto_inferred
+  source_files:
+  - S4_253SRR_metadata
+  unit: n/a
+public_url:
+  allowed_range: free text / categorical (253 unique values)
+  description: UNCLEAR - human review required
+  examples:
+  - https://sra-downloadb.be-md.ncbi.nlm.nih.gov/sos5/sra-pub-zq-11/DRR000/146/DRR146894/DRR146894.sralite.1
+  - https://sra-downloadb.be-md.ncbi.nlm.nih.gov/sos5/sra-pub-zq-11/DRR000/146/DRR146906/DRR146906.sralite.1
+  - https://sra-downloadb.be-md.ncbi.nlm.nih.gov/sos1/sra-pub-zq-38/ERR001/1356/ERR1356733/ERR1356733.lite.2
+  expected_dtype: object
+  notes: 'description: no confident inference rule matched for: public_url; unit:
+    default text rule; allowed_range: categorical summary rule; review this field
+    before final reporting'
+  review_status: unclear
+  source_files:
+  - S4_253SRR_metadata
+  unit: n/a
+public_version:
+  allowed_range: '[1, 2]'
+  description: Version number of the public file
+  examples:
+  - 1
+  - 2
+  expected_dtype: int64
+  notes: 'description: token rule: public+version; unit: generic numeric rule; allowed_range:
+    numeric min/max rule'
+  review_status: auto_inferred
+  source_files:
+  - S4_253SRR_metadata
+  unit: unitless
+ref_biomaterial:
+  allowed_range: UNCLEAR - human review required
+  description: UNCLEAR - human review required
+  examples: []
+  expected_dtype: float64
+  notes: 'description: no confident inference rule matched for: ref_biomaterial; unit:
+    column has no non-null values; allowed_range: column has no non-null values; review
+    this field before final reporting'
+  review_status: unclear
+  source_files:
+  - S4_253SRR_metadata
+  unit: UNCLEAR - human review required
+rel_to_oxygen:
+  allowed_range: UNCLEAR - human review required
+  description: UNCLEAR - human review required
+  examples: []
+  expected_dtype: float64
+  notes: 'description: no confident inference rule matched for: rel_to_oxygen; unit:
+    column has no non-null values; allowed_range: column has no non-null values; review
+    this field before final reporting'
+  review_status: unclear
+  source_files:
+  - S4_253SRR_metadata
+  unit: UNCLEAR - human review required
+replicate:
+  allowed_range: free text / categorical (12 unique values)
+  description: UNCLEAR - human review required
+  examples:
+  - replicate = biological replicate 2
+  - '2'
+  - Biological replicate 3
+  expected_dtype: object
+  notes: 'description: no confident inference rule matched for: replicate; unit: default
+    text rule; allowed_range: categorical summary rule; review this field before final
+    reporting'
+  review_status: unclear
+  source_files:
+  - S4_253SRR_metadata
+  unit: n/a
+run_accession:
+  allowed_range: free text / categorical (253 unique values)
+  description: Sequencing run accession
+  examples:
+  - DRR146894
+  - DRR146906
+  - ERR1356733
+  expected_dtype: object
+  notes: 'description: exact-name rule; unit: default text rule; allowed_range: categorical
+    summary rule'
+  review_status: auto_inferred
+  source_files:
+  - S4_253SRR_metadata
+  unit: n/a
+run_alias:
+  allowed_range: free text / categorical (250 unique values)
+  description: Submitter-provided run alias
+  examples:
+  - DRR146894
+  - DRR146906
+  - ena-RUN-EAWAG-12-04-2016-14:33:33:720-42
+  expected_dtype: object
+  notes: 'description: token rule: run+alias; unit: default text rule; allowed_range:
+    categorical summary rule'
+  review_status: auto_inferred
+  source_files:
+  - S4_253SRR_metadata
+  unit: n/a
+run_total_bases:
+  allowed_range: '[5.16151e+07, 3.65976e+10]'
+  description: Total number of bases for the sequencing run
+  examples:
+  - 2830587418
+  - 1874533033
+  - 4813558449
+  expected_dtype: int64
+  notes: 'description: token rule: run+total+bases; unit: generic numeric rule; allowed_range:
+    numeric min/max rule'
+  review_status: auto_inferred
+  source_files:
+  - S4_253SRR_metadata
+  unit: unitless
+run_total_spots:
+  allowed_range: '[102819, 1.70209e+08]'
+  description: Total number of spots for the sequencing run
+  examples:
+  - 28025618
+  - 18559733
+  - 23928438
+  expected_dtype: int64
+  notes: 'description: token rule: run+total+spots; unit: generic numeric rule; allowed_range:
+    numeric min/max rule'
+  review_status: auto_inferred
+  source_files:
+  - S4_253SRR_metadata
+  unit: unitless
+samp_collect_device:
+  allowed_range: UNCLEAR - human review required
+  description: UNCLEAR - human review required
+  examples: []
+  expected_dtype: float64
+  notes: 'description: no confident inference rule matched for: samp_collect_device;
+    unit: column has no non-null values; allowed_range: column has no non-null values;
+    review this field before final reporting'
+  review_status: unclear
+  source_files:
+  - S4_253SRR_metadata
+  unit: UNCLEAR - human review required
+samp_mat_process:
+  allowed_range: '{''Total RNA was extracted from each individual using Trizol-Chloroform
+    extractions'', ''none''}'
+  description: UNCLEAR - human review required
+  examples:
+  - Total RNA was extracted from each individual using Trizol-Chloroform extractions
+  - none
+  expected_dtype: object
+  notes: 'description: no confident inference rule matched for: samp_mat_process;
+    unit: default text rule; allowed_range: small categorical rule; review this field
+    before final reporting'
+  review_status: unclear
+  source_files:
+  - S4_253SRR_metadata
+  unit: n/a
+samp_size:
+  allowed_range: '{''45 individuals''}'
+  description: UNCLEAR - human review required
+  examples:
+  - 45 individuals
+  expected_dtype: object
+  notes: 'description: no confident inference rule matched for: samp_size; unit: default
+    text rule; allowed_range: small categorical rule; review this field before final
+    reporting'
+  review_status: unclear
+  source_files:
+  - S4_253SRR_metadata
+  unit: n/a
+samp_volume:
+  allowed_range: '{''0.65 L'', ''0.7 L'', ''0.73 L'', ''0.76 L'', ''1.06 L'', ''1.59
+    L''}'
+  description: UNCLEAR - human review required
+  examples:
+  - 1.59 L
+  - 1.06 L
+  - 0.73 L
+  expected_dtype: object
+  notes: 'description: no confident inference rule matched for: samp_volume; unit:
+    default text rule; allowed_range: small categorical rule; review this field before
+    final reporting'
+  review_status: unclear
+  source_files:
+  - S4_253SRR_metadata
+  unit: n/a
+sample description:
+  allowed_range: '{''Total nucleic acid extraction from human feces''}'
+  description: Sample identifier
+  examples:
+  - Total nucleic acid extraction from human feces
+  expected_dtype: object
+  notes: 'description: single-token rule: sample; unit: default text rule; allowed_range:
+    small categorical rule; review this field before final reporting'
+  review_status: review_recommended
+  source_files:
+  - S4_253SRR_metadata
+  unit: n/a
+sample name:
+  allowed_range: '{''20730x94'', ''6bcb1c40-540d-11e6-9a3d-3c4a9275d6c8'', ''E-MTAB-6943:IgG-ACM_1,2,3'',
+    ''E-MTAB-7533:Sample 16'', ''U121''}'
+  description: Sample name
+  examples:
+  - U121
+  - E-MTAB-6943:IgG-ACM_1,2,3
+  - 20730x94
+  expected_dtype: object
+  notes: 'description: exact-name rule; unit: default text rule; allowed_range: small
+    categorical rule'
+  review_status: auto_inferred
+  source_files:
+  - S4_253SRR_metadata
+  unit: n/a
+sample_accession:
+  allowed_range: free text / categorical (247 unique values)
+  description: Sample accession identifier
+  examples:
+  - DRS074483
+  - DRS074495
+  - ERS1110349
+  expected_dtype: object
+  notes: 'description: exact-name rule; unit: default text rule; allowed_range: categorical
+    summary rule'
+  review_status: auto_inferred
+  source_files:
+  - S4_253SRR_metadata
+  unit: n/a
+sample_name:
+  allowed_range: '{''Sample_1086'', ''Sample_1235''}'
+  description: Sample name
+  examples:
+  - Sample_1086
+  - Sample_1235
+  expected_dtype: object
+  notes: 'description: exact-name rule; unit: default text rule; allowed_range: small
+    categorical rule'
+  review_status: auto_inferred
+  source_files:
+  - S4_253SRR_metadata
+  unit: n/a
+sample_number:
+  allowed_range: UNCLEAR - human review required
+  description: Sample identifier
+  examples: []
+  expected_dtype: float64
+  notes: 'description: single-token rule: sample; unit: column has no non-null values;
+    allowed_range: column has no non-null values; review this field before final reporting'
+  review_status: unclear
+  source_files:
+  - S4_253SRR_metadata
+  unit: UNCLEAR - human review required
+sample_source:
+  allowed_range: UNCLEAR - human review required
+  description: Sample identifier
+  examples: []
+  expected_dtype: float64
+  notes: 'description: single-token rule: sample; unit: column has no non-null values;
+    allowed_range: column has no non-null values; review this field before final reporting'
+  review_status: unclear
+  source_files:
+  - S4_253SRR_metadata
+  unit: UNCLEAR - human review required
+sample_timepoint:
+  allowed_range: '{''SF05''}'
+  description: Sample identifier
+  examples:
+  - SF05
+  expected_dtype: object
+  notes: 'description: single-token rule: sample; unit: default text rule; allowed_range:
+    small categorical rule; review this field before final reporting'
+  review_status: review_recommended
+  source_files:
+  - S4_253SRR_metadata
+  unit: n/a
+sample_title:
+  allowed_range: UNCLEAR - human review required
+  description: Sample title
+  examples: []
+  expected_dtype: float64
+  notes: 'description: exact-name rule; unit: column has no non-null values; allowed_range:
+    column has no non-null values; review this field before final reporting'
+  review_status: unclear
+  source_files:
+  - S4_253SRR_metadata
+  unit: UNCLEAR - human review required
+sample_type:
+  allowed_range: '{''2786_HFKKJALXX_L5'', ''cells'', ''single cell''}'
+  description: Sample identifier
+  examples:
+  - single cell
+  - cells
+  - 2786_HFKKJALXX_L5
+  expected_dtype: object
+  notes: 'description: single-token rule: sample; unit: default text rule; allowed_range:
+    small categorical rule; review this field before final reporting'
+  review_status: review_recommended
+  source_files:
+  - S4_253SRR_metadata
+  unit: n/a
+scientific_name:
+  allowed_range: '{''Homo sapiens'', ''soil metagenome'', ''viral metagenome''}'
+  description: Scientific name
+  examples:
+  - Homo sapiens
+  - viral metagenome
+  - soil metagenome
+  expected_dtype: object
+  notes: 'description: exact-name rule; unit: default text rule; allowed_range: small
+    categorical rule'
+  review_status: auto_inferred
+  source_files:
+  - S4_253SRR_metadata
+  unit: n/a
+season:
+  allowed_range: UNCLEAR - human review required
+  description: UNCLEAR - human review required
+  examples: []
+  expected_dtype: float64
+  notes: 'description: no confident inference rule matched for: season; unit: column
+    has no non-null values; allowed_range: column has no non-null values; review this
+    field before final reporting'
+  review_status: unclear
+  source_files:
+  - S4_253SRR_metadata
+  unit: UNCLEAR - human review required
+sequencing method:
+  allowed_range: '{''Illumina HiSeq''}'
+  description: Sequencing method
+  examples:
+  - Illumina HiSeq
+  expected_dtype: object
+  notes: 'description: token rule: sequencing+method; unit: default text rule; allowed_range:
+    small categorical rule'
+  review_status: auto_inferred
+  source_files:
+  - S4_253SRR_metadata
+  unit: n/a
+sequencing_machine:
+  allowed_range: '{''HiSeq 2500''}'
+  description: Sequencing machine
+  examples:
+  - HiSeq 2500
+  expected_dtype: object
+  notes: 'description: token rule: sequencing+machine; unit: default text rule; allowed_range:
+    small categorical rule'
+  review_status: auto_inferred
+  source_files:
+  - S4_253SRR_metadata
+  unit: n/a
+sequencing_method:
+  allowed_range: '{''Illumina PE 150x150'', ''Illumina Rapid Run''}'
+  description: Sequencing method
+  examples:
+  - Illumina PE 150x150
+  - Illumina Rapid Run
+  expected_dtype: object
+  notes: 'description: token rule: sequencing+method; unit: default text rule; allowed_range:
+    small categorical rule'
+  review_status: auto_inferred
+  source_files:
+  - S4_253SRR_metadata
+  unit: n/a
+sex:
+  allowed_range: '{''female'', ''male'', ''not collected'', ''not determined''}'
+  description: UNCLEAR - human review required
+  examples:
+  - female
+  - male
+  - not determined
+  expected_dtype: object
+  notes: 'description: no confident inference rule matched for: sex; unit: default
+    text rule; allowed_range: small categorical rule; review this field before final
+    reporting'
+  review_status: unclear
+  source_files:
+  - S4_253SRR_metadata
+  unit: n/a
+site_name:
+  allowed_range: '{''Macapa North (MCPN)'', ''Macapa South (MCPS)'', ''Obidos (OB)'',
+    ''Tapajos Surface (TAPS)''}'
+  description: UNCLEAR - human review required
+  examples:
+  - Tapajos Surface (TAPS)
+  - Obidos (OB)
+  - Macapa South (MCPS)
+  expected_dtype: object
+  notes: 'description: no confident inference rule matched for: site_name; unit: default
+    text rule; allowed_range: small categorical rule; review this field before final
+    reporting'
+  review_status: unclear
+  source_files:
+  - S4_253SRR_metadata
+  unit: n/a
+source_material_id:
+  allowed_range: UNCLEAR - human review required
+  description: UNCLEAR - human review required
+  examples: []
+  expected_dtype: float64
+  notes: 'description: no confident inference rule matched for: source_material_id;
+    unit: column has no non-null values; allowed_range: column has no non-null values;
+    review this field before final reporting'
+  review_status: unclear
+  source_files:
+  - S4_253SRR_metadata
+  unit: UNCLEAR - human review required
+source_name:
+  allowed_range: '{''Cortical thymic epithelial cells'', ''Leaf'', ''Medullary thymic
+    epithelial cells'', ''S2 cells'', ''Skin epithelial cells'', ''acute myeloid leukemia'',
+    ''stage 1: one week before water deficit'', ''whole body''}'
+  description: UNCLEAR - human review required
+  examples:
+  - S2 cells
+  - whole body
+  - 'stage 1: one week before water deficit'
+  expected_dtype: object
+  notes: 'description: no confident inference rule matched for: source_name; unit:
+    default text rule; allowed_range: small categorical rule; review this field before
+    final reporting'
+  review_status: unclear
+  source_files:
+  - S4_253SRR_metadata
+  unit: n/a
+specimen_voucher:
+  allowed_range: '{''TH-08-6182''}'
+  description: UNCLEAR - human review required
+  examples:
+  - TH-08-6182
+  expected_dtype: object
+  notes: 'description: no confident inference rule matched for: specimen_voucher;
+    unit: default text rule; allowed_range: small categorical rule; review this field
+    before final reporting'
+  review_status: unclear
+  source_files:
+  - S4_253SRR_metadata
+  unit: n/a
+std_norm_factor:
+  allowed_range: '[4217, 43832]'
+  description: UNCLEAR - human review required
+  examples:
+  - 10022.0
+  - 5713.0
+  - 4217.0
+  expected_dtype: float64
+  notes: 'description: no confident inference rule matched for: std_norm_factor; unit:
+    numeric column without confident semantic match; allowed_range: numeric min/max
+    rule; review this field before final reporting'
+  review_status: unclear
+  source_files:
+  - S4_253SRR_metadata
+  unit: UNCLEAR - human review required
+strain:
+  allowed_range: '{''C57BL/6'', ''MdSGHV'', ''fenpropathrin-resistant'', ''fenpropathrin-susceptible''}'
+  description: UNCLEAR - human review required
+  examples:
+  - MdSGHV
+  - fenpropathrin-susceptible
+  - fenpropathrin-resistant
+  expected_dtype: object
+  notes: 'description: no confident inference rule matched for: strain; unit: default
+    text rule; allowed_range: small categorical rule; review this field before final
+    reporting'
+  review_status: unclear
+  source_files:
+  - S4_253SRR_metadata
+  unit: n/a
+study_accession:
+  allowed_range: free text / categorical (69 unique values)
+  description: Study accession identifier
+  examples:
+  - DRP004413
+  - ERP014782
+  - ERP109502
+  expected_dtype: object
+  notes: 'description: exact-name rule; unit: default text rule; allowed_range: categorical
+    summary rule'
+  review_status: auto_inferred
+  source_files:
+  - S4_253SRR_metadata
+  unit: n/a
+study_title:
+  allowed_range: free text / categorical (69 unique values)
+  description: Study title
+  examples:
+  - 'Phylogeny of the spider mite sub-family Tetranychinae (Acari: Tetranychidae)
+    inferred from RNA-Seq data'
+  - Studying the presence and selection of antibiotic resistance genes
+  - Ago-RIP-Seq Analysis to Identify miR-375 Targets in Human Macrophages
+  expected_dtype: object
+  notes: 'description: token rule: study+title; unit: default text rule; allowed_range:
+    categorical summary rule'
+  review_status: auto_inferred
+  source_files:
+  - S4_253SRR_metadata
+  unit: n/a
+submitter id:
+  allowed_range: '{''20730x94'', ''6bcb1c40-540d-11e6-9a3d-3c4a9275d6c8'', ''E-MTAB-6943:IgG-ACM_1,2,3'',
+    ''E-MTAB-7533:Sample 16'', ''U121''}'
+  description: Submitter name
+  examples:
+  - U121
+  - E-MTAB-6943:IgG-ACM_1,2,3
+  - 20730x94
+  expected_dtype: object
+  notes: 'description: single-token rule: submitter; unit: default text rule; allowed_range:
+    small categorical rule; review this field before final reporting'
+  review_status: review_recommended
+  source_files:
+  - S4_253SRR_metadata
+  unit: n/a
+target_molecules:
+  allowed_range: '{''mRNA''}'
+  description: UNCLEAR - human review required
+  examples:
+  - mRNA
+  expected_dtype: object
+  notes: 'description: no confident inference rule matched for: target_molecules;
+    unit: default text rule; allowed_range: small categorical rule; review this field
+    before final reporting'
+  review_status: unclear
+  source_files:
+  - S4_253SRR_metadata
+  unit: n/a
+temp:
+  allowed_range: '{''AMBIENT''}'
+  description: UNCLEAR - human review required
+  examples:
+  - AMBIENT
+  expected_dtype: object
+  notes: 'description: unresolved abbreviation in column name: temp; unit: default
+    text rule; allowed_range: small categorical rule; review this field before final
+    reporting'
+  review_status: unclear
+  source_files:
+  - S4_253SRR_metadata
+  unit: n/a
+tissue:
+  allowed_range: free text / categorical (32 unique values)
+  description: UNCLEAR - human review required
+  examples:
+  - Trichomes from leaves
+  - stem in June 7
+  - skin
+  expected_dtype: object
+  notes: 'description: no confident inference rule matched for: tissue; unit: default
+    text rule; allowed_range: categorical summary rule; review this field before final
+    reporting'
+  review_status: unclear
+  source_files:
+  - S4_253SRR_metadata
+  unit: n/a
+total_size:
+  allowed_range: '[3.29977e+07, 4.05363e+10]'
+  description: UNCLEAR - human review required
+  examples:
+  - 1255865062
+  - 1145221599
+  - 2865073755
+  expected_dtype: int64
+  notes: 'description: no confident inference rule matched for: total_size; unit:
+    numeric column without confident semantic match; allowed_range: numeric min/max
+    rule; review this field before final reporting'
+  review_status: unclear
+  source_files:
+  - S4_253SRR_metadata
+  unit: UNCLEAR - human review required
+total_spots:
+  allowed_range: '[102819, 5.79302e+08]'
+  description: UNCLEAR - human review required
+  examples:
+  - 28025618
+  - 18559733
+  - 23928438
+  expected_dtype: int64
+  notes: 'description: no confident inference rule matched for: total_spots; unit:
+    numeric column without confident semantic match; allowed_range: numeric min/max
+    rule; review this field before final reporting'
+  review_status: unclear
+  source_files:
+  - S4_253SRR_metadata
+  unit: UNCLEAR - human review required
+treatment:
+  allowed_range: free text / categorical (79 unique values)
+  description: UNCLEAR - human review required
+  examples:
+  - mechanical wounding
+  - none
+  - Rehydration-3
+  expected_dtype: object
+  notes: 'description: no confident inference rule matched for: treatment; unit: default
+    text rule; allowed_range: categorical summary rule; review this field before final
+    reporting'
+  review_status: unclear
+  source_files:
+  - S4_253SRR_metadata
+  unit: n/a
+type_of_nucleic_acid:
+  allowed_range: UNCLEAR - human review required
+  description: Record type
+  examples: []
+  expected_dtype: float64
+  notes: 'description: single-token rule: type; unit: column has no non-null values;
+    allowed_range: column has no non-null values; review this field before final reporting'
+  review_status: unclear
+  source_files:
+  - S4_253SRR_metadata
+  unit: UNCLEAR - human review required
+wastewater/sludge environmental package:
+  allowed_range: '{''wastewater/sludge''}'
+  description: UNCLEAR - human review required
+  examples:
+  - wastewater/sludge
+  expected_dtype: object
+  notes: 'description: no confident inference rule matched for: wastewater/sludge
+    environmental package; unit: default text rule; allowed_range: small categorical
+    rule; review this field before final reporting'
+  review_status: unclear
+  source_files:
+  - S4_253SRR_metadata
+  unit: n/a
