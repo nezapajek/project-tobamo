@@ -184,7 +184,7 @@ species:
   unit: n/a
 training:
   allowed_range: '{0, 1}'
-  description: Training-set membership flag
+  description: Training-set membership flag (training 1, not in training 0)
   examples:
   - 1
   - 0
@@ -197,7 +197,7 @@ training:
   unit: unitless
 type:
   allowed_range: '{''outgroup'', ''tobamo''}'
-  description: Record type
+  description: group type
   examples:
   - outgroup
   - tobamo

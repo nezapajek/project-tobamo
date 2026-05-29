@@ -1,26 +1,26 @@
 age:
   allowed_range: free text / categorical (16 unique values)
-  description: UNCLEAR - human review required
+  description: age at the time of sampling; relevant scale depends on species and
+    study, e.g. could be seconds for amoebae or centuries for trees
   examples:
   - 60 days old plants
   - 3 years old
   - 1-year-old
   expected_dtype: object
-  notes: 'description: no confident inference rule matched for: age; unit: default
-    text rule; allowed_range: categorical summary rule; review this field before final
-    reporting'
-  review_status: unclear
+  notes: 'description: NCBI BioSample attribute; unit: default text rule; allowed_range:
+    categorical summary rule'
+  review_status: auto_inferred
   source_files:
   - S4_253SRR_metadata
   unit: n/a
 altitude:
   allowed_range: UNCLEAR - human review required
-  description: UNCLEAR - human review required
+  description: The altitude of the sample is the vertical distance between Earth's
+    surface above Sea Level and the sampled position in the air.
   examples: []
   expected_dtype: float64
-  notes: 'description: no confident inference rule matched for: altitude; unit: column
-    has no non-null values; allowed_range: column has no non-null values; review this
-    field before final reporting'
+  notes: 'description: NCBI BioSample attribute; unit: column has no non-null values;
+    allowed_range: column has no non-null values; review this field before final reporting'
   review_status: unclear
   source_files:
   - S4_253SRR_metadata
@@ -113,16 +113,15 @@ biomaterial_provider:
   allowed_range: '{''Carolina Biological Supply Company'', ''Hui-Ling Liao'', ''Mark
     Coggeshall, University of Missouri'', ''Prof. Dr. med Georg Bornkamm, HelmholtzZentrum
     Munich'', ''Sugar Research Australia''}'
-  description: UNCLEAR - human review required
+  description: name and address of the lab or PI, or a culture collection identifier
   examples:
   - Sugar Research Australia
   - Hui-Ling Liao
   - Mark Coggeshall, University of Missouri
   expected_dtype: object
-  notes: 'description: no confident inference rule matched for: biomaterial_provider;
-    unit: default text rule; allowed_range: small categorical rule; review this field
-    before final reporting'
-  review_status: unclear
+  notes: 'description: NCBI BioSample attribute; unit: default text rule; allowed_range:
+    small categorical rule'
+  review_status: auto_inferred
   source_files:
   - S4_253SRR_metadata
   unit: n/a
@@ -174,16 +173,15 @@ biosamplemodel:
 breed:
   allowed_range: '{''Missing'', ''bashibai sheep'', ''citrus'', ''not applicable'',
     ''not collected''}'
-  description: UNCLEAR - human review required
+  description: breed name - chiefly used in domesticated animals or plants
   examples:
   - bashibai sheep
   - Missing
   - not applicable
   expected_dtype: object
-  notes: 'description: no confident inference rule matched for: breed; unit: default
-    text rule; allowed_range: small categorical rule; review this field before final
-    reporting'
-  review_status: unclear
+  notes: 'description: NCBI BioSample attribute; unit: default text rule; allowed_range:
+    small categorical rule'
+  review_status: auto_inferred
   source_files:
   - S4_253SRR_metadata
   unit: n/a
@@ -202,40 +200,39 @@ broker name:
   unit: n/a
 cell type:
   allowed_range: '{''S2 cells'', ''macrophage''}'
-  description: Cell type
+  description: Type of cell of the sample or from which the sample was obtained.
   examples:
   - macrophage
   - S2 cells
   expected_dtype: object
-  notes: 'description: exact-name rule; unit: default text rule; allowed_range: small
-    categorical rule'
+  notes: 'description: NCBI BioSample attribute; unit: default text rule; allowed_range:
+    small categorical rule'
   review_status: auto_inferred
   source_files:
   - S4_253SRR_metadata
   unit: n/a
 cell_line:
   allowed_range: '{''P493-4'', ''P493-5'', ''P493-6''}'
-  description: UNCLEAR - human review required
+  description: Name of the cell line.
   examples:
   - P493-6
   - P493-5
   - P493-4
   expected_dtype: object
-  notes: 'description: no confident inference rule matched for: cell_line; unit: default
-    text rule; allowed_range: small categorical rule; review this field before final
-    reporting'
-  review_status: unclear
+  notes: 'description: NCBI BioSample attribute; unit: default text rule; allowed_range:
+    small categorical rule'
+  review_status: auto_inferred
   source_files:
   - S4_253SRR_metadata
   unit: n/a
 cell_type:
   allowed_range: '{''B-cell''}'
-  description: Cell type
+  description: Type of cell of the sample or from which the sample was obtained.
   examples:
   - B-cell
   expected_dtype: object
-  notes: 'description: exact-name rule; unit: default text rule; allowed_range: small
-    categorical rule'
+  notes: 'description: NCBI BioSample attribute; unit: default text rule; allowed_range:
+    small categorical rule'
   review_status: auto_inferred
   source_files:
   - S4_253SRR_metadata
@@ -243,16 +240,15 @@ cell_type:
 chlorophyll:
   allowed_range: '{''0.87 ug/L'', ''1.67 ug/L'', ''1.99 ug/L'', ''3.23 ug/L'', ''3.82
     ug/L''}'
-  description: UNCLEAR - human review required
+  description: concentration of chlorophyll
   examples:
   - 3.82 ug/L
   - 3.23 ug/L
   - 1.99 ug/L
   expected_dtype: object
-  notes: 'description: no confident inference rule matched for: chlorophyll; unit:
-    default text rule; allowed_range: small categorical rule; review this field before
-    final reporting'
-  review_status: unclear
+  notes: 'description: NCBI BioSample attribute; unit: default text rule; allowed_range:
+    small categorical rule'
+  review_status: auto_inferred
   source_files:
   - S4_253SRR_metadata
   unit: n/a
@@ -260,42 +256,55 @@ collected_by:
   allowed_range: '{''Dr Brett Williams'', ''Gretchen A Gerrish, James G Morin, Nicholai
     M Hensley, Trevor J Rivers, Todd H Oakley, Emily A Ellis'', ''NOTRE DAME'', ''QAAFI,
     University of Queensland''}'
-  description: UNCLEAR - human review required
+  description: Name of persons or institute who collected the sample
   examples:
   - Gretchen A Gerrish, James G Morin, Nicholai M Hensley, Trevor J Rivers, Todd H
     Oakley, Emily A Ellis
   - QAAFI, University of Queensland
   - NOTRE DAME
   expected_dtype: object
-  notes: 'description: no confident inference rule matched for: collected_by; unit:
-    default text rule; allowed_range: small categorical rule; review this field before
-    final reporting'
-  review_status: unclear
+  notes: 'description: NCBI BioSample attribute; unit: default text rule; allowed_range:
+    small categorical rule'
+  review_status: auto_inferred
   source_files:
   - S4_253SRR_metadata
   unit: n/a
 collection date:
   allowed_range: '[2014, 2014]'
-  description: Collection date
+  description: the date on which the sample was collected; date/time ranges are supported
+    by providing two dates from among the supported value formats, delimited by a
+    forward-slash character; collection times are supported by adding "T", then the
+    hour and minute after the date, and must be in Coordinated Universal Time (UTC),
+    otherwise known as "Zulu Time" (Z); supported formats include "DD-Mmm-YYYY", "Mmm-YYYY",
+    "YYYY" or ISO 8601 standard "YYYY-mm-dd", "YYYY-mm", "YYYY-mm-ddThh:mm:ss"; e.g.,
+    30-Oct-1990, Oct-1990, 1990, 1990-10-30, 1990-10,  21-Oct-1952/15-Feb-1953, 2015-10-11T17:53:03Z;
+    valid non-ISO dates will be automatically transformed to ISO format
   examples:
   - 2014.0
   expected_dtype: float64
-  notes: 'description: exact-name rule; unit: date rule; allowed_range: numeric min/max
-    rule'
+  notes: 'description: NCBI BioSample attribute; unit: date rule; allowed_range: numeric
+    min/max rule'
   review_status: auto_inferred
   source_files:
   - S4_253SRR_metadata
   unit: ISO-8601
 collection_date:
   allowed_range: '[2008-07-06, 2019-01-01]'
-  description: Collection date
+  description: the date on which the sample was collected; date/time ranges are supported
+    by providing two dates from among the supported value formats, delimited by a
+    forward-slash character; collection times are supported by adding "T", then the
+    hour and minute after the date, and must be in Coordinated Universal Time (UTC),
+    otherwise known as "Zulu Time" (Z); supported formats include "DD-Mmm-YYYY", "Mmm-YYYY",
+    "YYYY" or ISO 8601 standard "YYYY-mm-dd", "YYYY-mm", "YYYY-mm-ddThh:mm:ss"; e.g.,
+    30-Oct-1990, Oct-1990, 1990, 1990-10-30, 1990-10,  21-Oct-1952/15-Feb-1953, 2015-10-11T17:53:03Z;
+    valid non-ISO dates will be automatically transformed to ISO format
   examples:
   - '2014'
   - '2012'
   - '2013'
   expected_dtype: object
-  notes: 'description: exact-name rule; unit: date rule; allowed_range: date parsing
-    rule'
+  notes: 'description: NCBI BioSample attribute; unit: date rule; allowed_range: date
+    parsing rule'
   review_status: auto_inferred
   source_files:
   - S4_253SRR_metadata
@@ -316,89 +325,86 @@ common name:
 conduc:
   allowed_range: '{''15.9 uS/cm'', ''55.3 uS/cm'', ''56.2 uS/cm'', ''56.4 uS/cm'',
     ''61.5 uS/cm''}'
-  description: UNCLEAR - human review required
+  description: electrical conductivity of water
   examples:
   - 15.9 uS/cm
   - 56.4 uS/cm
   - 55.3 uS/cm
   expected_dtype: object
-  notes: 'description: unresolved abbreviation in column name: conduc; unit: default
-    text rule; allowed_range: small categorical rule; review this field before final
-    reporting'
-  review_status: unclear
+  notes: 'description: NCBI BioSample attribute; unit: default text rule; allowed_range:
+    small categorical rule'
+  review_status: auto_inferred
   source_files:
   - S4_253SRR_metadata
   unit: n/a
 cultivar:
   allowed_range: free text / categorical (14 unique values)
-  description: UNCLEAR - human review required
+  description: cultivar name - cultivated variety of plant
   examples:
   - Petit Havana
   - not applicable
   - Wonhwang
   expected_dtype: object
-  notes: 'description: unresolved abbreviation in column name: cultivar; unit: default
-    text rule; allowed_range: categorical summary rule; review this field before final
-    reporting'
-  review_status: unclear
+  notes: 'description: NCBI BioSample attribute; unit: default text rule; allowed_range:
+    categorical summary rule'
+  review_status: auto_inferred
   source_files:
   - S4_253SRR_metadata
   unit: n/a
 depth:
   allowed_range: '{''0.5 m'', ''10 m'', ''14 m'', ''33 m''}'
-  description: Read depth
+  description: Depth is defined as the vertical distance below surface, e.g. for sediment
+    or soil samples depth is measured from sediment or soil surface, respectivly.
+    Depth can be reported as an interval for subsurface samples.
   examples:
   - 0.5 m
   - 33 m
   - 10 m
   expected_dtype: object
-  notes: 'description: single-token rule: depth; unit: default text rule; allowed_range:
-    small categorical rule; review this field before final reporting'
-  review_status: review_recommended
+  notes: 'description: NCBI BioSample attribute; unit: default text rule; allowed_range:
+    small categorical rule'
+  review_status: auto_inferred
   source_files:
   - S4_253SRR_metadata
   unit: n/a
 dev_stage:
   allowed_range: free text / categorical (14 unique values)
-  description: UNCLEAR - human review required
+  description: Developmental stage at the time of sampling.
   examples:
   - V5
   - not applicable
   - 105DAF
   expected_dtype: object
-  notes: 'description: no confident inference rule matched for: dev_stage; unit: default
-    text rule; allowed_range: categorical summary rule; review this field before final
-    reporting'
-  review_status: unclear
+  notes: 'description: NCBI BioSample attribute; unit: default text rule; allowed_range:
+    categorical summary rule'
+  review_status: auto_inferred
   source_files:
   - S4_253SRR_metadata
   unit: n/a
 developmental stage:
   allowed_range: '{''adult''}'
-  description: UNCLEAR - human review required
+  description: Developmental stage at the time of sampling.
   examples:
   - adult
   expected_dtype: object
-  notes: 'description: no confident inference rule matched for: developmental stage;
-    unit: default text rule; allowed_range: small categorical rule; review this field
-    before final reporting'
-  review_status: unclear
+  notes: 'description: NCBI BioSample attribute; unit: default text rule; allowed_range:
+    small categorical rule'
+  review_status: auto_inferred
   source_files:
   - S4_253SRR_metadata
   unit: n/a
 diss_inorg_carb:
   allowed_range: '{''155 umol C/kg'', ''459 umol C/kg'', ''502 umol C/kg'', ''507
     umol C/kg'', ''551 umol C/kg''}'
-  description: UNCLEAR - human review required
+  description: dissolved inorganic carbon concentration
   examples:
   - 155 umol C/kg
   - 551 umol C/kg
   - 459 umol C/kg
   expected_dtype: object
-  notes: 'description: no confident inference rule matched for: diss_inorg_carb; unit:
-    default text rule; allowed_range: small categorical rule; review this field before
-    final reporting'
-  review_status: unclear
+  notes: 'description: NCBI BioSample attribute; unit: default text rule; allowed_range:
+    small categorical rule'
+  review_status: auto_inferred
   source_files:
   - S4_253SRR_metadata
   unit: n/a
@@ -445,27 +451,27 @@ ebi_url:
   unit: n/a
 ecotype:
   allowed_range: '{''B73'', ''mising'', ''not applicable'', ''not collected''}'
-  description: UNCLEAR - human review required
+  description: a population within a given species displaying genetically based, phenotypic
+    traits that reflect adaptation to a local habitat, e.g., Columbia
   examples:
   - not applicable
   - mising
   - not collected
   expected_dtype: object
-  notes: 'description: unresolved abbreviation in column name: ecotype; unit: default
-    text rule; allowed_range: small categorical rule; review this field before final
-    reporting'
-  review_status: unclear
+  notes: 'description: NCBI BioSample attribute; unit: default text rule; allowed_range:
+    small categorical rule'
+  review_status: auto_inferred
   source_files:
   - S4_253SRR_metadata
   unit: n/a
 elev:
   allowed_range: UNCLEAR - human review required
-  description: UNCLEAR - human review required
+  description: The elevation of the sampling site as measured by the vertical distance
+    from mean sea level.
   examples: []
   expected_dtype: float64
-  notes: 'description: unresolved abbreviation in column name: elev; unit: column
-    has no non-null values; allowed_range: column has no non-null values; review this
-    field before final reporting'
+  notes: 'description: NCBI BioSample attribute; unit: column has no non-null values;
+    allowed_range: column has no non-null values; review this field before final reporting'
   review_status: unclear
   source_files:
   - S4_253SRR_metadata
@@ -616,118 +622,133 @@ ena_fastq_http_2:
   unit: n/a
 env_biome:
   allowed_range: '{''ENVO:00009003'', ''river''}'
-  description: UNCLEAR - human review required
+  description: "Add terms that identify the major environment type(s) where your sample\
+    \ was collected. Recommend subclasses of biome [ENVO:00000428]. Multiple terms\
+    \ can be separated by one or more pipes e.g.: \_mangrove biome [ENVO:01000181]|estuarine\
+    \ biome [ENVO:01000020]\r\n"
   examples:
   - river
   - ENVO:00009003
   expected_dtype: object
-  notes: 'description: no confident inference rule matched for: env_biome; unit: default
-    text rule; allowed_range: small categorical rule; review this field before final
-    reporting'
-  review_status: unclear
+  notes: 'description: NCBI BioSample attribute; unit: NCBI categorical: {term}...;
+    allowed_range: small categorical rule'
+  review_status: auto_inferred
   source_files:
   - S4_253SRR_metadata
   unit: n/a
 env_broad_scale:
   allowed_range: UNCLEAR - human review required
-  description: UNCLEAR - human review required
+  description: "Add terms that identify the major environment type(s) where your sample\
+    \ was collected. Recommend subclasses of biome [ENVO:00000428]. Multiple terms\
+    \ can be separated by one or more pipes e.g.: \_mangrove biome [ENVO:01000181]|estuarine\
+    \ biome [ENVO:01000020]\r\n"
   examples: []
   expected_dtype: float64
-  notes: 'description: no confident inference rule matched for: env_broad_scale; unit:
-    column has no non-null values; allowed_range: column has no non-null values; review
-    this field before final reporting'
+  notes: 'description: NCBI BioSample attribute; unit: column has no non-null values;
+    allowed_range: column has no non-null values; review this field before final reporting'
   review_status: unclear
   source_files:
   - S4_253SRR_metadata
   unit: UNCLEAR - human review required
 env_feature:
   allowed_range: '{''Amazon River'', ''ENVO:2100002''}'
-  description: UNCLEAR - human review required
+  description: "Add terms that identify environmental entities having causal influences\
+    \ upon the entity at time of sampling, multiple terms can be separated by pipes,\
+    \ e.g.: \_shoreline [ENVO:00000486]|intertidal zone [ENVO:00000316]\r\n"
   examples:
   - Amazon River
   - ENVO:2100002
   expected_dtype: object
-  notes: 'description: no confident inference rule matched for: env_feature; unit:
-    default text rule; allowed_range: small categorical rule; review this field before
-    final reporting'
-  review_status: unclear
+  notes: 'description: NCBI BioSample attribute; unit: NCBI categorical: {term}...;
+    allowed_range: small categorical rule'
+  review_status: auto_inferred
   source_files:
   - S4_253SRR_metadata
   unit: n/a
 env_local_scale:
   allowed_range: UNCLEAR - human review required
-  description: UNCLEAR - human review required
+  description: "Add terms that identify environmental entities having causal influences\
+    \ upon the entity at time of sampling, multiple terms can be separated by pipes,\
+    \ e.g.: \_shoreline [ENVO:00000486]|intertidal zone [ENVO:00000316]\r\n"
   examples: []
   expected_dtype: float64
-  notes: 'description: no confident inference rule matched for: env_local_scale; unit:
-    column has no non-null values; allowed_range: column has no non-null values; review
-    this field before final reporting'
+  notes: 'description: NCBI BioSample attribute; unit: column has no non-null values;
+    allowed_range: column has no non-null values; review this field before final reporting'
   review_status: unclear
   source_files:
   - S4_253SRR_metadata
   unit: UNCLEAR - human review required
 env_material:
   allowed_range: '{''ENVO:00002003'', ''water''}'
-  description: UNCLEAR - human review required
+  description: "Add terms that identify the material displaced by the entity at time\
+    \ of sampling. Recommend subclasses of environmental material [ENVO:00010483].\
+    \ Multiple terms can be separated by pipes e.g.: estuarine water [ENVO:01000301]|estuarine\
+    \ mud [ENVO:00002160]\r\n"
   examples:
   - water
   - ENVO:00002003
   expected_dtype: object
-  notes: 'description: no confident inference rule matched for: env_material; unit:
-    default text rule; allowed_range: small categorical rule; review this field before
-    final reporting'
-  review_status: unclear
+  notes: 'description: NCBI BioSample attribute; unit: NCBI categorical: {term}...;
+    allowed_range: small categorical rule'
+  review_status: auto_inferred
   source_files:
   - S4_253SRR_metadata
   unit: n/a
 env_medium:
   allowed_range: UNCLEAR - human review required
-  description: UNCLEAR - human review required
+  description: "Add terms that identify the material displaced by the entity at time\
+    \ of sampling. Recommend subclasses of environmental material [ENVO:00010483].\
+    \ Multiple terms can be separated by pipes e.g.: estuarine water [ENVO:01000301]|estuarine\
+    \ mud [ENVO:00002160]\r\n"
   examples: []
   expected_dtype: float64
-  notes: 'description: no confident inference rule matched for: env_medium; unit:
-    column has no non-null values; allowed_range: column has no non-null values; review
-    this field before final reporting'
+  notes: 'description: NCBI BioSample attribute; unit: column has no non-null values;
+    allowed_range: column has no non-null values; review this field before final reporting'
   review_status: unclear
   source_files:
   - S4_253SRR_metadata
   unit: UNCLEAR - human review required
 environment (biome):
   allowed_range: '{''wastewater''}'
-  description: UNCLEAR - human review required
+  description: "Add terms that identify the major environment type(s) where your sample\
+    \ was collected. Recommend subclasses of biome [ENVO:00000428]. Multiple terms\
+    \ can be separated by one or more pipes e.g.: \_mangrove biome [ENVO:01000181]|estuarine\
+    \ biome [ENVO:01000020]\r\n"
   examples:
   - wastewater
   expected_dtype: object
-  notes: 'description: no confident inference rule matched for: environment (biome);
-    unit: default text rule; allowed_range: small categorical rule; review this field
-    before final reporting'
-  review_status: unclear
+  notes: 'description: NCBI BioSample attribute; unit: NCBI categorical: {term}...;
+    allowed_range: small categorical rule'
+  review_status: auto_inferred
   source_files:
   - S4_253SRR_metadata
   unit: n/a
 environment (feature):
   allowed_range: '{''wastewater treatment plant''}'
-  description: UNCLEAR - human review required
+  description: "Add terms that identify environmental entities having causal influences\
+    \ upon the entity at time of sampling, multiple terms can be separated by pipes,\
+    \ e.g.: \_shoreline [ENVO:00000486]|intertidal zone [ENVO:00000316]\r\n"
   examples:
   - wastewater treatment plant
   expected_dtype: object
-  notes: 'description: no confident inference rule matched for: environment (feature);
-    unit: default text rule; allowed_range: small categorical rule; review this field
-    before final reporting'
-  review_status: unclear
+  notes: 'description: NCBI BioSample attribute; unit: NCBI categorical: {term}...;
+    allowed_range: small categorical rule'
+  review_status: auto_inferred
   source_files:
   - S4_253SRR_metadata
   unit: n/a
 environment (material):
   allowed_range: '{''activated sludge''}'
-  description: UNCLEAR - human review required
+  description: "Add terms that identify the material displaced by the entity at time\
+    \ of sampling. Recommend subclasses of environmental material [ENVO:00010483].\
+    \ Multiple terms can be separated by pipes e.g.: estuarine water [ENVO:01000301]|estuarine\
+    \ mud [ENVO:00002160]\r\n"
   examples:
   - activated sludge
   expected_dtype: object
-  notes: 'description: no confident inference rule matched for: environment (material);
-    unit: default text rule; allowed_range: small categorical rule; review this field
-    before final reporting'
-  review_status: unclear
+  notes: 'description: NCBI BioSample attribute; unit: NCBI categorical: {term}...;
+    allowed_range: small categorical rule'
+  review_status: auto_inferred
   source_files:
   - S4_253SRR_metadata
   unit: n/a
@@ -909,41 +930,46 @@ gcp_url:
   unit: n/a
 genotype:
   allowed_range: '{''PB1+ Pi54'', ''Wildtype'', ''wild type genotype''}'
-  description: UNCLEAR - human review required
+  description: observed genotype
   examples:
   - wild type genotype
   - Wildtype
   - PB1+ Pi54
   expected_dtype: object
-  notes: 'description: no confident inference rule matched for: genotype; unit: default
-    text rule; allowed_range: small categorical rule; review this field before final
-    reporting'
-  review_status: unclear
+  notes: 'description: NCBI BioSample attribute; unit: NCBI categorical: {text}...;
+    allowed_range: small categorical rule'
+  review_status: auto_inferred
   source_files:
   - S4_253SRR_metadata
   unit: n/a
 geo_loc_name:
   allowed_range: free text / categorical (48 unique values)
-  description: Geographic location name
+  description: 'Geographical origin of the sample; use the appropriate name from this
+    list https://www.insdc.org/submitting-standards/geo_loc_name-qualifier-vocabulary/.
+    Use a colon to separate the country or ocean from more detailed information about
+    the location, eg "Canada: Vancouver" or "Germany: halfway down Zugspitze, Alps"'
   examples:
   - Japan:Gumma
   - Japan:Ibaraki
   - India
   expected_dtype: object
-  notes: 'description: token rule: geo+loc+name; unit: default text rule; allowed_range:
-    categorical summary rule'
+  notes: 'description: NCBI BioSample attribute; unit: NCBI categorical: {term}:{term}:{text}...;
+    allowed_range: categorical summary rule'
   review_status: auto_inferred
   source_files:
   - S4_253SRR_metadata
   unit: n/a
 geographic location (country and/or sea):
   allowed_range: '{''Switzerland''}'
-  description: 'Geographic location: country and/or sea'
+  description: 'Geographical origin of the sample; use the appropriate name from this
+    list https://www.insdc.org/submitting-standards/geo_loc_name-qualifier-vocabulary/.
+    Use a colon to separate the country or ocean from more detailed information about
+    the location, eg "Canada: Vancouver" or "Germany: halfway down Zugspitze, Alps"'
   examples:
   - Switzerland
   expected_dtype: object
-  notes: 'description: token rule: geographic+location+country+and+or+sea; unit: default
-    text rule; allowed_range: small categorical rule'
+  notes: 'description: NCBI BioSample attribute; unit: NCBI categorical: {term}:{term}:{text}...;
+    allowed_range: small categorical rule'
   review_status: auto_inferred
   source_files:
   - S4_253SRR_metadata
@@ -974,13 +1000,16 @@ geographic location (longitude):
   unit: degrees
 geographic_location:
   allowed_range: '{''not collected''}'
-  description: Sampling location
+  description: 'Geographical origin of the sample; use the appropriate name from this
+    list https://www.insdc.org/submitting-standards/geo_loc_name-qualifier-vocabulary/.
+    Use a colon to separate the country or ocean from more detailed information about
+    the location, eg "Canada: Vancouver" or "Germany: halfway down Zugspitze, Alps"'
   examples:
   - not collected
   expected_dtype: object
-  notes: 'description: single-token rule: location; unit: default text rule; allowed_range:
-    small categorical rule; review this field before final reporting'
-  review_status: review_recommended
+  notes: 'description: NCBI BioSample attribute; unit: NCBI categorical: {term}:{term}:{text}...;
+    allowed_range: small categorical rule'
+  review_status: auto_inferred
   source_files:
   - S4_253SRR_metadata
   unit: n/a
@@ -1017,54 +1046,58 @@ growth condition:
   unit: n/a
 host:
   allowed_range: free text / categorical (16 unique values)
-  description: Host organism
+  description: The natural (as opposed to laboratory) host to the organism from which
+    the sample was obtained. Use the full taxonomic name, eg, "Homo sapiens".
   examples:
   - Citrus
   - plant
   - not applicable
   expected_dtype: object
-  notes: 'description: single-token rule: host; unit: default text rule; allowed_range:
-    categorical summary rule; review this field before final reporting'
-  review_status: review_recommended
+  notes: 'description: NCBI BioSample attribute; unit: default text rule; allowed_range:
+    categorical summary rule'
+  review_status: auto_inferred
   source_files:
   - S4_253SRR_metadata
   unit: n/a
 host_subject_id:
   allowed_range: '[5.01762e+07, 5.01762e+07]'
-  description: Host subject identifier
+  description: 'a unique identifier by which each subject can be referred to, de-identified,
+    e.g. #131'
   examples:
   - 50176181.0
   expected_dtype: float64
-  notes: 'description: token rule: host+subject+id; unit: generic numeric rule; allowed_range:
-    numeric min/max rule'
+  notes: 'description: NCBI BioSample attribute; unit: NCBI categorical: {text}...;
+    allowed_range: numeric min/max rule'
   review_status: auto_inferred
   source_files:
   - S4_253SRR_metadata
-  unit: unitless
+  unit: n/a
 host_tissue_sampled:
   allowed_range: '{''Gut''}'
-  description: Host organism
+  description: name of body site where the sample was obtained from, such as a specific
+    organ or tissue, e.g., tongue, lung. For foundational model of anatomy ontology
+    (fma) (v 4.11.0) or Uber-anatomy ontology (UBERON) (v releases/2014-06-15) terms,
+    please see http://purl.bioontology.org/ontology/FMA or http://purl.bioontology.org/ontology/UBERON
   examples:
   - Gut
   expected_dtype: object
-  notes: 'description: single-token rule: host; unit: default text rule; allowed_range:
-    small categorical rule; review this field before final reporting'
-  review_status: review_recommended
+  notes: 'description: NCBI BioSample attribute; unit: default text rule; allowed_range:
+    small categorical rule'
+  review_status: auto_inferred
   source_files:
   - S4_253SRR_metadata
   unit: n/a
 identified_by:
   allowed_range: '{''Gretchen A Gerrish, James G Morin, Nicholai M Hensley, Trevor
     J Rivers, Todd H Oakley, Emily A Ellis''}'
-  description: UNCLEAR - human review required
+  description: name of the taxonomist who identified the specimen
   examples:
   - Gretchen A Gerrish, James G Morin, Nicholai M Hensley, Trevor J Rivers, Todd H
     Oakley, Emily A Ellis
   expected_dtype: object
-  notes: 'description: no confident inference rule matched for: identified_by; unit:
-    default text rule; allowed_range: small categorical rule; review this field before
-    final reporting'
-  review_status: unclear
+  notes: 'description: NCBI BioSample attribute; unit: default text rule; allowed_range:
+    small categorical rule'
+  review_status: auto_inferred
   source_files:
   - S4_253SRR_metadata
   unit: n/a
@@ -1197,89 +1230,97 @@ instrument_model_desc:
   unit: n/a
 investigation type:
   allowed_range: '{''metagenome''}'
-  description: Record type
+  description: Nucleic Acid Sequence Report is the root element of all MIGS/MIMS compliant
+    reports as standardized by Genomic Standards Consortium. This field is either
+    eukaryote,bacteria,virus,plasmid,organelle, metagenome, miens-survey or miens-culture
   examples:
   - metagenome
   expected_dtype: object
-  notes: 'description: single-token rule: type; unit: default text rule; allowed_range:
-    small categorical rule; review this field before final reporting'
-  review_status: review_recommended
+  notes: 'description: NCBI BioSample attribute; unit: default text rule; allowed_range:
+    small categorical rule'
+  review_status: auto_inferred
   source_files:
   - S4_253SRR_metadata
   unit: n/a
 investigation_type:
   allowed_range: '{''Non-selective Metatranscriptome''}'
-  description: Record type
+  description: Nucleic Acid Sequence Report is the root element of all MIGS/MIMS compliant
+    reports as standardized by Genomic Standards Consortium. This field is either
+    eukaryote,bacteria,virus,plasmid,organelle, metagenome, miens-survey or miens-culture
   examples:
   - Non-selective Metatranscriptome
   expected_dtype: object
-  notes: 'description: single-token rule: type; unit: default text rule; allowed_range:
-    small categorical rule; review this field before final reporting'
-  review_status: review_recommended
+  notes: 'description: NCBI BioSample attribute; unit: default text rule; allowed_range:
+    small categorical rule'
+  review_status: auto_inferred
   source_files:
   - S4_253SRR_metadata
   unit: n/a
 isol_growth_condt:
   allowed_range: UNCLEAR - human review required
-  description: UNCLEAR - human review required
+  description: PMID or url for isolation and growth condition specifications
   examples: []
   expected_dtype: float64
-  notes: 'description: no confident inference rule matched for: isol_growth_condt;
-    unit: column has no non-null values; allowed_range: column has no non-null values;
-    review this field before final reporting'
+  notes: 'description: NCBI BioSample attribute; unit: column has no non-null values;
+    allowed_range: column has no non-null values; review this field before final reporting'
   review_status: unclear
   source_files:
   - S4_253SRR_metadata
   unit: UNCLEAR - human review required
 isolate:
   allowed_range: free text / categorical (33 unique values)
-  description: Isolate identifier or isolate name
+  description: identification or description of the specific individual from which
+    this sample was obtained
   examples:
   - superior individual from Jiangxi, China
   - shoot tips of NILs-AA for RNA-seq at V5 stage
   - not applicable
   expected_dtype: object
-  notes: 'description: exact-name rule; unit: default text rule; allowed_range: categorical
-    summary rule'
+  notes: 'description: NCBI BioSample attribute; unit: default text rule; allowed_range:
+    categorical summary rule'
   review_status: auto_inferred
   source_files:
   - S4_253SRR_metadata
   unit: n/a
 isolation source:
   allowed_range: UNCLEAR - human review required
-  description: Material or environment from which the sample was isolated
+  description: Describes the physical, environmental and/or local geographical source
+    of the biological sample from which the sample was derived.
   examples: []
   expected_dtype: float64
-  notes: 'description: exact-name rule; unit: column has no non-null values; allowed_range:
-    column has no non-null values; review this field before final reporting'
+  notes: 'description: NCBI BioSample attribute; unit: column has no non-null values;
+    allowed_range: column has no non-null values; review this field before final reporting'
   review_status: unclear
   source_files:
   - S4_253SRR_metadata
   unit: UNCLEAR - human review required
 isolation_source:
   allowed_range: free text / categorical (20 unique values)
-  description: Material or environment from which the sample was isolated
+  description: Describes the physical, environmental and/or local geographical source
+    of the biological sample from which the sample was derived.
   examples:
   - Multiple species from Arthropoda
   - Missing
   - the riverside of the ancient canal in Zhenjiang city, China
   expected_dtype: object
-  notes: 'description: exact-name rule; unit: default text rule; allowed_range: categorical
-    summary rule'
+  notes: 'description: NCBI BioSample attribute; unit: default text rule; allowed_range:
+    categorical summary rule'
   review_status: auto_inferred
   source_files:
   - S4_253SRR_metadata
   unit: n/a
 lat_lon:
   allowed_range: formatted latitude/longitude pair
-  description: Latitude/longitude coordinate pair
+  description: The geographical coordinates of the location where the sample was collected.
+    Specify as degrees latitude and longitude in format "d[d.dddd] N|S d[dd.dddd]
+    W|E", eg, 38.98 N 77.11 W
   examples:
   - 32.13188 N 119.43396 E
   - 16.811598 N 88.082428 W
   - not applicable
   expected_dtype: object
-  notes: 'description: exact-name rule; unit: coordinate rule; allowed_range: coordinate-pair
-    rule'
+  notes: 'description: NCBI BioSample attribute; unit: coordinate rule; allowed_range:
+    coordinate-pair rule'
   review_status: auto_inferred
   source_files:
   - S4_253SRR_metadata
@@ -1453,14 +1494,13 @@ number_of_cells:
   unit: UNCLEAR - human review required
 organism part:
   allowed_range: '{''blood''}'
-  description: UNCLEAR - human review required
+  description: Type of tissue the sample was taken from.
   examples:
   - blood
   expected_dtype: object
-  notes: 'description: no confident inference rule matched for: organism part; unit:
-    default text rule; allowed_range: small categorical rule; review this field before
-    final reporting'
-  review_status: unclear
+  notes: 'description: NCBI BioSample attribute; unit: default text rule; allowed_range:
+    small categorical rule'
+  review_status: auto_inferred
   source_files:
   - S4_253SRR_metadata
   unit: n/a
@@ -1494,16 +1534,16 @@ organism_taxid:
   unit: unitless
 phenotype:
   allowed_range: '{''cyan gray'', ''white'', ''wild type phenotype''}'
-  description: UNCLEAR - human review required
+  description: Phenotype of sampled organism. For Phenotypic quality Ontology (PATO)
+    (v1.269) terms, please see http://bioportal.bioontology.org/visualize/44601
   examples:
   - wild type phenotype
   - cyan gray
   - white
   expected_dtype: object
-  notes: 'description: unresolved abbreviation in column name: phenotype; unit: default
-    text rule; allowed_range: small categorical rule; review this field before final
-    reporting'
-  review_status: unclear
+  notes: 'description: NCBI BioSample attribute; unit: NCBI categorical: {term}...;
+    allowed_range: small categorical rule'
+  review_status: auto_inferred
   source_files:
   - S4_253SRR_metadata
   unit: n/a
@@ -1522,26 +1562,26 @@ progenitor cell type:
 project name:
   allowed_range: '{''What biological and operational factors determine the release
     of antibiotic resistance genes from WWTPs?''}'
-  description: UNCLEAR - human review required
+  description: A concise name that describes the overall project, for example "Analysis
+    of sequences collected from Antarctic soil"
   examples:
   - What biological and operational factors determine the release of antibiotic resistance
     genes from WWTPs?
   expected_dtype: object
-  notes: 'description: no confident inference rule matched for: project name; unit:
-    default text rule; allowed_range: small categorical rule; review this field before
-    final reporting'
-  review_status: unclear
+  notes: 'description: NCBI BioSample attribute; unit: NCBI categorical: {text}...;
+    allowed_range: small categorical rule'
+  review_status: auto_inferred
   source_files:
   - S4_253SRR_metadata
   unit: n/a
 propagation:
   allowed_range: UNCLEAR - human review required
-  description: UNCLEAR - human review required
+  description: 'phage: lytic/lysogenic/temperate/obligately lytic; plasmid: incompatibility
+    group; eukaryote: asexual/sexual'
   examples: []
   expected_dtype: float64
-  notes: 'description: no confident inference rule matched for: propagation; unit:
-    column has no non-null values; allowed_range: column has no non-null values; review
-    this field before final reporting'
+  notes: 'description: NCBI BioSample attribute; unit: column has no non-null values;
+    allowed_range: column has no non-null values; review this field before final reporting'
   review_status: unclear
   source_files:
   - S4_253SRR_metadata
@@ -1672,24 +1712,25 @@ public_version:
   unit: unitless
 ref_biomaterial:
   allowed_range: UNCLEAR - human review required
-  description: UNCLEAR - human review required
+  description: Primary publication or genome report
   examples: []
   expected_dtype: float64
-  notes: 'description: no confident inference rule matched for: ref_biomaterial; unit:
-    column has no non-null values; allowed_range: column has no non-null values; review
-    this field before final reporting'
+  notes: 'description: NCBI BioSample attribute; unit: column has no non-null values;
+    allowed_range: column has no non-null values; review this field before final reporting'
   review_status: unclear
   source_files:
   - S4_253SRR_metadata
   unit: UNCLEAR - human review required
 rel_to_oxygen:
   allowed_range: UNCLEAR - human review required
-  description: UNCLEAR - human review required
+  description: Is this organism an aerobe, anaerobe? Please note that aerobic and
+    anaerobic are valid descriptors for microbial environments, eg, aerobe, anaerobe,
+    facultative, microaerophilic, microanaerobe, obligate aerobe, obligate anaerobe,
+    missing, not applicable, not collected, not provided, restricted access
   examples: []
   expected_dtype: float64
-  notes: 'description: no confident inference rule matched for: rel_to_oxygen; unit:
-    column has no non-null values; allowed_range: column has no non-null values; review
-    this field before final reporting'
+  notes: 'description: NCBI BioSample attribute; unit: column has no non-null values;
+    allowed_range: column has no non-null values; review this field before final reporting'
   review_status: unclear
   source_files:
   - S4_253SRR_metadata
@@ -1767,12 +1808,11 @@ run_total_spots:
   unit: unitless
 samp_collect_device:
   allowed_range: UNCLEAR - human review required
-  description: UNCLEAR - human review required
+  description: Method or device employed for collecting sample
   examples: []
   expected_dtype: float64
-  notes: 'description: no confident inference rule matched for: samp_collect_device;
-    unit: column has no non-null values; allowed_range: column has no non-null values;
-    review this field before final reporting'
+  notes: 'description: NCBI BioSample attribute; unit: column has no non-null values;
+    allowed_range: column has no non-null values; review this field before final reporting'
   review_status: unclear
   source_files:
   - S4_253SRR_metadata
@@ -1780,28 +1820,26 @@ samp_collect_device:
 samp_mat_process:
   allowed_range: '{''Total RNA was extracted from each individual using Trizol-Chloroform
     extractions'', ''none''}'
-  description: UNCLEAR - human review required
+  description: Processing applied to the sample during or after isolation
   examples:
   - Total RNA was extracted from each individual using Trizol-Chloroform extractions
   - none
   expected_dtype: object
-  notes: 'description: no confident inference rule matched for: samp_mat_process;
-    unit: default text rule; allowed_range: small categorical rule; review this field
-    before final reporting'
-  review_status: unclear
+  notes: 'description: NCBI BioSample attribute; unit: NCBI categorical: {text|term}...;
+    allowed_range: small categorical rule'
+  review_status: auto_inferred
   source_files:
   - S4_253SRR_metadata
   unit: n/a
 samp_size:
   allowed_range: '{''45 individuals''}'
-  description: UNCLEAR - human review required
+  description: Amount or size of sample (volume, mass or area) that was collected
   examples:
   - 45 individuals
   expected_dtype: object
-  notes: 'description: no confident inference rule matched for: samp_size; unit: default
-    text rule; allowed_range: small categorical rule; review this field before final
-    reporting'
-  review_status: unclear
+  notes: 'description: NCBI BioSample attribute; unit: default text rule; allowed_range:
+    small categorical rule'
+  review_status: auto_inferred
   source_files:
   - S4_253SRR_metadata
   unit: n/a
@@ -1836,14 +1874,14 @@ sample description:
 sample name:
   allowed_range: '{''20730x94'', ''6bcb1c40-540d-11e6-9a3d-3c4a9275d6c8'', ''E-MTAB-6943:IgG-ACM_1,2,3'',
     ''E-MTAB-7533:Sample 16'', ''U121''}'
-  description: Sample name
+  description: sample name in source database
   examples:
   - U121
   - E-MTAB-6943:IgG-ACM_1,2,3
   - 20730x94
   expected_dtype: object
-  notes: 'description: exact-name rule; unit: default text rule; allowed_range: small
-    categorical rule'
+  notes: 'description: NCBI BioSample attribute; unit: default text rule; allowed_range:
+    small categorical rule'
   review_status: auto_inferred
   source_files:
   - S4_253SRR_metadata
@@ -1864,13 +1902,13 @@ sample_accession:
   unit: n/a
 sample_name:
   allowed_range: '{''Sample_1086'', ''Sample_1235''}'
-  description: Sample name
+  description: sample name in source database
   examples:
   - Sample_1086
   - Sample_1235
   expected_dtype: object
-  notes: 'description: exact-name rule; unit: default text rule; allowed_range: small
-    categorical rule'
+  notes: 'description: NCBI BioSample attribute; unit: default text rule; allowed_range:
+    small categorical rule'
   review_status: auto_inferred
   source_files:
   - S4_253SRR_metadata
@@ -1922,15 +1960,16 @@ sample_title:
   unit: UNCLEAR - human review required
 sample_type:
   allowed_range: '{''2786_HFKKJALXX_L5'', ''cells'', ''single cell''}'
-  description: Sample identifier
+  description: Sample type, such as cell culture, mixed culture, tissue sample, whole
+    organism, single cell, metagenomic assembly
   examples:
   - single cell
   - cells
   - 2786_HFKKJALXX_L5
   expected_dtype: object
-  notes: 'description: single-token rule: sample; unit: default text rule; allowed_range:
-    small categorical rule; review this field before final reporting'
-  review_status: review_recommended
+  notes: 'description: NCBI BioSample attribute; unit: default text rule; allowed_range:
+    small categorical rule'
+  review_status: auto_inferred
   source_files:
   - S4_253SRR_metadata
   unit: n/a
@@ -1950,12 +1989,13 @@ scientific_name:
   unit: n/a
 season:
   allowed_range: UNCLEAR - human review required
-  description: UNCLEAR - human review required
+  description: The season when sampling occurred. Any of the four periods into which
+    the year is divided by the equinoxes and solstices. This field accepts terms listed
+    under season (http://purl.obolibrary.org/obo/NCIT_C94729)
   examples: []
   expected_dtype: float64
-  notes: 'description: no confident inference rule matched for: season; unit: column
-    has no non-null values; allowed_range: column has no non-null values; review this
-    field before final reporting'
+  notes: 'description: NCBI BioSample attribute; unit: column has no non-null values;
+    allowed_range: column has no non-null values; review this field before final reporting'
   review_status: unclear
   source_files:
   - S4_253SRR_metadata
@@ -1999,16 +2039,16 @@ sequencing_method:
   unit: n/a
 sex:
   allowed_range: '{''female'', ''male'', ''not collected'', ''not determined''}'
-  description: UNCLEAR - human review required
+  description: physical sex of sampled organism
   examples:
   - female
   - male
   - not determined
   expected_dtype: object
-  notes: 'description: no confident inference rule matched for: sex; unit: default
-    text rule; allowed_range: small categorical rule; review this field before final
-    reporting'
-  review_status: unclear
+  notes: 'description: NCBI BioSample attribute; unit: NCBI categorical: ['''', ''male'',
+    ''female'', ''pooled male and female'', ''...; allowed_range: small categorical
+    rule'
+  review_status: auto_inferred
   source_files:
   - S4_253SRR_metadata
   unit: n/a
@@ -2030,12 +2070,13 @@ site_name:
   unit: n/a
 source_material_id:
   allowed_range: UNCLEAR - human review required
-  description: UNCLEAR - human review required
+  description: unique identifier assigned to a material sample used for extracting
+    nucleic acids, and subsequent sequencing. The identifier can refer either to the
+    original material collected or to any derived sub-samples.
   examples: []
   expected_dtype: float64
-  notes: 'description: no confident inference rule matched for: source_material_id;
-    unit: column has no non-null values; allowed_range: column has no non-null values;
-    review this field before final reporting'
+  notes: 'description: NCBI BioSample attribute; unit: column has no non-null values;
+    allowed_range: column has no non-null values; review this field before final reporting'
   review_status: unclear
   source_files:
   - S4_253SRR_metadata
@@ -2044,29 +2085,38 @@ source_name:
   allowed_range: '{''Cortical thymic epithelial cells'', ''Leaf'', ''Medullary thymic
     epithelial cells'', ''S2 cells'', ''Skin epithelial cells'', ''acute myeloid leukemia'',
     ''stage 1: one week before water deficit'', ''whole body''}'
-  description: UNCLEAR - human review required
+  description: Sample source name or description
   examples:
   - S2 cells
   - whole body
   - 'stage 1: one week before water deficit'
   expected_dtype: object
-  notes: 'description: no confident inference rule matched for: source_name; unit:
-    default text rule; allowed_range: small categorical rule; review this field before
-    final reporting'
-  review_status: unclear
+  notes: 'description: NCBI BioSample attribute; unit: default text rule; allowed_range:
+    small categorical rule'
+  review_status: auto_inferred
   source_files:
   - S4_253SRR_metadata
   unit: n/a
 specimen_voucher:
   allowed_range: '{''TH-08-6182''}'
-  description: UNCLEAR - human review required
+  description: 'Identifier for the physical specimen. Use format: "[<institution-code>:[<collection-code>:]]<specimen_id>",
+    eg, "UAM:Mamm:52179". Intended as a reference to the physical specimen that remains
+    after it was analyzed. If the specimen was destroyed in the process of analysis,
+    electronic images (e-vouchers) are an adequate substitute for a physical voucher
+    specimen. Ideally the specimens will be deposited in a curated museum, herbarium,
+    or frozen tissue collection, but often they will remain in a personal or laboratory
+    collection for some time before they are deposited in a curated collection. There
+    are three forms of specimen_voucher qualifiers. If the text of the qualifier includes
+    one or more colons it is a ''structured voucher''. Structured vouchers include
+    institution-codes (and optional collection-codes) taken from a controlled vocabulary
+    maintained by the INSDC that denotes the museum or herbarium collection where
+    the specimen resides, please visit: http://www.insdc.org/controlled-vocabulary-specimenvoucher-qualifier.'
   examples:
   - TH-08-6182
   expected_dtype: object
-  notes: 'description: no confident inference rule matched for: specimen_voucher;
-    unit: default text rule; allowed_range: small categorical rule; review this field
-    before final reporting'
-  review_status: unclear
+  notes: 'description: NCBI BioSample attribute; unit: default text rule; allowed_range:
+    small categorical rule'
+  review_status: auto_inferred
   source_files:
   - S4_253SRR_metadata
   unit: n/a
@@ -2087,16 +2137,15 @@ std_norm_factor:
   unit: UNCLEAR - human review required
 strain:
   allowed_range: '{''C57BL/6'', ''MdSGHV'', ''fenpropathrin-resistant'', ''fenpropathrin-susceptible''}'
-  description: UNCLEAR - human review required
+  description: microbial or eukaryotic strain name
   examples:
   - MdSGHV
   - fenpropathrin-susceptible
   - fenpropathrin-resistant
   expected_dtype: object
-  notes: 'description: no confident inference rule matched for: strain; unit: default
-    text rule; allowed_range: small categorical rule; review this field before final
-    reporting'
-  review_status: unclear
+  notes: 'description: NCBI BioSample attribute; unit: default text rule; allowed_range:
+    small categorical rule'
+  review_status: auto_inferred
   source_files:
   - S4_253SRR_metadata
   unit: n/a
@@ -2159,29 +2208,27 @@ target_molecules:
   unit: n/a
 temp:
   allowed_range: '{''AMBIENT''}'
-  description: UNCLEAR - human review required
+  description: temperature of the sample at time of sampling
   examples:
   - AMBIENT
   expected_dtype: object
-  notes: 'description: unresolved abbreviation in column name: temp; unit: default
-    text rule; allowed_range: small categorical rule; review this field before final
-    reporting'
-  review_status: unclear
+  notes: 'description: NCBI BioSample attribute; unit: default text rule; allowed_range:
+    small categorical rule'
+  review_status: auto_inferred
   source_files:
   - S4_253SRR_metadata
   unit: n/a
 tissue:
   allowed_range: free text / categorical (32 unique values)
-  description: UNCLEAR - human review required
+  description: Type of tissue the sample was taken from.
   examples:
   - Trichomes from leaves
   - stem in June 7
   - skin
   expected_dtype: object
-  notes: 'description: no confident inference rule matched for: tissue; unit: default
-    text rule; allowed_range: categorical summary rule; review this field before final
-    reporting'
-  review_status: unclear
+  notes: 'description: NCBI BioSample attribute; unit: default text rule; allowed_range:
+    categorical summary rule'
+  review_status: auto_inferred
   source_files:
   - S4_253SRR_metadata
   unit: n/a

@@ -13,7 +13,7 @@ assembler:
   unit: n/a
 cluster_membership:
   allowed_range: free text / categorical (56 unique values)
-  description: UNCLEAR - human review required
+  description: cluster membership identifier
   examples:
   - Cluster_2
   - Cluster_4
@@ -22,33 +22,40 @@ cluster_membership:
   notes: 'description: no confident inference rule matched for: cluster_membership;
     unit: default text rule; allowed_range: categorical summary rule; review this
     field before final reporting'
-  review_status: unclear
+  review_status: review completed
   source_files:
   - S5_510discovered_contigs
   unit: n/a
 cluster_representative:
   allowed_range: '{0, 1}'
-  description: UNCLEAR - human review required
+  description: cluster representative flag
   examples:
   - 1.0
   expected_dtype: float64
   notes: 'description: no confident inference rule matched for: cluster_representative;
     unit: binary flag rule; allowed_range: binary flag rule; review this field before
     final reporting'
-  review_status: unclear
+  review_status: review completed
   source_files:
   - S5_510discovered_contigs
   unit: unitless
 collection_date:
   allowed_range: '[2008-07-06, 2019-01-01]'
-  description: Collection date
+  description: the date on which the sample was collected; date/time ranges are supported
+    by providing two dates from among the supported value formats, delimited by a
+    forward-slash character; collection times are supported by adding "T", then the
+    hour and minute after the date, and must be in Coordinated Universal Time (UTC),
+    otherwise known as "Zulu Time" (Z); supported formats include "DD-Mmm-YYYY", "Mmm-YYYY",
+    "YYYY" or ISO 8601 standard "YYYY-mm-dd", "YYYY-mm", "YYYY-mm-ddThh:mm:ss"; e.g.,
+    30-Oct-1990, Oct-1990, 1990, 1990-10-30, 1990-10,  21-Oct-1952/15-Feb-1953, 2015-10-11T17:53:03Z;
+    valid non-ISO dates will be automatically transformed to ISO format
   examples:
   - '2015'
   - '2011-05-08'
   - '2016'
   expected_dtype: object
-  notes: 'description: exact-name rule; unit: date rule; allowed_range: date parsing
-    rule'
+  notes: 'description: NCBI BioSample attribute; unit: date rule; allowed_range: date
+    parsing rule'
   review_status: auto_inferred
   source_files:
   - S5_510discovered_contigs
@@ -83,7 +90,7 @@ contig_length:
   unit: bp
 corresponding_srr:
   allowed_range: free text / categorical (131 unique values)
-  description: UNCLEAR - human review required
+  description: corresponding SRA Run accession identifier
   examples:
   - SRR5087336
   - SRR7288019
@@ -92,21 +99,24 @@ corresponding_srr:
   notes: 'description: no confident inference rule matched for: corresponding_srr;
     unit: default text rule; allowed_range: categorical summary rule; review this
     field before final reporting'
-  review_status: unclear
+  review_status: review completed
   source_files:
   - S5_510discovered_contigs
   unit: n/a
 country:
   allowed_range: free text / categorical (44 unique values)
-  description: Country of origin
+  description: 'Geographical origin of the sample; use the appropriate name from this
+    list https://www.insdc.org/submitting-standards/geo_loc_name-qualifier-vocabulary/.
+    Use a colon to separate the country or ocean from more detailed information about
+    the location, eg "Canada: Vancouver" or "Germany: halfway down Zugspitze, Alps"'
   examples:
   - Germany
   - China:Jiangsu
   - 'Brazil: Amazon River'
   expected_dtype: object
-  notes: 'description: single-token rule: country; unit: default text rule; allowed_range:
-    categorical summary rule; review this field before final reporting'
-  review_status: review_recommended
+  notes: 'description: NCBI BioSample attribute; unit: NCBI categorical: {term}:{term}:{text}...;
+    allowed_range: categorical summary rule'
+  review_status: auto_inferred
   source_files:
   - S5_510discovered_contigs
   unit: n/a
@@ -182,7 +192,7 @@ first_blastx_hit_name_accession:
   unit: n/a
 first_blastx_hit_protein:
   allowed_range: free text / categorical (212 unique values)
-  description: UNCLEAR - human review required
+  description: First blastx hit protein result
   examples:
   - RNA-dependent RNA polymerase [Astegopteryx formosana nege-like virus 1]
   - 184 kDa replicase, partial [Tomato mosaic virus]
@@ -191,7 +201,7 @@ first_blastx_hit_protein:
   notes: 'description: no confident inference rule matched for: first_blastx_hit_protein;
     unit: default text rule; allowed_range: categorical summary rule; review this
     field before final reporting'
-  review_status: unclear
+  review_status: review completed
   source_files:
   - S5_510discovered_contigs
   unit: n/a
@@ -225,7 +235,7 @@ first_diamond_blastx_hit_identity_percent:
   unit: '%'
 first_diamond_blastx_hit_name:
   allowed_range: free text / categorical (40 unique values)
-  description: UNCLEAR - human review required
+  description: first diamond blastx hit name
   examples:
   - Viruses; Riboviria
   - Viruses; Riboviria; Orthornavirae; Kitrinoviricota; Alsuviricetes; Martellivirales;
@@ -235,7 +245,7 @@ first_diamond_blastx_hit_name:
   notes: 'description: no confident inference rule matched for: first_diamond_blastx_hit_name;
     unit: default text rule; allowed_range: categorical summary rule; review this
     field before final reporting'
-  review_status: unclear
+  review_status: review completed
   source_files:
   - S5_510discovered_contigs
   unit: n/a
@@ -269,7 +279,8 @@ ground_truth_category:
   unit: n/a
 known_or_potentially_novel_tobamovirus:
   allowed_range: '{0, 1}'
-  description: UNCLEAR - human review required
+  description: flag indicating whether the contig is a known or potentially novel tobamovirus
+   (1) or not (0)
   examples:
   - false
   - true
@@ -277,7 +288,7 @@ known_or_potentially_novel_tobamovirus:
   notes: 'description: no confident inference rule matched for: known_or_potentially_novel_tobamovirus;
     unit: binary flag rule; allowed_range: binary flag rule; review this field before
     final reporting'
-  review_status: unclear
+  review_status: review completed
   source_files:
   - S5_510discovered_contigs
   unit: unitless
@@ -328,7 +339,7 @@ notes:
   unit: n/a
 orf1_complete:
   allowed_range: '{0, 1}'
-  description: UNCLEAR - human review required
+  description: flag indicating whether the contig is complete (1) or not (0)
   examples:
   - 0.0
   - 1.0
@@ -336,7 +347,7 @@ orf1_complete:
   notes: 'description: unresolved abbreviation in column name: orf1_complete; unit:
     binary flag rule; allowed_range: binary flag rule; review this field before final
     reporting'
-  review_status: unclear
+  review_status: review completed
   source_files:
   - S5_510discovered_contigs
   unit: unitless
@@ -356,7 +367,7 @@ orf1_length:
   unit: bp
 orf1_partial:
   allowed_range: '{0, 1}'
-  description: UNCLEAR - human review required
+  description: flag indicating whether the contig is partial (1) or not (0)
   examples:
   - 0.0
   - 1.0
@@ -364,7 +375,7 @@ orf1_partial:
   notes: 'description: unresolved abbreviation in column name: orf1_partial; unit:
     binary flag rule; allowed_range: binary flag rule; review this field before final
     reporting'
-  review_status: unclear
+  review_status: review completed
   source_files:
   - S5_510discovered_contigs
   unit: unitless
@@ -396,7 +407,7 @@ orf1_stop:
   unit: bp
 orf1_tree_representative:
   allowed_range: '{0, 1}'
-  description: UNCLEAR - human review required
+  description: flag indicating whether the contig is a tree representative (1) or not (0)
   examples:
   - 0.0
   - 1.0
@@ -404,13 +415,13 @@ orf1_tree_representative:
   notes: 'description: unresolved abbreviation in column name: orf1_tree_representative;
     unit: binary flag rule; allowed_range: binary flag rule; review this field before
     final reporting'
-  review_status: unclear
+  review_status: review completed
   source_files:
   - S5_510discovered_contigs
   unit: unitless
 orf2_rdrp_complete:
   allowed_range: '{0, 1}'
-  description: UNCLEAR - human review required
+  description: flag indicating whether the contig is complete (1) or not (0)
   examples:
   - 0.0
   - 1.0
@@ -418,7 +429,7 @@ orf2_rdrp_complete:
   notes: 'description: unresolved abbreviation in column name: orf2_rdrp_complete;
     unit: binary flag rule; allowed_range: binary flag rule; review this field before
     final reporting'
-  review_status: unclear
+  review_status: review completed
   source_files:
   - S5_510discovered_contigs
   unit: unitless
@@ -438,7 +449,7 @@ orf2_rdrp_length:
   unit: bp
 orf2_rdrp_partial:
   allowed_range: '{0, 1}'
-  description: UNCLEAR - human review required
+  description: flag indicating whether the contig is partial (1) or not (0)
   examples:
   - 0.0
   - 1.0
@@ -446,7 +457,7 @@ orf2_rdrp_partial:
   notes: 'description: unresolved abbreviation in column name: orf2_rdrp_partial;
     unit: binary flag rule; allowed_range: binary flag rule; review this field before
     final reporting'
-  review_status: unclear
+  review_status: review completed
   source_files:
   - S5_510discovered_contigs
   unit: unitless
@@ -478,7 +489,7 @@ orf2_stop:
   unit: bp
 orf2_tree_representative:
   allowed_range: '{0, 1}'
-  description: UNCLEAR - human review required
+  description: flag indicating whether the contig is a tree representative (1) or not (0)
   examples:
   - 0.0
   - 1.0
@@ -486,13 +497,13 @@ orf2_tree_representative:
   notes: 'description: unresolved abbreviation in column name: orf2_tree_representative;
     unit: binary flag rule; allowed_range: binary flag rule; review this field before
     final reporting'
-  review_status: unclear
+  review_status: review completed
   source_files:
   - S5_510discovered_contigs
   unit: unitless
 orf3_mp_complete:
   allowed_range: '{0, 1}'
-  description: UNCLEAR - human review required
+  description: flag indicating whether the contig is complete (1) or not (0)
   examples:
   - 0.0
   - 1.0
@@ -500,7 +511,7 @@ orf3_mp_complete:
   notes: 'description: unresolved abbreviation in column name: orf3_mp_complete; unit:
     binary flag rule; allowed_range: binary flag rule; review this field before final
     reporting'
-  review_status: unclear
+  review_status: review completed
   source_files:
   - S5_510discovered_contigs
   unit: unitless
@@ -520,7 +531,7 @@ orf3_mp_length:
   unit: bp
 orf3_mp_partial:
   allowed_range: '{0, 1}'
-  description: UNCLEAR - human review required
+  description: flag indicating whether the contig is partial (1) or not (0)
   examples:
   - 0.0
   - 1.0
@@ -528,7 +539,7 @@ orf3_mp_partial:
   notes: 'description: unresolved abbreviation in column name: orf3_mp_partial; unit:
     binary flag rule; allowed_range: binary flag rule; review this field before final
     reporting'
-  review_status: unclear
+  review_status: review completed
   source_files:
   - S5_510discovered_contigs
   unit: unitless
@@ -560,7 +571,7 @@ orf3_stop:
   unit: bp
 orf3_tree_representative:
   allowed_range: '{0, 1}'
-  description: UNCLEAR - human review required
+  description: flag indicating whether the contig is a tree representative (1) or not (0)
   examples:
   - 0.0
   - 1.0
@@ -568,13 +579,13 @@ orf3_tree_representative:
   notes: 'description: unresolved abbreviation in column name: orf3_tree_representative;
     unit: binary flag rule; allowed_range: binary flag rule; review this field before
     final reporting'
-  review_status: unclear
+  review_status: review completed
   source_files:
   - S5_510discovered_contigs
   unit: unitless
 orf4_cp_complete:
   allowed_range: '{0, 1}'
-  description: UNCLEAR - human review required
+  description: flag indicating whether the contig is complete (1) or not (0)
   examples:
   - 1.0
   - 0.0
@@ -582,7 +593,7 @@ orf4_cp_complete:
   notes: 'description: unresolved abbreviation in column name: orf4_cp_complete; unit:
     binary flag rule; allowed_range: binary flag rule; review this field before final
     reporting'
-  review_status: unclear
+  review_status: review completed
   source_files:
   - S5_510discovered_contigs
   unit: unitless
@@ -602,7 +613,7 @@ orf4_cp_length:
   unit: bp
 orf4_cp_partial:
   allowed_range: '{0, 1}'
-  description: UNCLEAR - human review required
+  description: flag indicating whether the contig is partial (1) or not (0)
   examples:
   - 0.0
   - 1.0
@@ -610,7 +621,7 @@ orf4_cp_partial:
   notes: 'description: unresolved abbreviation in column name: orf4_cp_partial; unit:
     binary flag rule; allowed_range: binary flag rule; review this field before final
     reporting'
-  review_status: unclear
+  review_status: review completed
   source_files:
   - S5_510discovered_contigs
   unit: unitless
@@ -642,7 +653,7 @@ orf4_stop:
   unit: bp
 orf4_tree_representative:
   allowed_range: '{0, 1}'
-  description: UNCLEAR - human review required
+  description: flag indicating whether the contig is a tree representative (1) or not (0)
   examples:
   - 0.0
   - 1.0
@@ -650,7 +661,7 @@ orf4_tree_representative:
   notes: 'description: unresolved abbreviation in column name: orf4_tree_representative;
     unit: binary flag rule; allowed_range: binary flag rule; review this field before
     final reporting'
-  review_status: unclear
+  review_status: review completed
   source_files:
   - S5_510discovered_contigs
   unit: unitless

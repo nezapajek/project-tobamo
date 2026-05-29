@@ -22,7 +22,7 @@ coverage:
   expected_dtype: float64
   notes: 'description: single-token rule: coverage; unit: coverage rule; allowed_range:
     numeric min/max rule; review this field before final reporting'
-  review_status: review_recommended
+  review_status: review completed
   source_files:
   - S3_serratus
   unit: unitless
@@ -36,7 +36,7 @@ date:
   expected_dtype: datetime64[ns]
   notes: 'description: single-token rule: date; unit: date rule; allowed_range: date
     parsing rule; review this field before final reporting'
-  review_status: review_recommended
+  review_status: review completed
   source_files:
   - S3_serratus
   unit: ISO-8601
@@ -62,7 +62,7 @@ file:
   expected_dtype: object
   notes: 'description: single-token rule: file; unit: default text rule; allowed_range:
     categorical summary rule; review this field before final reporting'
-  review_status: review_recommended
+  review_status: review completed
   source_files:
   - S3_serratus
   unit: n/a
@@ -76,7 +76,7 @@ lat:
   expected_dtype: float64
   notes: 'description: single-token rule: lat; unit: coordinate rule; allowed_range:
     latitude bounds; review this field before final reporting'
-  review_status: review_recommended
+  review_status: review completed
   source_files:
   - S3_serratus
   unit: degrees
@@ -90,7 +90,7 @@ lng:
   expected_dtype: float64
   notes: 'description: single-token rule: lng; unit: coordinate rule; allowed_range:
     longitude bounds; review this field before final reporting'
-  review_status: review_recommended
+  review_status: review completed
   source_files:
   - S3_serratus
   unit: degrees
@@ -104,7 +104,7 @@ nickname:
   expected_dtype: object
   notes: 'description: single-token rule: nickname; unit: default text rule; allowed_range:
     categorical summary rule; review this field before final reporting'
-  review_status: review_recommended
+  review_status: review completed
   source_files:
   - S3_serratus
   unit: n/a
@@ -166,16 +166,15 @@ run_id:
   unit: n/a
 sOTU:
   allowed_range: free text / categorical (1165 unique values)
-  description: UNCLEAR - human review required
+  description: sub-operational taxonomic unit identifier
   examples:
   - u5183
   - u88410
   - u1364
   expected_dtype: object
-  notes: 'description: unresolved abbreviation in column name: sOTU; unit: default
-    text rule; allowed_range: categorical summary rule; review this field before final
-    reporting'
-  review_status: unclear
+  notes: 'description: sub-operational taxonomic unit identifier; unit: default text rule; allowed_range: categorical
+    summary rule'
+  review_status: manual_review_completed
   source_files:
   - S3_serratus
   unit: n/a
@@ -195,7 +194,7 @@ scientific_name:
   unit: n/a
 sra_sequence:
   allowed_range: free text / categorical (1748 unique values)
-  description: SRA accession
+  description: SRA hit sequence
   examples:
   - LELDISKYDKSQNEFHCAVEYEIWRRLGIDDFLAEVWKQGHRRTTLKDFTSGIKTCLWYQRKSGDVTTFIGNTVIIAACLASMLPMEKVIKAAFCGDDSLV
   - LELDISKYDKSQNEFHCAVEYEIWKRLGLNEFLAEVWKQGHRKTTLKDYIAGIKTCLWYQRKSGDVTTFIGNTVIIAACLGSMLPMEKVIKGAFCGDDSVL
@@ -203,7 +202,7 @@ sra_sequence:
   expected_dtype: object
   notes: 'description: single-token rule: sra; unit: default text rule; allowed_range:
     categorical summary rule; review this field before final reporting'
-  review_status: review_recommended
+  review_status: review completed
   source_files:
   - S3_serratus
   unit: n/a

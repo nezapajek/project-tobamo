@@ -41,14 +41,21 @@ cluster_representative:
   unit: unitless
 collection_date:
   allowed_range: '[2008-07-06, 2019-01-01]'
-  description: Collection date
+  description: the date on which the sample was collected; date/time ranges are supported
+    by providing two dates from among the supported value formats, delimited by a
+    forward-slash character; collection times are supported by adding "T", then the
+    hour and minute after the date, and must be in Coordinated Universal Time (UTC),
+    otherwise known as "Zulu Time" (Z); supported formats include "DD-Mmm-YYYY", "Mmm-YYYY",
+    "YYYY" or ISO 8601 standard "YYYY-mm-dd", "YYYY-mm", "YYYY-mm-ddThh:mm:ss"; e.g.,
+    30-Oct-1990, Oct-1990, 1990, 1990-10-30, 1990-10,  21-Oct-1952/15-Feb-1953, 2015-10-11T17:53:03Z;
+    valid non-ISO dates will be automatically transformed to ISO format
   examples:
   - '2015'
   - '2011-05-08'
   - '2016'
   expected_dtype: object
-  notes: 'description: exact-name rule; unit: date rule; allowed_range: date parsing
-    rule'
+  notes: 'description: NCBI BioSample attribute; unit: date rule; allowed_range: date
+    parsing rule'
   review_status: auto_inferred
   source_files:
   - S5_510discovered_contigs
@@ -98,15 +105,18 @@ corresponding_srr:
   unit: n/a
 country:
   allowed_range: free text / categorical (44 unique values)
-  description: Country of origin
+  description: 'Geographical origin of the sample; use the appropriate name from this
+    list https://www.insdc.org/submitting-standards/geo_loc_name-qualifier-vocabulary/.
+    Use a colon to separate the country or ocean from more detailed information about
+    the location, eg "Canada: Vancouver" or "Germany: halfway down Zugspitze, Alps"'
   examples:
   - Germany
   - China:Jiangsu
   - 'Brazil: Amazon River'
   expected_dtype: object
-  notes: 'description: single-token rule: country; unit: default text rule; allowed_range:
-    categorical summary rule; review this field before final reporting'
-  review_status: review_recommended
+  notes: 'description: NCBI BioSample attribute; unit: NCBI categorical: {term}:{term}:{text}...;
+    allowed_range: categorical summary rule'
+  review_status: auto_inferred
   source_files:
   - S5_510discovered_contigs
   unit: n/a
