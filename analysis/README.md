@@ -4,7 +4,7 @@ This folder contains the post-processing analysis pipeline and related code for 
 
 ## Overview
 
-The analysis pipeline is organized into 5 main components, each focused on a distinct part of the post-workflow analysis:
+The analysis pipeline is organized into 8 top-level components covering core analysis workflows and supporting data/reference resources:
 
 ```
 analysis/
@@ -13,6 +13,9 @@ analysis/
 ├── palmprint/              # Viral palmprint domain identification
 ├── clustering/             # Contig clustering for phylogenetic analysis
 ├── phylogenetic_placement/ # Phylogenetic placement using EPA-ng
+├── data/                   # Shared datasets and curated inputs
+├── references/             # Reference sequence preparation workflows
+└── supplementary_data/     # Supplementary tables and metadata assets
 ```
 
 ## Folder Structure
@@ -88,3 +91,36 @@ See [palmprint/README.md](palmprint/README.md) and [palmprint/protocol.md](palmp
 **Output:** Phylogenetic placement results (.jplace) and annotated tree visualizations
 
 See [phylogenetic_placement/README.md](phylogenetic_placement/README.md) and [phylogenetic_placement/protocol.md](phylogenetic_placement/protocol.md) for detailed workflows.
+
+
+### `data/`
+
+**Purpose:** Central storage for analysis-ready datasets, curated sequence collections, and domain-scientist-provided inputs shared across workflows.
+
+**Key Contents:**
+- `contigs/` and `serratus/` data resources
+- `domain_sci_input/` curated input sets
+- `non-virga_representatives/` model control datasets
+- `tobamo/` project-specific sequence and metadata resources
+
+
+### `references/`
+
+**Purpose:** Workflows and scripts for generating and curating reference representatives used in downstream model and phylogenetic analyses.
+
+**Key Functions:**
+- Build curated Virgaviridae representative sets
+- Generate non-virga control representatives
+- Produce reference outputs for downstream placement and evaluation
+
+See [references/README.md](references/README.md) for workflow details.
+
+
+### `supplementary_data/`
+
+**Purpose:** Supplementary deliverables and metadata support for reporting and manuscript-ready outputs.
+
+**Key Contents:**
+- `raw_files/` source supplementary files
+- `files/` generated/organized supplementary artifacts
+- notebook utilities for supplementary report assembly and variable dictionary generation
