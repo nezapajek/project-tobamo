@@ -114,12 +114,15 @@ debug_*
 # ------------------------------------------------------------------------------
 # Analysis-specific directories and files
 # ------------------------------------------------------------------------------
+
 # Data directories
-analysis/data/**
+!analysis/data/**
 
 # Model analysis
 analysis/model/archive/**
 analysis/model/results/**
+!analysis/model/results/analysis_summary.csv
+!analysis/model/results/publication_summary.txt
 analysis/model/scripts/archive/**
 analysis/model/notebooks/archive/**
 analysis/model/notebooks/results/**
