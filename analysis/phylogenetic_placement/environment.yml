@@ -15,6 +15,6 @@ dependencies:
   - gappa=0.9.0           # Convert placement information into annotations
   
   # Python packages
-  - biopython>=1.81
+  - biopython=1.87
   - pandas>=1.5.0
   - numpy>=1.21.0
