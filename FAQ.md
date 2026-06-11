@@ -26,12 +26,6 @@
 - **CPU:** 8+ cores recommended
 - **OS:** Linux (Ubuntu 18.04+, CentOS 7+)
 
-### Q: Do I need to download databases manually?
-**A:** Most databases download automatically, but you can pre-download:
-- **NR database:** ~100GB (downloads during first Diamond search)
-- **MEGAN mapping:** Downloads automatically
-- **Tobamovirus DB:** Included in workflow
-
 ### Q: Can I run this on Windows or macOS?
 **A:** The workflow is designed for Linux. For other systems:
 - **Windows:** Use WSL2 (Windows Subsystem for Linux)
@@ -48,8 +42,6 @@
 ### Q: Can I use local FASTQ files instead of SRA?
 **A:** The workflow is designed for SRA data. For local files, you would need to:
 1. Place files in `resources/SRA/` with naming convention `{accession}_1.fastq.gz`
-2. Modify the input rules to skip SRA download
-3. This requires workflow customization
 
 ### Q: How do I run only specific steps?
 **A:** Use Snakemake targets:
@@ -68,7 +60,7 @@ snakemake --use-conda -c8 results/SRR1234567/09_SRR1234567_megan6_results.csv
 
 ### Q: The workflow is running slowly. How can I speed it up?
 **A:** Optimization strategies:
-1. **Increase threads:** `snakemake --use-conda -c64`
+1. **Increase threads if you have available resources:** `snakemake --use-conda -c64`
 2. **Use faster storage:** SSD for databases and temp files
 3. **Increase memory:** Especially for assembly steps
 4. **Use cluster:** Submit to HPC scheduler
@@ -206,7 +198,8 @@ snakemake --cluster "qsub -l nodes=1:ppn={threads}"
 - Repository URL: https://github.com/nezapajek/project-tobamo
 - DOI: [To be added when available]
 - Related publications: [To be added]
-- Individual tool citations: Listed in workflow documentation
+    - IAPV 2025 conference poster: https://doi.org/10.6084/m9.figshare.30999190
+    - ViBioM 2025 conference poster: https://doi.org/10.6084/m9.figshare.30999328
 
 ## Updates and Maintenance
 
